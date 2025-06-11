@@ -12,6 +12,15 @@ pub struct TelegramOptions {
     token: String,
 }
 
+impl TelegramOptions {
+    pub fn new(chat_id: i64, token: &str) -> Self {
+        Self {
+            chat_id,
+            token: token.to_string(),
+        }
+    }
+}
+
 #[derive(Default, Debug)]
 pub struct TelegramNotifier {
     token: Option<String>,

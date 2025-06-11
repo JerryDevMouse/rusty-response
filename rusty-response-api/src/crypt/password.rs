@@ -15,3 +15,22 @@ impl BcryptController {
         Ok(verified)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    static RAW: &str = "foobar";
+    static HASHED: &str = "$2a$12$aS6X5VGi7zebM9c86vPWE.7ZwePAsSi2AqU8fCm.ZMSoWcmXReYGq";
+
+    #[test]
+    fn test_encrypt() {
+        let hashed = BcryptController::encrypt(RAW).unwrap();
+        assert!(BcryptController::verify(RAW, &hashed).unwrap());
+    }
+
+    #[test]
+    fn test_verify() {
+        assert!(BcryptController::verify(RAW, HASHED).unwrap());
+    }
+}

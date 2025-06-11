@@ -247,3 +247,68 @@ impl Default for NotifyManager {
         Self::new()
     }
 }
+
+#[cfg(test)]
+mod test {
+    use serde_json::Map;
+    use time::{Date, PrimitiveDateTime, UtcDateTime};
+
+    use crate::notify::telegram::TelegramOptions;
+
+    use super::*;
+
+    fn get_mock(id: i64, user_id: i64, server_id: i64) -> NotifierModel {
+        let utc = UtcDateTime::now();
+        NotifierModel {
+            id: id,
+            user_id: user_id,
+            server_id: server_id,
+            provider: "telegram".to_string(),
+            credentials: serde_json::to_value(TelegramOptions::new(-4444444, "tokenhere")).unwrap(),
+            format: "{{server.id}}".to_string(),
+            active: true,
+            created_at: PrimitiveDateTime::new(utc.date(), utc.time()),
+            updated_at: PrimitiveDateTime::new(utc.date(), utc.time()),
+        }
+    }
+
+    #[tokio::test]
+    async fn test_notify_manager_add() {
+        let manager = NotifyManager::new();
+        let notifier = get_mock(1, 1, 1);
+
+        manager.add(&notifier).await.unwrap();
+
+        assert!(!manager.get_by_sid(1).await.is_empty());
+        assert!(manager.inner.read().await.by_id.contains_key(&1));
+    }
+
+    #[tokio::test]
+    async fn test_notify_manager_remove() {
+        let manager = NotifyManager::new();
+        let notifier1 = get_mock(2, 0, 2);
+        let notifier2 = get_mock(3, 0, 3);
+
+        manager.add(&notifier1).await.unwrap();
+        manager.add(&notifier2).await.unwrap();
+
+        assert!(!manager.get_by_sid(2).await.is_empty());
+        assert!(!manager.get_by_sid(3).await.is_empty());
+        assert!(manager.inner.read().await.by_id.contains_key(&2));
+        assert!(manager.inner.read().await.by_id.contains_key(&3));
+
+        manager.remove_by_sid(2).await.unwrap();
+
+        assert!(manager.get_by_sid(2).await.is_empty());
+        assert!(!manager.get_by_sid(3).await.is_empty());
+        assert!(!manager.inner.read().await.by_id.contains_key(&2));
+        assert!(manager.inner.read().await.by_id.contains_key(&3));
+
+        manager.remove_by_nid(3).await.unwrap();
+
+        assert!(manager.get_by_sid(2).await.is_empty());
+        assert!(manager.get_by_sid(3).await.is_empty());
+        assert!(!manager.inner.read().await.by_id.contains_key(&2));
+        assert!(!manager.inner.read().await.by_id.contains_key(&3));
+    }
+}
