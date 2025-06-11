@@ -1,0 +1,3 @@
+[workspace]
+members = ["rusty-response-api"]
+resolver = "3"

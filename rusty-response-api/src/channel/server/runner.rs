@@ -1,0 +1,330 @@
+use std::{collections::BTreeMap, sync::Arc, time::Duration};
+
+use axum::http;
+use tokio::{
+    sync::{Mutex, mpsc},
+    task::JoinHandle,
+};
+use tracing::{debug, error, trace, warn};
+
+use crate::{
+    ModelManager,
+    channel::{
+        UnboundedMPSCController,
+        server::{
+            ServerStatus,
+            types::{ControlMessage, ServerMessage},
+        },
+    },
+    model::{Ctx, Server, ServerBmc},
+};
+
+async fn payload(
+    server: Server,
+    client: Arc<reqwest::Client>,
+    sender: mpsc::UnboundedSender<ServerMessage>,
+    cancellation_token: tokio_util::sync::CancellationToken,
+    last_seen_status: bool,
+) {
+    let interval = Duration::from_secs(server.interval as u64);
+    let timeout = Duration::from_secs(server.timeout as u64);
+
+    let mut local_status = last_seen_status;
+
+    // TODO: Appropriate reason determining for failed requests
+    loop {
+        let response = client.get(&server.url).timeout(timeout).send().await;
+
+        if let Err(e) = response {
+            if local_status {
+                let message = ServerMessage::error(e.into(), server.id);
+                sender.send(message);
+                local_status = false;
+            }
+            tokio::time::sleep(interval).await;
+            continue;
+        }
+
+        let response = response.unwrap();
+        let status = response.status();
+        let mut body = Vec::<u8>::new();
+        let result = response.bytes().await;
+        if let Err(e) = result {
+            error!(
+                "Error during reading response body from server: {}. Error: {:#?}",
+                server.id, e
+            );
+            body.extend_from_slice(b"Unable to read body");
+        } else {
+            let res_body = result.unwrap();
+            body.extend_from_slice(&res_body);
+        }
+
+        if !status.is_success() {
+            if local_status {
+                let message = ServerMessage::unreachable(
+                    super::ServerStatus::Unreachable {
+                        reason: "TODO".to_string(),
+                        body,
+                        status_code: status,
+                    },
+                    server.id,
+                );
+
+                sender.send(message);
+                local_status = false;
+            }
+            tokio::time::sleep(interval).await;
+            continue;
+        }
+
+        if !local_status {
+            let message = ServerMessage::ServerStateChanged {
+                status: ServerStatus::Online {
+                    status_code: status,
+                    body,
+                },
+                server_id: server.id,
+            };
+            sender.send(message);
+            local_status = true;
+        }
+
+        // DEBUG SHIT, DON'T UNCOMMENT
+        sender.send(ServerMessage::ServerStateChanged {
+            status: super::ServerStatus::Unreachable {
+                reason: format!("Sending from: {}", server.id),
+                status_code: http::StatusCode::OK,
+                body: b"TEST".to_vec(),
+            },
+            server_id: server.id,
+        });
+
+        tokio::select! {
+            _ = tokio::time::sleep(interval) => {},
+            _ = cancellation_token.cancelled() => {
+                break;
+            }
+        }
+    }
+}
+
+pub async fn setup_monitoring_future(
+    mm: ModelManager,
+    control_rx: mpsc::UnboundedReceiver<ControlMessage>,
+    cancellation_token: tokio_util::sync::CancellationToken,
+) {
+    let mut mpsc = UnboundedMPSCController::<ServerMessage>::new();
+    let admin_ctx = Ctx::admin_root();
+
+    let reqwest_client = Arc::new(
+        reqwest::ClientBuilder::new()
+            .user_agent(format!(
+                "{} - {}",
+                env!("CARGO_PKG_NAME"),
+                env!("CARGO_PKG_VERSION")
+            ))
+            .build()
+            .expect("unable to create reqwest client"),
+    );
+
+    let servers = ServerBmc::all(&mm, &admin_ctx)
+        .await
+        .expect("unable to fetch servers from database");
+
+    let statuses = Arc::new(Mutex::new(BTreeMap::<i64, (i64, String)>::new()));
+    let handles = Arc::new(Mutex::new(BTreeMap::<i64, JoinHandle<()>>::new()));
+
+    {
+        let mut status_lock = statuses.lock().await;
+        for server in &servers {
+            status_lock.insert(
+                server.id,
+                (
+                    server.last_seen_status_code.unwrap_or(0),
+                    server.last_seen_reason.clone().unwrap_or_default(),
+                ),
+            );
+        }
+    }
+    {
+        let mut handles_lock = handles.lock().await;
+        for server in servers {
+            trace!("Setting up: {:#?}", server);
+            let reqwest_arc = Arc::clone(&reqwest_client);
+            let tx = mpsc.get_sender();
+            let child_token = cancellation_token.child_token();
+            let server_id = server.id;
+            let last_seen_status =
+                http::StatusCode::from_u16(server.last_seen_status_code.unwrap_or(200) as u16)
+                    .unwrap()
+                    .is_success();
+
+            let handle = tokio::spawn(async move {
+                payload(server, reqwest_arc, tx, child_token, last_seen_status).await
+            });
+            handles_lock.insert(server_id, handle);
+        }
+    }
+    let server_tx = mpsc.get_sender();
+
+    // FUTURE 1: Handle ServerMessage
+    let statuses_clone = Arc::clone(&statuses);
+    let mm_clone = mm.clone();
+    let admin_ctx_clone = admin_ctx.clone();
+    let mut server_rx = mpsc.take_receiver();
+    let updates = tokio::spawn(async move {
+        while let Some(msg) = server_rx.recv().await {
+            super::handle_server_response(
+                msg,
+                &mm_clone,
+                &admin_ctx_clone,
+                Arc::clone(&statuses_clone),
+            )
+            .await;
+        }
+    });
+
+    // FUTURE 2: Handle ControlMessage
+    let mm_clone = mm.clone();
+    let admin_ctx_clone = admin_ctx.clone();
+    let statuses_clone = Arc::clone(&statuses);
+    let handles_clone = Arc::clone(&handles);
+    let reqwest_client_clone = Arc::clone(&reqwest_client);
+    let control = tokio::spawn(async move {
+        let mut control_rx = control_rx;
+        while let Some(ctrl_msg) = control_rx.recv().await {
+            debug!("Received control message: {:?}", ctrl_msg);
+            match ctrl_msg {
+                ControlMessage::AddServer(server) => {
+                    let reqwest_arc = Arc::clone(&reqwest_client_clone);
+                    let tx = server_tx.clone();
+                    let child_token = cancellation_token.child_token();
+
+                    {
+                        let server_id = server.id;
+                        {
+                            let mut status_lock = statuses_clone.lock().await;
+                            status_lock.insert(
+                                server.id,
+                                (
+                                    server.last_seen_status_code.unwrap_or(0),
+                                    server.last_seen_reason.clone().unwrap_or_default(),
+                                ),
+                            );
+                        }
+
+                        let handle = tokio::spawn(async move {
+                            payload(server, reqwest_arc, tx, child_token, true).await;
+                        });
+
+                        {
+                            let mut handles_lock = handles_clone.lock().await;
+                            handles_lock.insert(server_id, handle);
+                        }
+                    }
+                }
+                ControlMessage::RemoveServer(server_id) => {
+                    {
+                        let mut status_lock = statuses_clone.lock().await;
+                        if status_lock.remove_entry(&server_id).is_none() {
+                            warn!(
+                                "Tried to remove non-existing entry from statuses tree: {}",
+                                server_id
+                            );
+                        }
+                    }
+
+                    {
+                        let mut handles_lock = handles_clone.lock().await;
+                        let handle = handles_lock.remove_entry(&server_id);
+                        if let Some((id, handle)) = handle {
+                            handle.abort();
+                        } else {
+                            warn!(
+                                "Tried to remove non-existing entry from handles tree: {server_id}"
+                            );
+                        }
+                    }
+                }
+                ControlMessage::ModifyServer(server) => {
+                    let reqwest_arc = Arc::clone(&reqwest_client_clone);
+                    let tx = server_tx.clone();
+                    let child_token = cancellation_token.child_token();
+                    let server_id = server.id;
+
+                    let removed_status = {
+                        let mut status_lock = statuses_clone.lock().await;
+                        status_lock.remove_entry(&server_id)
+                    };
+
+                    if removed_status.is_none() {
+                        warn!(
+                            "Tried to remove non-existing entry from statuses tree: {}",
+                            server_id
+                        );
+                    }
+
+                    let removed_handle = {
+                        let mut handles_lock = handles_clone.lock().await;
+                        handles_lock.remove_entry(&server_id)
+                    };
+
+                    if let Some((_id, handle)) = removed_handle {
+                        handle.abort();
+                    } else {
+                        warn!(
+                            "Tried to modify non-existing server entry from handles tree: {}",
+                            server_id
+                        );
+                    }
+
+                    {
+                        let mut status_lock = statuses_clone.lock().await;
+                        status_lock.insert(
+                            server.id,
+                            (
+                                server.last_seen_status_code.unwrap_or(0),
+                                server.last_seen_reason.clone().unwrap_or_default(),
+                            ),
+                        );
+                    }
+
+                    let handle = tokio::spawn(async move {
+                        payload(server, reqwest_arc, tx, child_token, true).await;
+                    });
+
+                    {
+                        let mut handles_lock = handles_clone.lock().await;
+                        handles_lock.insert(server_id, handle);
+                    }
+                }
+                ControlMessage::Shutdown => {
+                    debug!("Shutdown requested. Shutting down...");
+                    cancellation_token.cancel();
+
+                    {
+                        let mut handles_lock = handles.lock().await;
+
+                        for (server_id, handle) in handles_lock.iter_mut() {
+                            match handle.await {
+                                Ok(_) => {
+                                    debug!("Shut down future for server {} cleanly", server_id)
+                                }
+                                Err(e) => error!("Task for server {} panicked: {:?}", server_id, e),
+                            }
+                        }
+
+                        handles_lock.clear();
+                    }
+
+                    break;
+                }
+            }
+        }
+    });
+
+    let _ = tokio::join!(updates, control);
+
+    debug!("Monitoring backend has been shut down.");
+}
