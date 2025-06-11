@@ -53,6 +53,9 @@ frankenstein = { version = "0.41", features = ["client-reqwest"] }
 # discord
 discord-webhook2 = "0.4.3"
 
+# Formatting
+handlebars = "6.3"
+
 [features]
 default = []
 events = []

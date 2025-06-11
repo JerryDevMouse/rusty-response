@@ -33,11 +33,11 @@ impl ServerStatus {
 pub enum ServerMessage {
     ServerStateChanged {
         status: ServerStatus,
-        server_id: i64,
+        server: Server,
     },
     ChannelError {
         error: super::Error,
-        server_id: i64,
+        server: Server,
     },
 }
 
@@ -50,14 +50,11 @@ pub enum ControlMessage {
 }
 
 impl ServerMessage {
-    pub fn unreachable(status: ServerStatus, id: i64) -> Self {
-        Self::ServerStateChanged {
-            status,
-            server_id: id,
-        }
+    pub fn unreachable(status: ServerStatus, server: Server) -> Self {
+        Self::ServerStateChanged { status, server }
     }
 
-    pub fn error(error: super::Error, server_id: i64) -> Self {
-        Self::ChannelError { error, server_id }
+    pub fn error(error: super::Error, server: Server) -> Self {
+        Self::ChannelError { error, server }
     }
 }

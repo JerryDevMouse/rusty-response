@@ -1,3 +1,5 @@
+use crate::notify::NotifierFormatter;
+
 use super::Result;
 use async_trait::async_trait;
 

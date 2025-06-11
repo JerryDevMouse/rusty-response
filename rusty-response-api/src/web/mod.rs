@@ -39,6 +39,10 @@ pub fn app<S>(state: AppState) -> Router<S> {
             "/api/v1/server/",
             routes::server_routes(AppState::clone(&state)),
         )
+        .nest(
+            "/api/v1/notify/",
+            routes::notify_routes(AppState::clone(&state)),
+        )
         .layer(tower_cookies::CookieManagerLayer::new())
         .with_state(AppState::clone(&state));
 

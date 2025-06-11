@@ -3,7 +3,22 @@ use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, Row, Sqlite};
 use time::PrimitiveDateTime;
 
-use crate::{ModelManager, model::Ctx};
+use crate::{
+    ModelManager,
+    model::{Ctx, Server},
+};
+
+#[derive(Debug, Clone, Serialize)]
+pub struct ServerLogLine {
+    pub server: Server,
+    pub log: ServerLog,
+}
+
+impl ServerLogLine {
+    pub fn new(server: Server, log: ServerLog) -> Self {
+        Self { server, log }
+    }
+}
 
 #[derive(Debug, Clone, FromRow, Serialize)]
 pub struct ServerLog {

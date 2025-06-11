@@ -34,6 +34,7 @@ CREATE TABLE notifier (
     server_id INTEGER NOT NULL,
     "provider" TEXT NOT NULL, --- notifier provider, e.g telegram, discord, bitrix24, etc.
     credentials TEXT NOT NULL, --- notifier credentials in JSON, e.g bot token for telegram, discord webhook url, etc.
+    format TEXT NOT NULL, --- format in hjs to format the log line
     active INTEGER NOT NULL CHECK(active IN (1, 0)) DEFAULT 1, --- 0 for off 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

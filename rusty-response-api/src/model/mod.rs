@@ -7,7 +7,7 @@ mod user_action;
 
 pub use notifier::{Notifier, NotifierBmc, NotifierCreate};
 pub use server::{Server, ServerBmc, ServerCreate};
-pub use server_log::{ServerLog, ServerLogBmc, ServerLogCreate};
+pub use server_log::{ServerLog, ServerLogBmc, ServerLogCreate, ServerLogLine};
 pub use user::{User, UserBmc, UserClaims, UserCreate, UserRole};
 pub use user_action::{UserAction, UserActionLog, UserActionLogBmc, UserActionLogCreate};
 

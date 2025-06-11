@@ -14,6 +14,7 @@ pub struct Notifier {
     pub server_id: i64,
     pub provider: String,
     pub credentials: Value,
+    pub format: String,
     pub active: bool,
     pub created_at: PrimitiveDateTime,
     pub updated_at: PrimitiveDateTime,
@@ -24,6 +25,7 @@ pub struct NotifierCreate {
     pub server_id: i64,
     pub provider: String,
     pub credentials: Value, // JSON object from request body
+    pub format: String,
     pub active: Option<bool>,
 }
 
@@ -32,12 +34,14 @@ impl NotifierCreate {
         server_id: i64,
         provider: S,
         credentials: String,
+        format: String,
         active: Option<bool>,
     ) -> Result<Self> {
         Ok(Self {
             server_id,
             provider: provider.into(),
             credentials: serde_json::from_str(&credentials)?,
+            format,
             active,
         })
     }
@@ -76,15 +80,17 @@ impl NotifierBmc {
         let server_id = nc.server_id;
         let provider = nc.provider;
         let credentials = nc.credentials;
+        let format = nc.format;
         let active = nc.active.unwrap_or(false);
 
         let row = sqlx::query(
-            "INSERT INTO notifier (user_id, server_id, provider, credentials, active) VALUES (?,?,?,?,?) RETURNING id, created_at, updated_at;"
+            "INSERT INTO notifier (user_id, server_id, provider, credentials, format, active) VALUES (?,?,?,?,?,?) RETURNING id, created_at, updated_at;"
         )
         .bind(user_id)
         .bind(server_id)
         .bind(&provider)
         .bind(&credentials)
+        .bind(&format)
         .bind(active)
         .fetch_one(&mm.pool)
         .await?;
@@ -100,6 +106,7 @@ impl NotifierBmc {
             provider,
             credentials,
             active,
+            format,
             created_at,
             updated_at,
         };

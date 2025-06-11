@@ -8,7 +8,7 @@ use tokio::sync::Mutex;
 use crate::{
     ModelManager,
     channel::ServerMessage,
-    model::{Ctx, ServerBmc, ServerLogBmc, ServerLogCreate},
+    model::{Ctx, Server, ServerBmc, ServerLogBmc, ServerLogCreate, ServerLogLine},
     notify::NotifyManager,
 };
 
@@ -22,14 +22,14 @@ pub async fn handle_server_response(
     let mut statuses = statuses.lock().await;
 
     match msg {
-        ServerMessage::ServerStateChanged { status, server_id } => match status {
+        ServerMessage::ServerStateChanged { status, server } => match status {
             super::ServerStatus::Unreachable {
                 reason,
                 status_code,
                 body,
             } => {
                 handle_arm(
-                    server_id,
+                    server,
                     status_code,
                     Some(reason),
                     body,
@@ -42,7 +42,7 @@ pub async fn handle_server_response(
             }
             super::ServerStatus::Online { status_code, body } => {
                 handle_arm(
-                    server_id,
+                    server,
                     status_code,
                     None,
                     body,
@@ -54,9 +54,9 @@ pub async fn handle_server_response(
                 .await;
             }
         },
-        ServerMessage::ChannelError { server_id, .. } => {
+        ServerMessage::ChannelError { server, .. } => {
             handle_arm(
-                server_id,
+                server,
                 http::StatusCode::INTERNAL_SERVER_ERROR,
                 Some("Error occurred during fetching".to_string()),
                 vec![],
@@ -71,7 +71,7 @@ pub async fn handle_server_response(
 }
 
 async fn handle_arm(
-    server_id: i64,
+    server: Server,
     status_code: http::StatusCode,
     reason: Option<String>,
     body: Vec<u8>,
@@ -81,6 +81,8 @@ async fn handle_arm(
     ctx: &Ctx,
 ) {
     let code = status_code.as_u16() as i64;
+
+    let server_id = server.id;
 
     if utils::is_changed(statuses, server_id, code, reason.as_ref()) {
         utils::update_cache(statuses, server_id, code, reason.clone());
@@ -95,7 +97,7 @@ async fn handle_arm(
     );
     let lossy_str = String::from_utf8_lossy(&body).into_owned();
 
-    let log_line = ServerLogCreate::new(
+    let lc = ServerLogCreate::new(
         server_id,
         !status_code.is_success(),
         status_code.as_u16() as i64,
@@ -103,17 +105,17 @@ async fn handle_arm(
         reason,
     );
 
-    let result = ServerLogBmc::insert(mm, ctx, log_line.clone()).await;
+    let result = ServerLogBmc::insert(mm, ctx, lc).await;
 
-    if let Err(e) = result {
+    if let Err(e) = &result {
         error!(
             "Error occured during logging server {} response: {}",
             server_id, e
         );
     }
 
-    let log_line = serde_json::to_string(&log_line).expect("unable to serialize log line");
+    let log_line = result.unwrap();
+    let log_line = ServerLogLine::new(server, log_line);
 
-    // TODO: Formatting
     notify_manager.notify(server_id, log_line).await;
 }

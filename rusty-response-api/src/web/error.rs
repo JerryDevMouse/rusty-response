@@ -35,6 +35,9 @@ pub enum WebError {
     #[error("Not your server")]
     ServerNotAllowed,
 
+    #[error(transparent)]
+    NotifierError(#[from] crate::notify::Error),
+
     #[error("Internal server error")]
     DatabaseError(#[from] crate::model::ModelError),
 
@@ -72,6 +75,11 @@ impl IntoResponse for WebError {
                 StatusCode::FORBIDDEN,
                 "You don't own that server to interact with it",
                 None,
+            ),
+            WebError::NotifierError(e) => (
+                StatusCode::BAD_REQUEST,
+                "Notifier error occured.",
+                Some(e.to_string()),
             ),
             WebError::DatabaseError(err) => (
                 StatusCode::INTERNAL_SERVER_ERROR,

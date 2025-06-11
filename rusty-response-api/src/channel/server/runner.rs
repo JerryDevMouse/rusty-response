@@ -33,74 +33,77 @@ async fn payload(
 
     let mut local_status = last_seen_status;
 
-    // TODO: Appropriate reason determining for failed requests
     loop {
-        let response = client.get(&server.url).timeout(timeout).send().await;
+        let result = async {
+            let response = client.get(&server.url).timeout(timeout).send().await;
 
-        if let Err(e) = response {
-            if local_status {
-                let message = ServerMessage::error(e.into(), server.id);
-                sender.send(message);
-                local_status = false;
-            }
-            tokio::time::sleep(interval).await;
-            continue;
-        }
-
-        let response = response.unwrap();
-        let status = response.status();
-        let mut body = Vec::<u8>::new();
-        let result = response.bytes().await;
-        if let Err(e) = result {
-            error!(
-                "Error during reading response body from server: {}. Error: {:#?}",
-                server.id, e
-            );
-            body.extend_from_slice(b"Unable to read body");
-        } else {
-            let res_body = result.unwrap();
-            body.extend_from_slice(&res_body);
-        }
-
-        if !status.is_success() {
-            if local_status {
-                let message = ServerMessage::unreachable(
-                    super::ServerStatus::Unreachable {
-                        reason: "TODO".to_string(),
-                        body,
-                        status_code: status,
-                    },
-                    server.id,
-                );
-
-                sender.send(message);
-                local_status = false;
-            }
-            tokio::time::sleep(interval).await;
-            continue;
-        }
-
-        if !local_status {
-            let message = ServerMessage::ServerStateChanged {
-                status: ServerStatus::Online {
-                    status_code: status,
-                    body,
-                },
-                server_id: server.id,
+            let response = match response {
+                Ok(resp) => resp,
+                Err(e) => {
+                    if local_status {
+                        let message = ServerMessage::error(e.into(), server.clone());
+                        sender.send(message).ok();
+                        local_status = false;
+                    }
+                    return;
+                }
             };
-            sender.send(message);
-            local_status = true;
-        }
 
-        // DEBUG SHIT, DON'T UNCOMMENT
-        sender.send(ServerMessage::ServerStateChanged {
-            status: super::ServerStatus::Unreachable {
-                reason: format!("Sending from: {}", server.id),
-                status_code: http::StatusCode::OK,
-                body: b"TEST".to_vec(),
-            },
-            server_id: server.id,
-        });
+            let status = response.status();
+            let mut body = Vec::new();
+            match response.bytes().await {
+                Ok(bytes) => body.extend_from_slice(&bytes),
+                Err(e) => {
+                    error!(
+                        "Error during reading response body from server: {}. Error: {:#?}",
+                        server.id, e
+                    );
+                    body.extend_from_slice(b"Unable to read body");
+                }
+            }
+
+            if !status.is_success() {
+                if local_status {
+                    let message = ServerMessage::unreachable(
+                        ServerStatus::Unreachable {
+                            reason: "TODO".to_string(),
+                            body,
+                            status_code: status,
+                        },
+                        server.clone(),
+                    );
+                    sender.send(message).ok();
+                    local_status = false;
+                }
+                return;
+            }
+
+            if !local_status {
+                let message = ServerMessage::ServerStateChanged {
+                    status: ServerStatus::Online {
+                        status_code: status,
+                        body,
+                    },
+                    server: server.clone(),
+                };
+                sender.send(message).ok();
+                local_status = true;
+            }
+
+            // DEBUG: REMOVE THIS BLOCK IN PROD
+            sender
+                .send(ServerMessage::ServerStateChanged {
+                    status: ServerStatus::Unreachable {
+                        reason: format!("Sending from: {}", server.id),
+                        status_code: http::StatusCode::OK,
+                        body: b"TEST".to_vec(),
+                    },
+                    server: server.clone(),
+                })
+                .ok();
+        };
+
+        result.await;
 
         tokio::select! {
             _ = tokio::time::sleep(interval) => {},

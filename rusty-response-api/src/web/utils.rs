@@ -16,6 +16,7 @@ pub async fn shutdown_signal(
 
     tokio::select! {
         _ = ctrl_c => {
+            println!();
             info!("Ctrl+C received. Please wait, this could take a while.");
             token.cancel();
             let _ = shutdown_tx.send(ControlMessage::Shutdown);
