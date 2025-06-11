@@ -9,6 +9,6 @@ to be written
 - [x] Basic API for accounts handling
 - [x] Basic alerts/notifying system
 - [x] Formatting alerts/notifying messages
-- [ ] Organizations and members
+- [-] Organizations and members (Won't be done, at least, now)
 - [ ] Web application on Leptos
 - [ ] Docker support
