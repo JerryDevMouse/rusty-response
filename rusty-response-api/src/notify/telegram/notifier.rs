@@ -4,7 +4,7 @@ use eyre::eyre;
 use frankenstein::{AsyncTelegramApi, client_reqwest::Bot, methods::SendMessageParams};
 use serde::{Deserialize, Serialize};
 
-use crate::notify::{NotifierFormatter, notifier::Notifier};
+use crate::notify::notifier::Notifier;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TelegramOptions {

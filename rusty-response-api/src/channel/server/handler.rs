@@ -1,8 +1,8 @@
-use axum::{http, serve};
-use tracing::{debug, error, info, trace};
+use axum::http;
+use tracing::{error, trace};
 
 use super::utils;
-use std::{borrow::Cow, collections::BTreeMap, pin::Pin, sync::Arc};
+use std::{collections::BTreeMap, sync::Arc};
 use tokio::sync::Mutex;
 
 use crate::{
@@ -70,6 +70,8 @@ pub async fn handle_server_response(
     }
 }
 
+// TODO: Rewrite this
+#[allow(clippy::too_many_arguments)]
 async fn handle_arm(
     server: Server,
     status_code: http::StatusCode,
@@ -86,8 +88,12 @@ async fn handle_arm(
 
     if utils::is_changed(statuses, server_id, code, reason.as_ref()) {
         utils::update_cache(statuses, server_id, code, reason.clone());
-        ServerBmc::update_status(mm, ctx, server_id, reason.clone().unwrap_or_default(), code)
-            .await;
+        let result =
+            ServerBmc::update_status(mm, ctx, server_id, reason.clone().unwrap_or_default(), code)
+                .await;
+        if let Err(e) = result {
+            error!("Unable to update server status: {}", e);
+        }
     }
 
     trace!(
@@ -117,5 +123,8 @@ async fn handle_arm(
     let log_line = result.unwrap();
     let log_line = ServerLogLine::new(server, log_line);
 
-    notify_manager.notify(server_id, log_line).await;
+    let result = notify_manager.notify(server_id, log_line).await;
+    if let Err(e) = result {
+        error!("Unable to send notification for {server_id}: {e}");
+    }
 }

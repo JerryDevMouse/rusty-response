@@ -121,7 +121,7 @@ pub async fn setup_monitoring_future(
     notify_manager: NotifyManager,
     cancellation_token: CancellationToken,
 ) {
-    let mut mpsc = UnboundedMPSCController::<ServerMessage>::new();
+    let mpsc = UnboundedMPSCController::<ServerMessage>::new();
     let admin_ctx = Ctx::admin_root();
 
     let reqwest_client = Arc::new(
@@ -194,8 +194,6 @@ pub async fn setup_monitoring_future(
     });
 
     // FUTURE 2: Handle ControlMessage
-    let mm_clone = mm.clone();
-    let admin_ctx_clone = admin_ctx.clone();
     let statuses_clone = Arc::clone(&statuses);
     let handles_clone = Arc::clone(&handles);
     let reqwest_client_clone = Arc::clone(&reqwest_client);
@@ -246,7 +244,7 @@ pub async fn setup_monitoring_future(
                     {
                         let mut handles_lock = handles_clone.lock().await;
                         let handle = handles_lock.remove_entry(&server_id);
-                        if let Some((id, handle)) = handle {
+                        if let Some((_, handle)) = handle {
                             handle.abort();
                         } else {
                             warn!(
@@ -313,7 +311,7 @@ pub async fn setup_monitoring_future(
                     {
                         let mut handles_lock = handles.lock().await;
 
-                        for (server_id, handle) in handles_lock.iter_mut() {
+                        for (_, handle) in handles_lock.iter_mut() {
                             handle.abort();
                         }
 

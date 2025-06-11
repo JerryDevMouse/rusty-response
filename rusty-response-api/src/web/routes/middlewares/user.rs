@@ -2,11 +2,9 @@ use axum::{
     extract::{FromRequestParts, Request, State},
     http::request::Parts,
     middleware::Next,
-    response::{IntoResponse, Response},
+    response::Response,
 };
-use std::sync::Arc;
 use tower_cookies::Cookies;
-use tracing::debug;
 
 use crate::{
     crypt::JWTController,
@@ -52,7 +50,7 @@ where
 {
     type Rejection = WebError;
 
-    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
         let ctx = parts.extensions.get::<Ctx>();
         if let Some(ctx) = ctx {
             Ok(ctx.clone())

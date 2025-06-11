@@ -1,13 +1,9 @@
-use std::convert::Infallible;
-use std::str::FromStr;
-
 use super::Result;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use sqlx::{Row, Sqlite};
 use time::PrimitiveDateTime;
 
-use crate::model::user;
 use crate::{ModelManager, model::Ctx};
 
 static USER_ACTIONS: [&str; 6] = [
@@ -70,12 +66,12 @@ impl UserAction {
 impl std::fmt::Display for UserAction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            UserAction::ServerCreate { server_id } => write!(f, "server_create"),
-            UserAction::ServerDelete { server_id } => write!(f, "server_delete"),
-            UserAction::ServerModify { server_id } => write!(f, "server_modify"),
-            UserAction::UserSignup { user_id } => write!(f, "user_signup"),
-            UserAction::UserSignin { user_id } => write!(f, "user_signin"),
-            UserAction::UserVerifyAuth { user_id } => write!(f, "user_verifyauth"),
+            UserAction::ServerCreate { .. } => write!(f, "server_create"),
+            UserAction::ServerDelete { .. } => write!(f, "server_delete"),
+            UserAction::ServerModify { .. } => write!(f, "server_modify"),
+            UserAction::UserSignup { .. } => write!(f, "user_signup"),
+            UserAction::UserSignin { .. } => write!(f, "user_signin"),
+            UserAction::UserVerifyAuth { .. } => write!(f, "user_verifyauth"),
         }
     }
 }
@@ -148,7 +144,7 @@ impl UserActionLogBmc {
         Ok(log_line)
     }
 
-    pub async fn all(mm: &ModelManager, ctx: &Ctx) -> Result<Vec<UserActionLog>> {
+    pub async fn all(mm: &ModelManager, _ctx: &Ctx) -> Result<Vec<UserActionLog>> {
         let logs: Vec<UserActionLog> = sqlx::query_as("SELECT * FROM user_action_log")
             .fetch_all(&mm.pool)
             .await?;
@@ -156,7 +152,7 @@ impl UserActionLogBmc {
         Ok(logs)
     }
 
-    pub async fn get(mm: &ModelManager, ctx: &Ctx, id: i64) -> Result<Option<UserActionLog>> {
+    pub async fn get(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<Option<UserActionLog>> {
         let result =
             sqlx::query_as::<Sqlite, UserActionLog>("SELECT * FROM user_action_log WHERE id = ?")
                 .bind(id)
@@ -171,8 +167,8 @@ impl UserActionLogBmc {
         Ok(Some(result))
     }
 
-    pub async fn delete(mm: &ModelManager, ctx: &Ctx, id: i64) -> Result<()> {
-        let result = sqlx::query("DELETE FROM user_action_log WHERE id = ?")
+    pub async fn delete(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<()> {
+        sqlx::query("DELETE FROM user_action_log WHERE id = ?")
             .bind(id)
             .execute(&mm.pool)
             .await?;

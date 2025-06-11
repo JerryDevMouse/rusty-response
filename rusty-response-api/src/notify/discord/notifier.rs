@@ -4,7 +4,7 @@ use discord_webhook2::{message::Message, webhook::DiscordWebhook};
 use eyre::eyre;
 use serde::{Deserialize, Serialize};
 
-use crate::notify::{NotifierFormatter, notifier::Notifier};
+use crate::notify::notifier::Notifier;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct DiscordOptions {

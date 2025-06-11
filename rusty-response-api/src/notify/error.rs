@@ -20,7 +20,10 @@ pub enum Error {
     ModelErr(#[from] crate::model::ModelError),
 
     #[error("format error: {0}")]
-    FormatterErr(#[from] handlebars::RenderError),
+    FormatterRenderErr(#[from] handlebars::RenderError),
+
+    #[error("format error: {0}")]
+    FormatterErr(#[from] handlebars::TemplateError),
 
     #[error("error: {0}")]
     Other(#[from] eyre::Report),

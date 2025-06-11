@@ -1,8 +1,4 @@
-use axum::{
-    Json,
-    http::{Response, StatusCode},
-    response::IntoResponse,
-};
+use axum::{Json, http::StatusCode, response::IntoResponse};
 use serde_json::json;
 
 use crate::crypt::CryptError;
@@ -84,7 +80,7 @@ impl IntoResponse for WebError {
             WebError::DatabaseError(err) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Database error occurred. Try again later.",
-                None,
+                Some(format!("Error: {}", err)),
             ),
             WebError::InternalServerError(err) => (
                 StatusCode::INTERNAL_SERVER_ERROR,

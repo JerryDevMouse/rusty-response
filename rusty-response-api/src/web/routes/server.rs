@@ -5,6 +5,7 @@ use axum::{
     response::{IntoResponse, Response},
     routing::{get, post},
 };
+use eyre::Context;
 use reqwest::StatusCode;
 
 use crate::{
@@ -43,7 +44,8 @@ pub async fn create_server(
     // Send control message to monitoring backend to create a new monitoring instance dynamically
     state
         .control_tx
-        .send(crate::channel::ControlMessage::AddServer(srv.clone()));
+        .send(crate::channel::ControlMessage::AddServer(srv.clone()))
+        .wrap_err("Failed to send control message")?;
 
     UserActionLogBmc::log(&state.mm, &ctx, UserAction::server_create(srv.id)).await?;
     Ok((StatusCode::OK, Json(srv)).into_response())
@@ -87,7 +89,8 @@ pub async fn update_server(
         .control_tx
         .send(crate::channel::ControlMessage::ModifyServer(
             modified_server.clone(),
-        ));
+        ))
+        .wrap_err("Failed to send control message")?;
 
     UserActionLogBmc::log(
         &state.mm,
@@ -118,7 +121,8 @@ pub async fn remove_server(
 
     state
         .control_tx
-        .send(crate::channel::ControlMessage::RemoveServer(srv.id));
+        .send(crate::channel::ControlMessage::RemoveServer(srv.id))
+        .wrap_err("Failed to send control message")?;
 
     UserActionLogBmc::log(&state.mm, &ctx, UserAction::server_delete(srv.id)).await?;
     Ok((StatusCode::OK, Json(srv)).into_response())

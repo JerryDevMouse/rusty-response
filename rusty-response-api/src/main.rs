@@ -1,27 +1,12 @@
-#![allow(unused)]
+use std::sync::Arc;
 
-mod channel;
-mod crypt;
-mod model;
-mod notify;
-mod web;
-
-use std::{sync::Arc, time::Duration};
-
-use crate::{
-    channel::{ServerMessage, UnboundedMPSCController},
-    model::{Ctx, ServerBmc, UserBmc, UserCreate},
-    web::{AppState, RawState},
-};
-
-use axum::Router;
-use eyre::Result;
-pub use model::ModelManager;
-use model::UserClaims;
-use tokio::{net::TcpListener, signal, sync::mpsc};
+use rusty_response_api::{Ctx, ModelManager, channel, web};
+use tokio::{net::TcpListener, sync::mpsc};
 use tokio_util::sync::CancellationToken;
-use tracing::{debug, info, trace};
+use tracing::info;
 use tracing_subscriber::EnvFilter;
+
+use eyre::Result;
 
 fn setup_tracing() {
     use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt};
@@ -62,7 +47,7 @@ async fn run(mm: ModelManager) -> Result<()> {
     let servers_handle =
         channel::setup_monitoring_future(mm, control_rx, state.notify_manager.clone(), child_token);
 
-    tokio::join!(axum_handle, servers_handle); // wait for both to finish
+    let _ = tokio::join!(axum_handle, servers_handle); // wait for both to finish
 
     info!("Goodbye!");
 

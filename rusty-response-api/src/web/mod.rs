@@ -23,14 +23,14 @@ pub async fn app_state(
 
     Ok(RawState::new(
         mm.clone(),
-        "key".to_string(),
+        jwt.to_string(),
         control_tx.clone(),
         notify_manager,
     ))
 }
 
 pub fn app<S>(state: AppState) -> Router<S> {
-    let all_routes = Router::new()
+    Router::new()
         .nest(
             "/api/v1/account/",
             routes::user_routes(AppState::clone(&state)),
@@ -44,7 +44,5 @@ pub fn app<S>(state: AppState) -> Router<S> {
             routes::notify_routes(AppState::clone(&state)),
         )
         .layer(tower_cookies::CookieManagerLayer::new())
-        .with_state(AppState::clone(&state));
-
-    all_routes
+        .with_state(AppState::clone(&state))
 }

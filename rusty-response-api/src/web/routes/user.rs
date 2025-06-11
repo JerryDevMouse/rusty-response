@@ -3,19 +3,18 @@ use std::str::FromStr;
 use axum::{
     Json, Router,
     extract::State,
-    http::Extensions,
     middleware,
     response::{IntoResponse, Response},
     routing::{get, post},
 };
 use reqwest::StatusCode;
 use serde_json::json;
-use tower_cookies::{Cookie, Cookies, cookie::Expiration};
+use tower_cookies::{Cookie, Cookies};
 use tracing::debug;
 
 use crate::{
     crypt::{BcryptController, JWTController},
-    model::{Ctx, UserAction, UserActionLog, UserActionLogBmc, UserBmc, UserClaims, UserCreate},
+    model::{Ctx, UserAction, UserActionLogBmc, UserBmc, UserClaims, UserCreate},
     web::WebError,
 };
 
@@ -32,13 +31,11 @@ pub fn routes<S>(state: AppState) -> Router<S> {
             verify_token_middleware,
         ));
 
-    let router = Router::new()
+    Router::new()
         .route("/signup", post(user_signup))
         .route("/signin", post(user_signin))
         .merge(protected)
-        .with_state(state);
-
-    router
+        .with_state(state)
 }
 
 pub async fn user_verify(ctx: Ctx, State(state): State<AppState>) -> Result<Response, WebError> {
@@ -47,7 +44,7 @@ pub async fn user_verify(ctx: Ctx, State(state): State<AppState>) -> Result<Resp
         "message": "Account successfully verified!"
     });
 
-    UserActionLogBmc::log(&state.mm, &ctx, UserAction::user_verifyauth(ctx.user_id)).await;
+    UserActionLogBmc::log(&state.mm, &ctx, UserAction::user_verifyauth(ctx.user_id)).await?;
     Ok((StatusCode::OK, Json(body)).into_response())
 }
 

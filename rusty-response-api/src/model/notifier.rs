@@ -1,4 +1,3 @@
-use crate::model::notifier;
 use crate::{ModelManager, model::Ctx};
 
 use super::Result;
@@ -52,7 +51,7 @@ pub struct NotifierBmc;
 impl NotifierBmc {
     pub async fn notifiers_for(
         mm: &ModelManager,
-        ctx: &Ctx,
+        _ctx: &Ctx,
         server_id: i64,
     ) -> Result<Vec<Notifier>> {
         let rows = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE server_id = ?")
@@ -63,8 +62,8 @@ impl NotifierBmc {
         Ok(rows)
     }
 
-    pub async fn delete_notifier_for(mm: &ModelManager, ctx: &Ctx, server_id: i64) -> Result<()> {
-        let result = sqlx::query("DELETE FROM notifier WHERE server_id = ?")
+    pub async fn delete_notifier_for(mm: &ModelManager, _ctx: &Ctx, server_id: i64) -> Result<()> {
+        sqlx::query("DELETE FROM notifier WHERE server_id = ?")
             .bind(server_id)
             .execute(&mm.pool)
             .await?;
@@ -116,7 +115,7 @@ impl NotifierBmc {
 
     pub async fn all_ol(
         mm: &ModelManager,
-        ctx: &Ctx,
+        _ctx: &Ctx,
         offset: i64,
         limit: i64,
     ) -> Result<Vec<Notifier>> {
@@ -129,7 +128,7 @@ impl NotifierBmc {
         Ok(rows)
     }
 
-    pub async fn all(mm: &ModelManager, ctx: &Ctx) -> Result<Vec<Notifier>> {
+    pub async fn all(mm: &ModelManager, _ctx: &Ctx) -> Result<Vec<Notifier>> {
         let rows = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier")
             .fetch_all(&mm.pool)
             .await?;
@@ -137,7 +136,7 @@ impl NotifierBmc {
         Ok(rows)
     }
 
-    pub async fn get(mm: &ModelManager, ctx: &Ctx, id: i64) -> Result<Option<Notifier>> {
+    pub async fn get(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<Option<Notifier>> {
         let result = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE id = ?")
             .bind(id)
             .fetch_one(&mm.pool)
@@ -151,8 +150,8 @@ impl NotifierBmc {
         Ok(Some(result))
     }
 
-    pub async fn delete(mm: &ModelManager, ctx: &Ctx, id: i64) -> Result<()> {
-        let result = sqlx::query("DELETE FROM notifier WHERE id = ?")
+    pub async fn delete(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<()> {
+        sqlx::query("DELETE FROM notifier WHERE id = ?")
             .bind(id)
             .execute(&mm.pool)
             .await?;

@@ -115,7 +115,7 @@ impl NotifyManager {
 
             self.formatter
                 .load_format(&notifier_key, &db_notifier.format)
-                .await;
+                .await?;
 
             let provider = match NotifierType::from_str(&db_notifier.provider) {
                 Ok(p) => p,
@@ -173,7 +173,7 @@ impl NotifyManager {
 
         self.formatter
             .load_format(&notifier_key, &notifier.format)
-            .await;
+            .await?;
 
         let mut lock = self.inner.write().await;
         lock.by_id.insert(
@@ -222,7 +222,7 @@ impl NotifyManager {
             Some(id_set) => id_set
                 .iter()
                 .filter_map(|id| lock.by_id.get(id))
-                .map(|meta| meta.clone())
+                .cloned()
                 .collect(),
             None => vec![],
         }
@@ -239,5 +239,11 @@ impl NotifyManager {
         }
 
         Ok(())
+    }
+}
+
+impl Default for NotifyManager {
+    fn default() -> Self {
+        Self::new()
     }
 }

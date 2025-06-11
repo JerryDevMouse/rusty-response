@@ -2,7 +2,7 @@ use eyre::Result;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 use sqlx::{Row, Sqlite};
-use time::{Date, PrimitiveDateTime};
+use time::PrimitiveDateTime;
 
 use super::{Ctx, ModelManager};
 
@@ -98,12 +98,12 @@ impl ServerBmc {
 
     pub async fn update_status<S: Into<String>>(
         mm: &ModelManager,
-        ctx: &Ctx,
+        _ctx: &Ctx,
         id: i64,
         reason: S,
         code: i64,
     ) -> Result<()> {
-        let result = sqlx::query(
+        sqlx::query(
             "UPDATE server SET last_seen_reason = ?, last_seen_status_code = ? WHERE id = ?",
         )
         .bind(reason.into())
@@ -117,7 +117,7 @@ impl ServerBmc {
 
     pub async fn update_server(
         mm: &ModelManager,
-        ctx: &Ctx,
+        _ctx: &Ctx,
         id: i64,
         sc: ServerCreate,
     ) -> Result<PrimitiveDateTime> {
@@ -129,7 +129,7 @@ impl ServerBmc {
         let now = time::UtcDateTime::now();
         let updated_at = PrimitiveDateTime::new(now.date(), now.time());
 
-        let result = sqlx::query(
+        sqlx::query(
             "UPDATE server SET name = ?, url = ?, timeout = ?, interval = ?, is_turned_on = ?, updated_at = ? WHERE id = ?"
         )
         .bind(&name)
@@ -145,7 +145,7 @@ impl ServerBmc {
         Ok(updated_at)
     }
 
-    pub async fn all(mm: &ModelManager, ctx: &Ctx) -> Result<Vec<Server>> {
+    pub async fn all(mm: &ModelManager, _ctx: &Ctx) -> Result<Vec<Server>> {
         let result = sqlx::query_as::<Sqlite, Server>("SELECT * FROM server;")
             .fetch_all(&mm.pool)
             .await?;
@@ -153,7 +153,7 @@ impl ServerBmc {
         Ok(result)
     }
 
-    pub async fn get_by_name(mm: &ModelManager, ctx: &Ctx, name: &str) -> Result<Option<Server>> {
+    pub async fn get_by_name(mm: &ModelManager, _ctx: &Ctx, name: &str) -> Result<Option<Server>> {
         let result = sqlx::query_as::<Sqlite, Server>("SELECT * FROM server WHERE name = ?")
             .bind(name)
             .fetch_one(&mm.pool)
@@ -168,7 +168,7 @@ impl ServerBmc {
         Ok(Some(result))
     }
 
-    pub async fn get_by_id(mm: &ModelManager, ctx: &Ctx, id: i64) -> Result<Option<Server>> {
+    pub async fn get_by_id(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<Option<Server>> {
         let result = sqlx::query_as::<Sqlite, Server>("SELECT * FROM server WHERE id = ?")
             .bind(id)
             .fetch_one(&mm.pool)
@@ -182,8 +182,8 @@ impl ServerBmc {
         Ok(Some(result))
     }
 
-    pub async fn remove_by_id(mm: &ModelManager, ctx: &Ctx, id: i64) -> Result<()> {
-        let result = sqlx::query("DELETE FROM server WHERE id = ?")
+    pub async fn remove_by_id(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<()> {
+        sqlx::query("DELETE FROM server WHERE id = ?")
             .bind(id)
             .execute(&mm.pool)
             .await?;

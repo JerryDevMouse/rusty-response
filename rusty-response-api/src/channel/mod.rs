@@ -34,3 +34,9 @@ impl<T> UnboundedMPSCController<T> {
         self.receiever
     }
 }
+
+impl<T> Default for UnboundedMPSCController<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}

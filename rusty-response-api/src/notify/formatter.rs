@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use super::Result;
-use crate::model::{Notifier as NotifierModel, ServerLogLine};
-use handlebars::{Handlebars, Template};
+use crate::model::ServerLogLine;
+use handlebars::Handlebars;
 use serde::Serialize;
 use tokio::sync::RwLock;
 
@@ -22,13 +22,14 @@ impl HJSFormatter {
         }
     }
 
-    pub async fn load_format(&self, key: &str, format: &str) {
+    pub async fn load_format(&self, key: &str, format: &str) -> Result<()> {
         let mut lock = self.inner.write().await;
-        lock.register_template_string(key, format.to_string());
+        lock.register_template_string(key, format)?;
+        Ok(())
     }
 
     pub async fn format<T: Serialize>(&self, key: &str, data: &T) -> Result<String> {
-        let mut lock = self.inner.write().await;
+        let lock = self.inner.read().await;
         let formatted = lock.render(key, data)?;
         Ok(formatted)
     }

@@ -3,11 +3,10 @@ use crate::crypt::BcryptController;
 use crate::model::ModelError;
 use eyre::Result;
 use serde::{Deserialize, Serialize};
-use sqlx::{FromRow, Row, Sqlite};
+use sqlx::{Row, Sqlite};
 use std::fmt::Display;
 use std::str::FromStr;
 use time::PrimitiveDateTime;
-use tracing::debug;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub enum UserRole {
@@ -40,6 +39,7 @@ impl FromStr for UserRole {
 }
 
 #[derive(Serialize, Debug, Clone, sqlx::FromRow)]
+#[cfg_attr(feature = "test-utils", derive(Deserialize))]
 pub struct User {
     pub id: i64,
     pub username: String,
@@ -51,6 +51,7 @@ pub struct User {
 }
 
 #[derive(Deserialize, Debug)]
+#[cfg_attr(feature = "test-utils", derive(Serialize))]
 pub struct UserCreate {
     pub username: String,
     pub password_raw: String,

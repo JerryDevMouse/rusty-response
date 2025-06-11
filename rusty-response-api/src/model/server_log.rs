@@ -61,7 +61,7 @@ impl ServerLogCreate {
 pub struct ServerLogBmc;
 
 impl ServerLogBmc {
-    pub async fn insert(mm: &ModelManager, ctx: &Ctx, slc: ServerLogCreate) -> Result<ServerLog> {
+    pub async fn insert(mm: &ModelManager, _ctx: &Ctx, slc: ServerLogCreate) -> Result<ServerLog> {
         let server_id = slc.server_id;
         let failed = slc.failed;
         let status_code = slc.status_code;
@@ -97,7 +97,7 @@ impl ServerLogBmc {
 
     pub async fn all_limited(
         mm: &ModelManager,
-        ctx: &Ctx,
+        _ctx: &Ctx,
         offset: i64,
         limit: i64,
     ) -> Result<Vec<ServerLog>> {
@@ -110,7 +110,7 @@ impl ServerLogBmc {
         Ok(logs)
     }
 
-    pub async fn all(mm: &ModelManager, ctx: &Ctx) -> Result<Vec<ServerLog>> {
+    pub async fn all(mm: &ModelManager, _ctx: &Ctx) -> Result<Vec<ServerLog>> {
         let logs = sqlx::query_as::<Sqlite, ServerLog>("SELECT * FROM server_log")
             .fetch_all(&mm.pool)
             .await?;
@@ -118,8 +118,8 @@ impl ServerLogBmc {
         Ok(logs)
     }
 
-    pub async fn delete(mm: &ModelManager, ctx: &Ctx, id: i64) -> Result<()> {
-        let result = sqlx::query("DELETE FROM server_log WHERE id = ?")
+    pub async fn delete(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<()> {
+        sqlx::query("DELETE FROM server_log WHERE id = ?")
             .bind(id)
             .execute(&mm.pool)
             .await?;
