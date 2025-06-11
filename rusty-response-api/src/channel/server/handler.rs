@@ -9,12 +9,14 @@ use crate::{
     ModelManager,
     channel::ServerMessage,
     model::{Ctx, ServerBmc, ServerLogBmc, ServerLogCreate},
+    notify::NotifyManager,
 };
 
 pub async fn handle_server_response(
     msg: ServerMessage,
     mm: &ModelManager,
     ctx: &Ctx,
+    notify_manager: &NotifyManager,
     statuses: Arc<Mutex<BTreeMap<i64, (i64, String)>>>,
 ) {
     let mut statuses = statuses.lock().await;
@@ -33,12 +35,23 @@ pub async fn handle_server_response(
                     body,
                     &mut statuses,
                     mm,
+                    notify_manager,
                     ctx,
                 )
                 .await;
             }
             super::ServerStatus::Online { status_code, body } => {
-                handle_arm(server_id, status_code, None, body, &mut statuses, mm, ctx).await;
+                handle_arm(
+                    server_id,
+                    status_code,
+                    None,
+                    body,
+                    &mut statuses,
+                    mm,
+                    notify_manager,
+                    ctx,
+                )
+                .await;
             }
         },
         ServerMessage::ChannelError { server_id, .. } => {
@@ -49,6 +62,7 @@ pub async fn handle_server_response(
                 vec![],
                 &mut statuses,
                 mm,
+                notify_manager,
                 ctx,
             )
             .await;
@@ -63,6 +77,7 @@ async fn handle_arm(
     body: Vec<u8>,
     statuses: &mut BTreeMap<i64, (i64, String)>,
     mm: &ModelManager,
+    notify_manager: &NotifyManager,
     ctx: &Ctx,
 ) {
     let code = status_code.as_u16() as i64;
@@ -96,4 +111,9 @@ async fn handle_arm(
             server_id, e
         );
     }
+
+    let log_line = serde_json::to_string(&log_line).expect("unable to serialize log line");
+
+    // TODO: Formatting
+    notify_manager.notify(server_id, log_line).await;
 }

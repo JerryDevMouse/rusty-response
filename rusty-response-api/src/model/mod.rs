@@ -5,14 +5,14 @@ mod server_log;
 mod user;
 mod user_action;
 
+pub use notifier::{Notifier, NotifierBmc, NotifierCreate};
 pub use server::{Server, ServerBmc, ServerCreate};
 pub use server_log::{ServerLog, ServerLogBmc, ServerLogCreate};
 pub use user::{User, UserBmc, UserClaims, UserCreate, UserRole};
 pub use user_action::{UserAction, UserActionLog, UserActionLogBmc, UserActionLogCreate};
 
-pub use error::ModelError;
+pub use error::{ModelError, Result};
 
-use eyre::Result;
 use sqlx::migrate::Migrator;
 use sqlx::sqlite::SqliteConnectOptions;
 use sqlx::{Pool, Sqlite};

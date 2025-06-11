@@ -32,7 +32,9 @@ impl FromStr for UserRole {
         match s {
             "admin" => Ok(UserRole::Admin),
             "user" => Ok(UserRole::User),
-            _ => Err(ModelError::invalid_user_role(s)),
+            _ => Err(ModelError::InvalidUserRole {
+                given: s.to_string(),
+            }),
         }
     }
 }

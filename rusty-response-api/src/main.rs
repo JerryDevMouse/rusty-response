@@ -36,7 +36,7 @@ fn setup_tracing() {
 async fn main() -> Result<()> {
     setup_tracing();
     let mm = ModelManager::new("./sqlite.db");
-    mm.migrate("migrations").await?;
+    mm.migrate("./rusty-response-api/migrations").await?;
 
     run(mm).await?;
 
@@ -46,18 +46,22 @@ async fn main() -> Result<()> {
 async fn run(mm: ModelManager) -> Result<()> {
     let (control_tx, control_rx) = mpsc::unbounded_channel();
     let cancel_token = CancellationToken::new();
-
+    let child_token = cancel_token.child_token();
     let admin_ctx = Ctx::admin_root();
 
-    let app = web::app(web::app_state(&mm, "key", control_tx));
+    let state = web::app_state(&mm, "key", &admin_ctx, control_tx.clone()).await?;
+    let app = web::app(Arc::clone(&state));
     let listener = TcpListener::bind("127.0.0.1:5000").await?;
 
     // TODO & FIXME: Configs
     info!("Server started at 127.0.0.1:5000");
-    let axum_handle = axum::serve(listener, app)
-        .with_graceful_shutdown(web::shutdown_signal(cancel_token.clone()));
 
-    let servers_handle = channel::setup_monitoring_future(mm, control_rx, cancel_token);
+    let axum_handle = axum::serve(listener, app)
+        .with_graceful_shutdown(web::shutdown_signal(cancel_token.clone(), control_tx));
+
+    let servers_handle =
+        channel::setup_monitoring_future(mm, control_rx, state.notify_manager.clone(), child_token);
+
     tokio::join!(axum_handle, servers_handle); // wait for both to finish
 
     info!("Goodbye!");

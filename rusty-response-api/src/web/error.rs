@@ -36,6 +36,9 @@ pub enum WebError {
     ServerNotAllowed,
 
     #[error("Internal server error")]
+    DatabaseError(#[from] crate::model::ModelError),
+
+    #[error("Internal server error")]
     InternalServerError(#[from] eyre::Error),
 }
 
@@ -68,6 +71,11 @@ impl IntoResponse for WebError {
             WebError::ServerNotAllowed => (
                 StatusCode::FORBIDDEN,
                 "You don't own that server to interact with it",
+                None,
+            ),
+            WebError::DatabaseError(err) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Database error occurred. Try again later.",
                 None,
             ),
             WebError::InternalServerError(err) => (

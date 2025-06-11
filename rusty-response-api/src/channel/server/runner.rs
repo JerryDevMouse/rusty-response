@@ -5,6 +5,7 @@ use tokio::{
     sync::{Mutex, mpsc},
     task::JoinHandle,
 };
+use tokio_util::sync::CancellationToken;
 use tracing::{debug, error, trace, warn};
 
 use crate::{
@@ -17,6 +18,7 @@ use crate::{
         },
     },
     model::{Ctx, Server, ServerBmc},
+    notify::NotifyManager,
 };
 
 async fn payload(
@@ -103,6 +105,7 @@ async fn payload(
         tokio::select! {
             _ = tokio::time::sleep(interval) => {},
             _ = cancellation_token.cancelled() => {
+                trace!("Payload for server {} shut down successfully", server.id);
                 break;
             }
         }
@@ -112,7 +115,8 @@ async fn payload(
 pub async fn setup_monitoring_future(
     mm: ModelManager,
     control_rx: mpsc::UnboundedReceiver<ControlMessage>,
-    cancellation_token: tokio_util::sync::CancellationToken,
+    notify_manager: NotifyManager,
+    cancellation_token: CancellationToken,
 ) {
     let mut mpsc = UnboundedMPSCController::<ServerMessage>::new();
     let admin_ctx = Ctx::admin_root();
@@ -179,6 +183,7 @@ pub async fn setup_monitoring_future(
                 msg,
                 &mm_clone,
                 &admin_ctx_clone,
+                &notify_manager,
                 Arc::clone(&statuses_clone),
             )
             .await;
@@ -301,18 +306,12 @@ pub async fn setup_monitoring_future(
                 }
                 ControlMessage::Shutdown => {
                     debug!("Shutdown requested. Shutting down...");
-                    cancellation_token.cancel();
 
                     {
                         let mut handles_lock = handles.lock().await;
 
                         for (server_id, handle) in handles_lock.iter_mut() {
-                            match handle.await {
-                                Ok(_) => {
-                                    debug!("Shut down future for server {} cleanly", server_id)
-                                }
-                                Err(e) => error!("Task for server {} panicked: {:?}", server_id, e),
-                            }
+                            handle.abort();
                         }
 
                         handles_lock.clear();
@@ -323,7 +322,6 @@ pub async fn setup_monitoring_future(
             }
         }
     });
-
     let _ = tokio::join!(updates, control);
 
     debug!("Monitoring backend has been shut down.");

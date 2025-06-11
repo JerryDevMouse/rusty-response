@@ -9,15 +9,24 @@ pub use utils::shutdown_signal;
 
 use axum::Router;
 
-use crate::{ModelManager, channel::ControlMessage};
+use crate::{ModelManager, channel::ControlMessage, model::Ctx, notify::NotifyManager};
 
 // TODO: Provide config
-pub fn app_state(
+pub async fn app_state(
     mm: &ModelManager,
     jwt: &str,
+    ctx: &Ctx,
     control_tx: UnboundedSender<ControlMessage>,
-) -> AppState {
-    RawState::new(mm.clone(), "key".to_string(), control_tx.clone())
+) -> Result<AppState, eyre::Report> {
+    let notify_manager = NotifyManager::new();
+    notify_manager.extend_from_db(mm, ctx).await?;
+
+    Ok(RawState::new(
+        mm.clone(),
+        "key".to_string(),
+        control_tx.clone(),
+        notify_manager,
+    ))
 }
 
 pub fn app<S>(state: AppState) -> Router<S> {

@@ -9,22 +9,22 @@ use time::PrimitiveDateTime;
 
 #[derive(Debug, Clone, FromRow, Serialize)]
 pub struct Notifier {
-    id: i64,
-    user_id: i64,
-    server_id: i64,
-    provider: String,
-    credentials: Value,
-    active: bool,
-    created_at: PrimitiveDateTime,
-    updated_at: PrimitiveDateTime,
+    pub id: i64,
+    pub user_id: i64,
+    pub server_id: i64,
+    pub provider: String,
+    pub credentials: Value,
+    pub active: bool,
+    pub created_at: PrimitiveDateTime,
+    pub updated_at: PrimitiveDateTime,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct NotifierCreate {
-    server_id: i64,
-    provider: String,
-    credentials: Value, // JSON object from request body
-    active: Option<bool>,
+    pub server_id: i64,
+    pub provider: String,
+    pub credentials: Value, // JSON object from request body
+    pub active: Option<bool>,
 }
 
 impl NotifierCreate {

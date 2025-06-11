@@ -7,22 +7,29 @@ pub use server::routes as server_routes;
 use tokio::sync::mpsc::UnboundedSender;
 pub use user::routes as user_routes;
 
-use crate::{ModelManager, channel::ControlMessage};
+use crate::{ModelManager, channel::ControlMessage, notify::NotifyManager};
 
 pub struct RawState {
-    mm: ModelManager,
+    pub mm: ModelManager,
     secret: String,
-    control_tx: UnboundedSender<ControlMessage>,
+    pub control_tx: UnboundedSender<ControlMessage>,
+    pub notify_manager: NotifyManager,
 }
 
 pub type AppState = std::sync::Arc<RawState>;
 
 impl RawState {
-    pub fn new(mm: ModelManager, secret: String, tx: UnboundedSender<ControlMessage>) -> AppState {
+    pub fn new(
+        mm: ModelManager,
+        secret: String,
+        tx: UnboundedSender<ControlMessage>,
+        notify_manager: NotifyManager,
+    ) -> AppState {
         AppState::new(Self {
             mm,
             secret,
             control_tx: tx,
+            notify_manager,
         })
     }
 }
