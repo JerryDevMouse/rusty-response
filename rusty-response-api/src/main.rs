@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
-use rusty_response_api::{Ctx, ModelManager, channel, web};
+use rusty_response_api::{Ctx, ModelManager, Settings, channel, web};
 use tokio::{net::TcpListener, sync::mpsc};
 use tokio_util::sync::CancellationToken;
-use tracing::info;
+use tracing::{debug, info};
 use tracing_subscriber::EnvFilter;
 
 use eyre::Result;
@@ -20,8 +20,11 @@ fn setup_tracing() {
 #[tokio::main]
 async fn main() -> Result<()> {
     setup_tracing();
-    let mm = ModelManager::new("./sqlite.db");
-    mm.migrate("./rusty-response-api/migrations").await?;
+    let config = Settings::global().database();
+
+    debug!("Setting up SQLite database at: {}.", config.path());
+    let mm = ModelManager::new(config.path());
+    mm.migrate().await?;
 
     run(mm).await?;
 
@@ -33,13 +36,21 @@ async fn run(mm: ModelManager) -> Result<()> {
     let cancel_token = CancellationToken::new();
     let child_token = cancel_token.child_token();
     let admin_ctx = Ctx::admin_root();
+    let config = Settings::global();
 
-    let state = web::app_state(&mm, "key", &admin_ctx, control_tx.clone()).await?;
+    let state = web::app_state(
+        &mm,
+        config.app().jwt().jwt_secret(),
+        &admin_ctx,
+        control_tx.clone(),
+    )
+    .await?;
+
+    let addr = format!("{}:{}", config.net().host(), config.net().port());
     let app = web::app(Arc::clone(&state));
-    let listener = TcpListener::bind("127.0.0.1:5000").await?;
+    let listener = TcpListener::bind(&addr).await?;
 
-    // TODO & FIXME: Configs
-    info!("Server started at 127.0.0.1:5000");
+    info!("Server started at {}", addr);
 
     let axum_handle = axum::serve(listener, app)
         .with_graceful_shutdown(web::shutdown_signal(cancel_token.clone(), control_tx));

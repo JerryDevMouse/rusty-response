@@ -250,8 +250,7 @@ impl Default for NotifyManager {
 
 #[cfg(test)]
 mod test {
-    use serde_json::Map;
-    use time::{Date, PrimitiveDateTime, UtcDateTime};
+    use time::{PrimitiveDateTime, UtcDateTime};
 
     use crate::notify::telegram::TelegramOptions;
 

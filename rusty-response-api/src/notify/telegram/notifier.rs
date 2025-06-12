@@ -12,6 +12,7 @@ pub struct TelegramOptions {
     token: String,
 }
 
+#[cfg(test)]
 impl TelegramOptions {
     pub fn new(chat_id: i64, token: &str) -> Self {
         Self {

@@ -56,6 +56,9 @@ discord-webhook2 = "0.4.3"
 # Formatting
 handlebars = "6.3"
 
+# Configs
+config = "0.15"
+
 [features]
 default = []
 events = []

@@ -11,7 +11,6 @@ use axum::Router;
 
 use crate::{ModelManager, channel::ControlMessage, model::Ctx, notify::NotifyManager};
 
-// TODO: Provide config
 pub async fn app_state(
     mm: &ModelManager,
     jwt: &str,

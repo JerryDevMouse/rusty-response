@@ -13,6 +13,7 @@ use tower_cookies::{Cookie, Cookies};
 use tracing::debug;
 
 use crate::{
+    Settings,
     crypt::{BcryptController, JWTController},
     model::{Ctx, UserAction, UserActionLogBmc, UserBmc, UserClaims, UserCreate},
     web::WebError,
@@ -74,8 +75,9 @@ pub async fn user_signin(
     let token = JWTController::generate_token(claims, &state.secret)?;
 
     let mut cookie = Cookie::new(AUTH_TOKEN, token);
+    let expire_time = Settings::global().app().jwt().expire_time();
     cookie.set_path("/");
-    cookie.set_expires(time::OffsetDateTime::now_utc() + time::Duration::hours(1));
+    cookie.set_expires(time::OffsetDateTime::now_utc() + time::Duration::seconds(expire_time));
     cookies.add(cookie);
 
     UserActionLogBmc::log(
@@ -112,8 +114,9 @@ pub async fn user_signup(
     let token = JWTController::generate_token(claims, &state.secret)?;
 
     let mut cookie = Cookie::new(AUTH_TOKEN, token);
+    let expire_time = Settings::global().app().jwt().expire_time();
     cookie.set_path("/");
-    cookie.set_expires(time::OffsetDateTime::now_utc() + time::Duration::hours(1));
+    cookie.set_expires(time::OffsetDateTime::now_utc() + time::Duration::seconds(expire_time));
     cookies.add(cookie);
 
     UserActionLogBmc::log(
