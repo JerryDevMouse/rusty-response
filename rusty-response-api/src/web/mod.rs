@@ -5,6 +5,7 @@ mod utils;
 pub use error::WebError;
 pub use routes::{AppState, RawState, server_routes, user_routes};
 use tokio::sync::mpsc::UnboundedSender;
+use tower_http::cors::CorsLayer;
 pub use utils::shutdown_signal;
 
 use axum::Router;
@@ -43,5 +44,6 @@ pub fn app<S>(state: AppState) -> Router<S> {
             routes::notify_routes(AppState::clone(&state)),
         )
         .layer(tower_cookies::CookieManagerLayer::new())
+        .layer(CorsLayer::very_permissive())
         .with_state(AppState::clone(&state))
 }

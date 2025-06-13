@@ -46,7 +46,7 @@ impl ModelManager {
     }
 
     pub async fn migrate(&self) -> Result<()> {
-        sqlx::migrate!("./migrations");
+        sqlx::migrate!("./migrations").run(&self.pool).await?;
         Ok(())
     }
 }
