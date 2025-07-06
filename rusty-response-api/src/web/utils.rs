@@ -16,6 +16,7 @@ pub async fn shutdown_signal(
 
     tokio::select! {
         _ = ctrl_c => {
+            #[cfg(not(windows))]
             println!();
             info!("Ctrl+C received. Please wait, this could take a while.");
             token.cancel();
