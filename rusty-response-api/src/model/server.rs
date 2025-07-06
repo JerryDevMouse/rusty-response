@@ -153,6 +153,15 @@ impl ServerBmc {
         Ok(result)
     }
 
+    pub async fn all_for_user(mm: &ModelManager, ctx: &Ctx) -> Result<Vec<Server>> {
+        let result = sqlx::query_as::<Sqlite, Server>("SELECT * FROM server WHERE user_id = ?;")
+            .bind(&ctx.user_id)
+            .fetch_all(&mm.pool)
+            .await?;
+
+        Ok(result)
+    }
+
     pub async fn get_by_name(mm: &ModelManager, _ctx: &Ctx, name: &str) -> Result<Option<Server>> {
         let result = sqlx::query_as::<Sqlite, Server>("SELECT * FROM server WHERE name = ?")
             .bind(name)

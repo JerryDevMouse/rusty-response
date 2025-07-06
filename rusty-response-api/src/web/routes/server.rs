@@ -17,7 +17,7 @@ use super::{AppState, middlewares::verify_token_middleware};
 
 pub fn routes<S>(state: AppState) -> Router<S> {
     Router::new()
-        .route("/", post(create_server))
+        .route("/", post(create_server).get(list_servers))
         .route(
             "/{id}",
             get(get_server).delete(remove_server).put(update_server),
@@ -49,6 +49,16 @@ pub async fn create_server(
 
     UserActionLogBmc::log(&state.mm, &ctx, UserAction::server_create(srv.id)).await?;
     Ok((StatusCode::OK, Json(srv)).into_response())
+}
+
+pub async fn list_servers(
+    State(state): State<AppState>, 
+    ctx: Ctx
+) -> Result<Response, WebError> {
+    let servers = ServerBmc::all_for_user(&state.mm, &ctx)
+        .await?;
+
+    Ok((StatusCode::OK, Json(servers)).into_response())
 }
 
 pub async fn update_server(
