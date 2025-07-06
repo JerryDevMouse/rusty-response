@@ -174,5 +174,5 @@ fn default_expire_time() -> i64 {
 }
 
 fn default_database_path() -> String {
-    "./rusty-response-api/sqlite.db".to_string()
+    std::env::current_dir().unwrap().join("sqlite.db").display().to_string()
 }

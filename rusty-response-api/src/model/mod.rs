@@ -46,7 +46,8 @@ impl ModelManager {
     }
 
     pub async fn migrate(&self) -> Result<()> {
-        sqlx::migrate!("./migrations").run(&self.pool).await?;
+        let migrator = sqlx::migrate::Migrator::new(Path::new("./rusty-response-api/migrations")).await?;
+        migrator.run(&self.pool).await?;
         Ok(())
     }
 }
