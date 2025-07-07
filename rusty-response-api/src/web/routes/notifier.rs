@@ -9,8 +9,8 @@ use reqwest::StatusCode;
 use serde_json::json;
 
 use crate::{
-    model::{Ctx, NotifierBmc, NotifierCreate, ServerBmc, UserRole},
-    web::{WebError, routes::PaginationQuery},
+    model::{Ctx, Notifier, NotifierBmc, NotifierCreate, ServerBmc, UserRole},
+    web::{routes::PaginationQuery, WebError},
 };
 
 use super::{AppState, middlewares::verify_token_middleware};
@@ -77,7 +77,21 @@ async fn notifier_modify(
         return Err(WebError::NotifierNotAllowed);
     }
 
-    NotifierBmc::update_notifier(&state.mm, &ctx, id, payload).await?;
+    let updated_at = NotifierBmc::update_notifier(&state.mm, &ctx, id, &payload).await?;
+    let modified_notifier = Notifier {
+        id,
+        user_id: found.user_id,
+        server_id: payload.server_id,
+        provider: payload.provider,
+        credentials: payload.credentials,
+        format: payload.format,
+        active: payload.active.unwrap_or(found.active),
+        created_at: found.created_at,
+        updated_at,
+    };
+
+    state.notify_manager.remove_by_nid(found.id).await?;
+    state.notify_manager.add(&modified_notifier).await?;
 
     Ok((StatusCode::OK, Json(json!({"message": "Success"}))).into_response())
 }

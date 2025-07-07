@@ -86,11 +86,11 @@ impl NotifierBmc {
         mm: &ModelManager,
         _ctx: &Ctx,
         notifier_id: i64,
-        nfc: NotifierCreate,
-    ) -> Result<()> {
+        nfc: &NotifierCreate,
+    ) -> Result<PrimitiveDateTime> {
         let now = time::UtcDateTime::now();
         let updated_at = PrimitiveDateTime::new(now.date(), now.time());
-        sqlx::query("UPDATE notifier SET server_id = ?, provider = ?, credentials = ?, format = ?, active = ?, updated_at = ? WHERE id = ?")
+        let row = sqlx::query("UPDATE notifier SET server_id = ?, provider = ?, credentials = ?, format = ?, active = ?, updated_at = ? WHERE id = ? RETURNING updated_at")
             .bind(nfc.server_id)
             .bind(&nfc.provider)
             .bind(&nfc.credentials)
@@ -98,9 +98,10 @@ impl NotifierBmc {
             .bind(nfc.active)
             .bind(updated_at)
             .bind(notifier_id)
-            .execute(&mm.pool)
+            .fetch_one(&mm.pool)
             .await?;
-        Ok(())
+        let updated_at: PrimitiveDateTime = row.try_get("updated_at")?;
+        Ok(updated_at)
     }
 
     pub async fn list(
