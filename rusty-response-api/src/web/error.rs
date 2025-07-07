@@ -31,6 +31,12 @@ pub enum WebError {
     #[error("Not your server")]
     ServerNotAllowed,
 
+    #[error("Notifier not found")]
+    NotifierNotFound,
+
+    #[error("Not your notifier")]
+    NotifierNotAllowed,
+
     #[error(transparent)]
     NotifierError(#[from] crate::notify::Error),
 
@@ -76,6 +82,12 @@ impl IntoResponse for WebError {
                 StatusCode::BAD_REQUEST,
                 "Notifier error occured.",
                 Some(e.to_string()),
+            ),
+            WebError::NotifierNotFound => (StatusCode::NOT_FOUND, "Notifier not found", None),
+            WebError::NotifierNotAllowed => (
+                StatusCode::FORBIDDEN,
+                "You don't own that notifier to interact with it",
+                None,
             ),
             WebError::DatabaseError(err) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
