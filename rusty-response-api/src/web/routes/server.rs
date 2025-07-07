@@ -1,6 +1,6 @@
 use axum::{
     Json, Router,
-    extract::{Path, State},
+    extract::{Path, Query, State},
     middleware,
     response::{IntoResponse, Response},
     routing::{get, post},
@@ -10,7 +10,7 @@ use reqwest::StatusCode;
 
 use crate::{
     model::{Ctx, Server, ServerBmc, ServerCreate, UserAction, UserActionLogBmc, UserRole},
-    web::WebError,
+    web::{WebError, routes::PaginationQuery},
 };
 
 use super::{AppState, middlewares::verify_token_middleware};
@@ -52,11 +52,14 @@ pub async fn create_server(
 }
 
 pub async fn list_servers(
-    State(state): State<AppState>, 
-    ctx: Ctx
+    State(state): State<AppState>,
+    Query(query): Query<PaginationQuery>,
+    ctx: Ctx,
 ) -> Result<Response, WebError> {
-    let servers = ServerBmc::all_for_user(&state.mm, &ctx)
-        .await?;
+    let limit = query.limit.unwrap_or(10);
+    let offset = query.offset.unwrap_or(0);
+
+    let servers = ServerBmc::list(&state.mm, &ctx, Some((limit, offset).into())).await?;
 
     Ok((StatusCode::OK, Json(servers)).into_response())
 }
