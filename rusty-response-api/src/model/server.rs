@@ -1,3 +1,4 @@
+use super::PaginationArguments;
 use eyre::Result;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
@@ -153,11 +154,26 @@ impl ServerBmc {
         Ok(result)
     }
 
-    pub async fn all_for_user(mm: &ModelManager, ctx: &Ctx) -> Result<Vec<Server>> {
-        let result = sqlx::query_as::<Sqlite, Server>("SELECT * FROM server WHERE user_id = ?;")
-            .bind(&ctx.user_id)
+    pub async fn list(
+        mm: &ModelManager,
+        ctx: &Ctx,
+        args: Option<PaginationArguments>,
+    ) -> Result<Vec<Server>> {
+        let result = if let Some(args) = args {
+            sqlx::query_as::<Sqlite, Server>(
+                "SELECT * FROM server WHERE user_id = ? LIMIT ? OFFSET ?",
+            )
+            .bind(ctx.user_id)
+            .bind(args.limit)
+            .bind(args.offset)
             .fetch_all(&mm.pool)
-            .await?;
+            .await?
+        } else {
+            sqlx::query_as::<Sqlite, Server>("SELECT * FROM server WHERE user_id = ?")
+                .bind(ctx.user_id)
+                .fetch_all(&mm.pool)
+                .await?
+        };
 
         Ok(result)
     }

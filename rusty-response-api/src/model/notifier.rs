@@ -1,4 +1,7 @@
-use crate::{ModelManager, model::Ctx};
+use crate::{
+    ModelManager,
+    model::{Ctx, PaginationArguments},
+};
 
 use super::Result;
 use serde::{Deserialize, Serialize};
@@ -60,6 +63,69 @@ impl NotifierBmc {
             .await?;
 
         Ok(rows)
+    }
+
+    pub async fn find_by_id(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+        notifier_id: i64,
+    ) -> Result<Option<Notifier>> {
+        let row = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE id = ?")
+            .bind(notifier_id)
+            .fetch_one(&mm.pool)
+            .await;
+
+        if let Err(sqlx::Error::RowNotFound) = row {
+            return Ok(None);
+        }
+
+        Ok(Some(row.unwrap()))
+    }
+
+    pub async fn update_notifier(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+        notifier_id: i64,
+        nfc: NotifierCreate,
+    ) -> Result<()> {
+        let now = time::UtcDateTime::now();
+        let updated_at = PrimitiveDateTime::new(now.date(), now.time());
+        sqlx::query("UPDATE notifier SET server_id = ?, provider = ?, credentials = ?, format = ?, active = ?, updated_at = ? WHERE id = ?")
+            .bind(nfc.server_id)
+            .bind(&nfc.provider)
+            .bind(&nfc.credentials)
+            .bind(&nfc.format)
+            .bind(nfc.active)
+            .bind(updated_at)
+            .bind(notifier_id)
+            .execute(&mm.pool)
+            .await?;
+        Ok(())
+    }
+
+    pub async fn list(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+        server_id: i64,
+        args: Option<PaginationArguments>,
+    ) -> Result<Vec<Notifier>> {
+        let result = if let Some(args) = args {
+            sqlx::query_as::<Sqlite, Notifier>(
+                "SELECT * FROM notifier WHERE server_id = ? LIMIT ? OFFSET ?",
+            )
+            .bind(server_id)
+            .bind(args.limit)
+            .bind(args.offset)
+            .fetch_all(&mm.pool)
+            .await?
+        } else {
+            sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE server_id = ?")
+                .bind(server_id)
+                .fetch_all(&mm.pool)
+                .await?
+        };
+
+        Ok(result)
     }
 
     pub async fn delete_notifier_for(mm: &ModelManager, _ctx: &Ctx, server_id: i64) -> Result<()> {
