@@ -44,7 +44,7 @@ Creates a new user account and returns a user object.
 }
 ```
 
-## POST /signin
+## POST `/signin`
 Authorizes existing user in a system.
 
 ### Body
@@ -68,7 +68,7 @@ Authorizes existing user in a system.
 And Cookie - `SID`
 
 # Server Routes
-## POST /server/
+## POST `/server/`
 Creates new server object and returns it as a response.
 
 ### Body
@@ -80,11 +80,17 @@ Creates new server object and returns it as a response.
 | `timeout`      | `Integer` | Yes      | The time server should respond in(secs)  | 10      |
 | `interval`     | `Integer` | Yes      | The interval between server checks(secs) | 60      |
 | `is_turned_on` | `Boolean` | Yes      | If this server should be checked at all? | false   |
-## GET /server/
+## GET `/server/`
 Lists all servers available for the current authorized user.
 
 ### Body
 None
+### Query
+| Name           | Type      | Optional | Description                              | Default |
+| -------------- | --------- | -------- | ---------------------------------------- | ------- |
+| `limit`        | `Integer` | Yes      | Limit response by N records              | 10      |
+| `offset`       | `Integer` | Yes      | Offset response by N records             | 0       |
+
 ### Example Response
 
 ```json
@@ -105,7 +111,7 @@ None
 ]
 ```
 
-## GET /server/{id}
+## GET `/server/{id}`
 Gets the specified server by ID and returns its object. Its permitted to try getting server created by another user.
 
 ### Body
@@ -177,4 +183,110 @@ Update server by ID. This action is restricted to the owner of this server objec
 }
 ```
 
-### TODO
+# Notifier Routes
+## POST `/notify/`
+Creates new notifier for a specified server
+
+### Body
+| Name           | Type      | Optional | Description                              | Default |
+| -------------- | --------- | -------- | ---------------------------------------- | ------- |
+| `server_id`    | `String`  | No       | ID of the server to attach               |         |
+| `provider`     | `String`  | No       | Provider, e.g: `telegram` or `discord`   |         |
+| `credentials`  | `Integer` | No       | Credentials, specific for provider       |         |
+| `format`       | `Integer` | No       | Format of the message in hjs             |         |
+| `active`       | `Boolean` | Yes      | If this notifier active?                 | false   |
+
+### Example Response
+```json
+{
+	"id": 1,
+	"user_id": 1,
+	"server_id": 1,
+	"provider": "telegram",
+	"credentials": {
+		"chat_id": -444444444,
+		"token": "TOKEN"
+	},
+	"format": "{{log.status_code}}",
+	"active": true,
+	"created_at": ...,
+	"updated_at": ...
+}
+```
+
+## PUT `/notify/{id}`
+Modifies notifier by ID
+
+### Body
+| Name           | Type      | Optional | Description                              | Default |
+| -------------- | --------- | -------- | ---------------------------------------- | ------- |
+| `server_id`    | `String`  | No       | ID of the server to attach               |         |
+| `provider`     | `String`  | No       | Provider, e.g: `telegram` or `discord`   |         |
+| `credentials`  | `Integer` | No       | Credentials, specific for provider       |         |
+| `format`       | `Integer` | No       | Format of the message in hjs             |         |
+| `active`       | `Boolean` | Yes      | If this notifier active?                 | false   |
+
+### Example Response
+```json
+{
+	"id": 1,
+	"user_id": 1,
+	"server_id": 1,
+	"provider": "telegram",
+	"credentials": {
+		"chat_id": -444444444,
+		"token": "TOKEN"
+	},
+	"format": "{{log.status_code}}",
+	"active": true,
+	"created_at": ...,
+	"updated_at": ...
+}
+```
+
+## GET `/notify/server/{id}`
+Lists notifiers by server ID.
+
+### Body
+None
+
+### Query
+| Name           | Type      | Optional | Description                              | Default |
+| -------------- | --------- | -------- | ---------------------------------------- | ------- |
+| `limit`        | `Integer` | Yes      | Limit response by N records              | 10      |
+| `offset`       | `Integer` | Yes      | Offset response by N records             | 0       |
+
+### Example Response
+```json
+[
+	{
+		"id": 1,
+		"user_id": 1,
+		"server_id": 1,
+		"provider": "telegram",
+		"credentials": {
+			"chat_id": -444444444,
+			"token": "TOKEN"
+		},
+		"format": "{{log.status_code}}",
+		"active": true,
+		"created_at": ...,
+		"updated_at": ...
+	}
+]
+```
+
+## DELETE `/notify/{id}`
+Removes notifier by notifier ID.
+
+### Body
+None
+
+### Example Response
+```json
+{
+	"message": "Success"
+}
+```
+
+### TODO: Server & User logs routes
