@@ -6,12 +6,20 @@ use axum::{
     routing::get,
 };
 use reqwest::StatusCode;
+use serde::{Deserialize, Serialize};
 
 use crate::{
     Ctx,
     model::{ServerBmc, ServerLogBmc, UserRole},
-    web::{AppState, WebError, routes::middlewares::verify_token_middleware, utils::PageQuery},
+    web::{AppState, WebError, routes::middlewares::verify_token_middleware},
 };
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LogsPageQuery {
+    limit: i64,
+    offset: i64,
+    failed: bool,
+}
 
 pub fn routes<S>(state: AppState) -> Router<S> {
     Router::new()
@@ -27,7 +35,7 @@ pub async fn get_server_logs(
     State(state): State<AppState>,
     ctx: Ctx,
     Path(id): Path<i64>,
-    Query(query): Query<PageQuery>,
+    Query(query): Query<LogsPageQuery>,
 ) -> Result<Response, WebError> {
     let server = ServerBmc::get_by_id(&state.mm, &ctx, id).await?;
     if server.is_none() {
@@ -39,7 +47,11 @@ pub async fn get_server_logs(
         return Err(WebError::ServerNotAllowed);
     }
 
-    let logs = ServerLogBmc::page(&state.mm, &ctx, id, query.offset, query.limit).await?;
+    let logs = if query.failed {
+        ServerLogBmc::page_failed(&state.mm, &ctx, id, query.offset, query.limit).await?
+    } else {
+        ServerLogBmc::page(&state.mm, &ctx, id, query.offset, query.limit).await?
+    };
 
     Ok((StatusCode::OK, Json(logs)).into_response())
 }
