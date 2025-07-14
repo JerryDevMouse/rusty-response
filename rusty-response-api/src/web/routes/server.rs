@@ -10,7 +10,7 @@ use reqwest::StatusCode;
 
 use crate::{
     model::{Ctx, Server, ServerBmc, ServerCreate, UserAction, UserActionLogBmc, UserRole},
-    web::{WebError, routes::PaginationQuery},
+    web::{utils::PageQuery, WebError},
 };
 
 use super::{AppState, middlewares::verify_token_middleware};
@@ -53,14 +53,10 @@ pub async fn create_server(
 
 pub async fn list_servers(
     State(state): State<AppState>,
-    Query(query): Query<PaginationQuery>,
+    Query(query): Query<PageQuery>,
     ctx: Ctx,
 ) -> Result<Response, WebError> {
-    let limit = query.limit.unwrap_or(10);
-    let offset = query.offset.unwrap_or(0);
-
-    let servers = ServerBmc::list(&state.mm, &ctx, Some((limit, offset).into())).await?;
-
+    let servers = ServerBmc::page(&state.mm, &ctx, query.offset, query.limit).await?;
     Ok((StatusCode::OK, Json(servers)).into_response())
 }
 
@@ -130,7 +126,7 @@ pub async fn remove_server(
         return Err(WebError::ServerNotAllowed);
     }
 
-    ServerBmc::remove_by_id(&state.mm, &ctx, id).await?;
+    ServerBmc::delete(&state.mm, &ctx, id).await?;
 
     state
         .control_tx

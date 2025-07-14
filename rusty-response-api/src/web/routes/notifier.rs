@@ -10,7 +10,7 @@ use serde_json::json;
 
 use crate::{
     model::{Ctx, Notifier, NotifierBmc, NotifierCreate, ServerBmc, UserRole},
-    web::{routes::PaginationQuery, WebError},
+    web::{utils::PageQuery, WebError},
 };
 
 use super::{AppState, middlewares::verify_token_middleware};
@@ -52,12 +52,20 @@ async fn notifier_list(
     State(state): State<AppState>,
     ctx: Ctx,
     Path(id): Path<i64>,
-    Query(query): Query<PaginationQuery>,
+    Query(query): Query<PageQuery>,
 ) -> Result<Response, WebError> {
-    let limit = query.limit.unwrap_or(10);
-    let offset = query.offset.unwrap_or(0);
+    let server = ServerBmc::get_by_id(&state.mm, &ctx, id).await?;
+    if server.is_none() {
+        return Err(WebError::ServerNotFound);
+    }
+    let server = server.unwrap();
 
-    let notifiers = NotifierBmc::list(&state.mm, &ctx, id, Some((limit, offset).into())).await?;
+    if server.user_id != ctx.user_id && !matches!(ctx.role, UserRole::Admin) {
+        return Err(WebError::ServerNotAllowed);
+    }
+
+    let notifiers = NotifierBmc::page(&state.mm, &ctx, query.offset, query.limit).await?;
+
     Ok((StatusCode::OK, Json(notifiers)).into_response())
 }
 

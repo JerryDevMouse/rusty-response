@@ -5,8 +5,10 @@ mod server_log;
 mod user;
 mod user_action;
 
+mod utils;
+pub use utils::Page;
+
 pub use notifier::{Notifier, NotifierBmc, NotifierCreate};
-use serde::Deserialize;
 pub use server::{Server, ServerBmc, ServerCreate};
 pub use server_log::{ServerLog, ServerLogBmc, ServerLogCreate, ServerLogLine};
 pub use user::{User, UserBmc, UserClaims, UserCreate, UserRole};
@@ -17,21 +19,6 @@ pub use error::{ModelError, Result};
 use sqlx::sqlite::SqliteConnectOptions;
 use sqlx::{Pool, Sqlite};
 use std::path::Path;
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct PaginationArguments {
-    pub limit: i64,
-    pub offset: i64,
-}
-
-impl From<(i64, i64)> for PaginationArguments {
-    fn from(value: (i64, i64)) -> Self {
-        Self {
-            limit: value.0,
-            offset: value.1,
-        }
-    }
-}
 
 #[derive(Clone)]
 pub struct ModelManager {

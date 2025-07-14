@@ -1,22 +1,17 @@
 mod middlewares;
+use tokio::sync::mpsc::UnboundedSender;
 
 mod notifier;
 mod server;
+mod server_log;
 mod user;
 
 pub use notifier::routes as notify_routes;
-use serde::Deserialize;
 pub use server::routes as server_routes;
-use tokio::sync::mpsc::UnboundedSender;
+pub use server_log::routes as server_log_routes;
 pub use user::routes as user_routes;
 
 use crate::{ModelManager, channel::ControlMessage, notify::NotifyManager};
-
-#[derive(Deserialize)]
-pub struct PaginationQuery {
-    limit: Option<i64>,
-    offset: Option<i64>,
-}
 
 pub struct RawState {
     pub mm: ModelManager,

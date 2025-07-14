@@ -1,7 +1,4 @@
-use crate::{
-    ModelManager,
-    model::{Ctx, PaginationArguments},
-};
+use crate::{model::{Ctx, Page}, ModelManager};
 
 use super::Result;
 use serde::{Deserialize, Serialize};
@@ -104,31 +101,6 @@ impl NotifierBmc {
         Ok(updated_at)
     }
 
-    pub async fn list(
-        mm: &ModelManager,
-        _ctx: &Ctx,
-        server_id: i64,
-        args: Option<PaginationArguments>,
-    ) -> Result<Vec<Notifier>> {
-        let result = if let Some(args) = args {
-            sqlx::query_as::<Sqlite, Notifier>(
-                "SELECT * FROM notifier WHERE server_id = ? LIMIT ? OFFSET ?",
-            )
-            .bind(server_id)
-            .bind(args.limit)
-            .bind(args.offset)
-            .fetch_all(&mm.pool)
-            .await?
-        } else {
-            sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE server_id = ?")
-                .bind(server_id)
-                .fetch_all(&mm.pool)
-                .await?
-        };
-
-        Ok(result)
-    }
-
     pub async fn delete_notifier_for(mm: &ModelManager, _ctx: &Ctx, server_id: i64) -> Result<()> {
         sqlx::query("DELETE FROM notifier WHERE server_id = ?")
             .bind(server_id)
@@ -180,21 +152,6 @@ impl NotifierBmc {
         Ok(notifier)
     }
 
-    pub async fn all_ol(
-        mm: &ModelManager,
-        _ctx: &Ctx,
-        offset: i64,
-        limit: i64,
-    ) -> Result<Vec<Notifier>> {
-        let rows = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier OFFSET ? LIMIT ?")
-            .bind(offset)
-            .bind(limit)
-            .fetch_all(&mm.pool)
-            .await?;
-
-        Ok(rows)
-    }
-
     pub async fn all(mm: &ModelManager, _ctx: &Ctx) -> Result<Vec<Notifier>> {
         let rows = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier")
             .fetch_all(&mm.pool)
@@ -224,5 +181,48 @@ impl NotifierBmc {
             .await?;
 
         Ok(())
+    }
+}
+
+
+// Listing API
+impl NotifierBmc {
+    pub async fn count(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+    ) -> Result<i64> {
+        let row = sqlx::query("SELECT COUNT(*) as count FROM notifier")
+            .fetch_one(&mm.pool)
+            .await?;
+
+        let count = row.try_get("count")?;
+        Ok(count)
+    }
+
+    pub async fn list(
+        mm: &ModelManager,
+        ctx: &Ctx,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Vec<Notifier>> {
+        let result = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE user_id = ? LIMIT ? OFFSET ?")
+            .bind(ctx.user_id)
+            .bind(limit)
+            .bind(offset)
+            .fetch_all(&mm.pool)
+            .await?;
+        Ok(result)
+    }
+
+    pub async fn page(
+        mm: &ModelManager,
+        ctx: &Ctx,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Page<Notifier>> {
+        let items = Self::list(mm, ctx, offset, limit).await?;
+        let count = Self::count(mm, ctx).await?;
+
+        Ok(Page::new(items, count, limit, offset))
     }
 }

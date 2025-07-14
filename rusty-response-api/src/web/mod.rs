@@ -43,6 +43,10 @@ pub fn app<S>(state: AppState) -> Router<S> {
             "/api/v1/notify/",
             routes::notify_routes(AppState::clone(&state)),
         )
+        .nest(
+            "/api/v1/logs/server/",
+            routes::server_log_routes(AppState::clone(&state)),
+        )
         .layer(tower_cookies::CookieManagerLayer::new())
         .layer(CorsLayer::very_permissive())
         .with_state(AppState::clone(&state))
