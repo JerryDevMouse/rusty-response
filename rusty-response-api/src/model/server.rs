@@ -1,9 +1,10 @@
-use super::PaginationArguments;
 use eyre::Result;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 use sqlx::{Row, Sqlite};
 use time::PrimitiveDateTime;
+
+use crate::model::Page;
 
 use super::{Ctx, ModelManager};
 
@@ -146,38 +147,6 @@ impl ServerBmc {
         Ok(updated_at)
     }
 
-    pub async fn all(mm: &ModelManager, _ctx: &Ctx) -> Result<Vec<Server>> {
-        let result = sqlx::query_as::<Sqlite, Server>("SELECT * FROM server;")
-            .fetch_all(&mm.pool)
-            .await?;
-
-        Ok(result)
-    }
-
-    pub async fn list(
-        mm: &ModelManager,
-        ctx: &Ctx,
-        args: Option<PaginationArguments>,
-    ) -> Result<Vec<Server>> {
-        let result = if let Some(args) = args {
-            sqlx::query_as::<Sqlite, Server>(
-                "SELECT * FROM server WHERE user_id = ? LIMIT ? OFFSET ?",
-            )
-            .bind(ctx.user_id)
-            .bind(args.limit)
-            .bind(args.offset)
-            .fetch_all(&mm.pool)
-            .await?
-        } else {
-            sqlx::query_as::<Sqlite, Server>("SELECT * FROM server WHERE user_id = ?")
-                .bind(ctx.user_id)
-                .fetch_all(&mm.pool)
-                .await?
-        };
-
-        Ok(result)
-    }
-
     pub async fn get_by_name(mm: &ModelManager, _ctx: &Ctx, name: &str) -> Result<Option<Server>> {
         let result = sqlx::query_as::<Sqlite, Server>("SELECT * FROM server WHERE name = ?")
             .bind(name)
@@ -207,12 +176,67 @@ impl ServerBmc {
         Ok(Some(result))
     }
 
-    pub async fn remove_by_id(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<()> {
+    pub async fn delete(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<()> {
         sqlx::query("DELETE FROM server WHERE id = ?")
             .bind(id)
             .execute(&mm.pool)
             .await?;
 
         Ok(())
+    }
+}
+
+// Listing API
+impl ServerBmc {
+    // Don't use in API routes, only for internal usage
+    pub async fn all(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+    ) -> Result<Vec<Server>> {
+        let result = sqlx::query_as("SELECT * FROM server")
+            .fetch_all(&mm.pool)
+            .await?;
+        Ok(result)
+    }
+
+    pub async fn count(
+        mm: &ModelManager,
+        ctx: &Ctx,
+    ) -> Result<i64> {
+        let row = sqlx::query("SELECT COUNT(*) as count FROM server WHERE user_id = ?")
+            .bind(ctx.user_id)
+            .fetch_one(&mm.pool)
+            .await?;
+
+        let count = row.try_get("count")?;
+        Ok(count)
+    }
+
+    pub async fn list(
+        mm: &ModelManager,
+        ctx: &Ctx,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Vec<Server>> {
+        let result = sqlx::query_as("SELECT * FROM server WHERE user_id = ? LIMIT ? OFFSET ?")
+            .bind(ctx.user_id)
+            .bind(limit)
+            .bind(offset)
+            .fetch_all(&mm.pool)
+            .await?;
+
+        Ok(result)
+    }
+
+    pub async fn page(
+        mm: &ModelManager,
+        ctx: &Ctx,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Page<Server>> {
+        let items = Self::list(mm, ctx, offset, limit).await?;
+        let count = Self::count(mm, ctx).await?;
+
+        Ok(Page::new(items, count, limit, offset))
     }
 }

@@ -91,16 +91,16 @@ async fn payload(
             }
 
             // DEBUG: REMOVE THIS BLOCK IN PROD
-            sender
-                .send(ServerMessage::ServerStateChanged {
-                    status: ServerStatus::Unreachable {
-                        reason: format!("Sending from: {}", server.id),
-                        status_code: http::StatusCode::OK,
-                        body: b"TEST".to_vec(),
-                    },
-                    server: server.clone(),
-                })
-                .ok();
+            //            sender
+            //                .send(ServerMessage::ServerStateChanged {
+            //                    status: ServerStatus::Unreachable {
+            //                        reason: format!("Sending from: {}", server.id),
+            //                        status_code: http::StatusCode::OK,
+            //                        body: b"TEST".to_vec(),
+            //                    },
+            //                    server: server.clone(),
+            //                })
+            //                .ok();
         };
 
         result.await;
