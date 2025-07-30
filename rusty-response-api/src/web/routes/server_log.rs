@@ -18,7 +18,7 @@ use crate::{
 pub struct LogsPageQuery {
     limit: i64,
     offset: i64,
-    failed: bool,
+    failed: Option<bool>,
 }
 
 pub fn routes<S>(state: AppState) -> Router<S> {
@@ -47,7 +47,7 @@ pub async fn get_server_logs(
         return Err(WebError::ServerNotAllowed);
     }
 
-    let logs = if query.failed {
+    let logs = if query.failed.unwrap_or(false) {
         ServerLogBmc::page_failed(&state.mm, &ctx, id, query.offset, query.limit).await?
     } else {
         ServerLogBmc::page(&state.mm, &ctx, id, query.offset, query.limit).await?
