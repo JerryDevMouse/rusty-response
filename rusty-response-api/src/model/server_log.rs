@@ -132,6 +132,22 @@ impl ServerLogBmc {
         Ok(logs)
     }
 
+    pub async fn list_failed(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+        id: i64,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Vec<ServerLog>> {
+        let logs = sqlx::query_as::<Sqlite, ServerLog>("SELECT * FROM server_log WHERE server_id = ? AND failed = 1 LIMIT ? OFFSET ?")
+            .bind(id)
+            .bind(limit)
+            .bind(offset)
+            .fetch_all(&mm.pool)
+            .await?;
+        Ok(logs)
+    }
+
     pub async fn page(
         mm: &ModelManager,
         _ctx: &Ctx,
@@ -140,6 +156,19 @@ impl ServerLogBmc {
         limit: i64,
     ) -> Result<Page<ServerLog>> {
         let items = Self::list(mm, _ctx, id, offset, limit).await?;
+        let count = Self::count(mm, _ctx).await?;
+
+        Ok(Page::new(items, count, limit, offset))
+    }
+
+    pub async fn page_failed(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+        id: i64,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Page<ServerLog>> {
+        let items = Self::list_failed(mm, _ctx, id, offset, limit).await?;
         let count = Self::count(mm, _ctx).await?;
 
         Ok(Page::new(items, count, limit, offset))
