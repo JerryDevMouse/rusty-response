@@ -1,4 +1,8 @@
 :root {
+  --color-main: #3F3BB6;
+  --color-success: #56D585;
+  --color-failed: #D55656;
+  --color-pause: #D5A656;
   --color-bg: #2A2A2A;
   --color-border: rgba(255, 255, 255, 0.1);
 

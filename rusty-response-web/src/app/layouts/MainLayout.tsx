@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from 'react-router'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { addCount, setString } from '../store/slices/countSlice';
-import Text from '../../components/ui/Text';
+import Text from '../../components/Text';
 
 const MainLayout = () => {
   const {count, string} = useAppSelector(state => state.count);
