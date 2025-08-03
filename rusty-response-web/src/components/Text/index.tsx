@@ -16,7 +16,7 @@ const Text: FC<Props> = ({children, weight, type, color}) => {
         style={{
             fontWeight: weight ?? '',
             fontSize: fontSizeCategories[type] + 'rem',
-            color: color ? `rgba(255, 255, 255, 0.${color})` : 'white'
+            color: color ? `rgba(255, 255, 255, 0.${color})` : ''
         }}
     >
         {children}
