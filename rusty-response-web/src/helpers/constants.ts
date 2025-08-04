@@ -8,5 +8,11 @@ const fontSizeCategories: TFontSizeCategories = {
     small: 1,
     tiny: 0.875
 }
+const AuthPageRedirectOffer = {
+    In: 'Not a member yet?',
+    Up: 'Already have an Account?'
+}
 
-export {fontSizeCategories}
+const urlApi = '/api/v1';
+
+export {fontSizeCategories, AuthPageRedirectOffer, urlApi}

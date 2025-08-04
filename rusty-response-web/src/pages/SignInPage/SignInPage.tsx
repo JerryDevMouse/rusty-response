@@ -1,8 +1,14 @@
-import React from 'react'
+import { AuthPages } from '../../components/AuthPages'
+import useAuth from '../../hooks/useAuth'
 
 const SignInPage = () => {
+  const {handleSignIn} = useAuth();
+ 
   return (
-    <h2>SignInPage</h2>
+    <AuthPages.Container>
+      <AuthPages.Form onSubmit={handleSignIn} sign='In'/>
+      <AuthPages.Copyright />
+    </AuthPages.Container>
   )
 }
 
