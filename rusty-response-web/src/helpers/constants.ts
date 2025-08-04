@@ -1,4 +1,4 @@
-import type { TFontSizeCategories } from "./types";
+import type { TRoutes, TFontSizeCategories } from "./types";
 
 const fontSizeCategories: TFontSizeCategories = {
     xxl: 1.5,
@@ -13,6 +13,13 @@ const AuthPageRedirectOffer = {
     Up: 'Already have an Account?'
 }
 
-const urlApi = '/api/v1';
+const API: TRoutes = {
+    signup: { path: '/api/v1/account/signup', method: ['POST'] },
+    signin: { path: '/api/v1/account/signin', method: ['POST'] },
+    verify: { path: '/api/v1/account/verify', method: ['GET'] },
+    server: { path: '/api/v1/server/', method: ['POST', 'GET', 'PUT', 'DELETE'] },
+    notify: { path: '/api/v1/notify/', method: ['POST', 'PUT', 'DELETE'] },
+    notifyServer: { path: '/notify/server/', method: ['GET'] }
+}; 
 
-export {fontSizeCategories, AuthPageRedirectOffer, urlApi}
+export {fontSizeCategories, AuthPageRedirectOffer, API}
