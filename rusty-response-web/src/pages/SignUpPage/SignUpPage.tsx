@@ -1,18 +1,25 @@
 import Text from '../../components/Text'
 import { NavLink } from 'react-router'
-import styles from './index.module.css'
+import { AuthPages } from '../../components/AuthPages'
+import styles from '../../components/AuthPages/AuthPages.module.css'
 
 const SignUpPage = () => {
+  const handleSignUp = (formData: FormData) => {
+    const login = formData.get('login');
+    const password = formData.get('password');
+    console.log(login, password);
+  }
+
   return (
-    <div className={styles.container}>
-      <form className={styles.form}>
+    <AuthPages.Container>
+      <AuthPages.Form onSubmit={handleSignUp}>
         <div className={styles.content}>
           <h2 className={styles.title}><Text type='xxl' weight={600}>Sign In</Text></h2>
           <div className={styles.inputs}>
-            <input type="text" placeholder='Login' className={styles.input}/>
-            <input type="password" placeholder='Password' className={styles.input}/>
+            <input type="text" placeholder='Login' className={styles.input} name='login'/>
+            <input type="password" placeholder='Password' className={styles.input} name='password'/>
           </div>
-          <button className={styles.button}>
+          <button className={styles.button} type='submit'>
             <Text type='small' weight={400}>Sign In</Text>
           </button>
           <div className={styles.row}>
@@ -22,11 +29,11 @@ const SignUpPage = () => {
             </NavLink>
           </div>
         </div>
-      </form>
+      </AuthPages.Form>
       <div className={styles.copy}>
         <Text type='tiny' weight={400} color={4}>&copy; 2025 Rusty Response</Text>
       </div>
-    </div>
+    </AuthPages.Container>
   )
 }
 
