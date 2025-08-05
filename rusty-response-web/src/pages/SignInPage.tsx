@@ -1,5 +1,5 @@
-import { AuthPages } from '../../components/AuthPages'
-import useAuth from '../../hooks/useAuth'
+import { AuthPages } from '../components/AuthPages'
+import useAuth from '../hooks/useAuth'
 
 const SignInPage = () => {
   const {handleSignIn} = useAuth();
