@@ -14,12 +14,12 @@ const AuthPageRedirectOffer = {
 }
 
 const API: TRoutes = {
-    signup: { path: '/api/v1/account/signup', method: ['POST'] },
-    signin: { path: '/api/v1/account/signin', method: ['POST'] },
-    verify: { path: '/api/v1/account/verify', method: ['GET'] },
-    server: { path: '/api/v1/server/', method: ['POST', 'GET', 'PUT', 'DELETE'] },
-    notify: { path: '/api/v1/notify/', method: ['POST', 'PUT', 'DELETE'] },
-    notifyServer: { path: '/notify/server/', method: ['GET'] }
+    signup: '/api/v1/account/signup',
+    signin: '/api/v1/account/signin',
+    verify: '/api/v1/account/verify',
+    server: '/api/v1/server/',
+    notify: '/api/v1/notify/',
+    notifyServer: '/notify/server/'
 }; 
 
 export {fontSizeCategories, AuthPageRedirectOffer, API}

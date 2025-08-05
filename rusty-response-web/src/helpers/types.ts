@@ -10,12 +10,14 @@ export type TFontSizeCategories = {
     [key in TFontSize]: number
 }
 
-type TFetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export type ApiEndpoints = 'signup' | 'signin' | 'verify' | 'server' | 'notify' | 'notifyServer';
 
 export type TRoutes = {
-  [key in ApiEndpoints]: {
-    path: string;
-    method: TFetchMethod[];
-  };
+  [key in ApiEndpoints]: string;
+}
+
+export interface IServerError {
+  error: string,
+  code: string,
+  details: string | null
 }

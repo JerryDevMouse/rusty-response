@@ -1,26 +1,11 @@
-class ApiError extends Error {
-    status: number;
+export default class ApiError extends Error {
+  status: number;
+  details?: string | null;
 
-    constructor(message: string, status: number) {
-        super(message)
-        this.name = 'ApiError'
-        this.status = status
-    }
+  constructor(message: string, status: number, details?: string | null) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.details = details;
+  }
 }
-
-export default ApiError;
-
-// for error handling
-// --------------------- 
-// try {
-//   await apiRequest(...);
-// } catch (err) {
-//   if (err instanceof ApiError) {
-//     if (err.status === ...) {
-//       navigate('...');
-//     } else {
-//       err.status;
-//       err.message;
-//     }
-//   }
-// }

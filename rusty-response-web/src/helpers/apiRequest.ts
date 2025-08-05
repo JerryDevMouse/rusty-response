@@ -1,4 +1,5 @@
 import ApiError from "./apiError";
+import type { IServerError } from "./types";
 
 interface IApiRequest {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE',
@@ -15,9 +16,21 @@ const apiRequest = async <T = any> (
     headers: { 'Content-Type': 'application/json' },
     ...(body && { body: JSON.stringify(body) }), 
   })
+  
+  let responseData = null;
+  const isJson = response.headers.get('Content-Type')?.includes('application/json');
+
+  if (isJson) {
+    responseData = await response.json().catch(() => null);
+  }
 
   if (!response.ok) {
-    throw new ApiError(response.statusText, response.status);
+    if (responseData && typeof responseData === 'object' && 'error' in responseData) {
+      const {error, code, details} = responseData as IServerError;
+      throw new ApiError(error, Number(code), details);
+    } else {
+      throw new ApiError(`Response error: ${response.status}`, response.status);
+    }
   }
 
   return response.json();
