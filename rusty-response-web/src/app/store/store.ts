@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import countSlice from './slices/countSlice'
+import userSlice from './slices/userSlice'
 
 export const store = configureStore({
     reducer: {
-        count: countSlice
+        user: userSlice,
     }
 })
 

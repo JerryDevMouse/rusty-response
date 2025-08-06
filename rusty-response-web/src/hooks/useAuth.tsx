@@ -1,10 +1,22 @@
-import { useNavigate } from 'react-router';
 import ApiError from '../helpers/ApiError';
 import apiRequest from '../helpers/apiRequest';
 import { API } from '../helpers/constants';
+import type { IUser } from '../helpers/types';
+import { useAppDispatch, useAppSelector } from '../app/store/hooks';
+import { setUser, setUserLoading } from '../app/store/slices/userSlice';
+import { useNavigate } from 'react-router';
+const tempUser = {
+	id: 1,
+	username: "Jerry",
+	role: "user",
+	created_at: [],
+	updated_at: []
+}
 
 const useAuth = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const user = useAppSelector(state => state.user.currentUser);
   
   const getValues = (formData: FormData) => {
     return [formData.get('login'), formData.get('password')]
@@ -13,11 +25,13 @@ const useAuth = () => {
   const fetchSign = async (formData: FormData, type: 'signup' | 'signin') => {
     const [username, password_raw] = getValues(formData);
     try {
-      const user = await apiRequest(API[type], {
+      dispatch(setUserLoading(true))
+      const resUser = await apiRequest<IUser>(API[type], {
         method: 'POST',
         body: { username, password_raw }
       })
-      // todo: add to global state/localstorage
+      dispatch(setUser(resUser ?? tempUser));
+      navigate('/');
     } catch (err) {
       if (err instanceof ApiError) {
         // todo: single standard output for the user
@@ -25,19 +39,19 @@ const useAuth = () => {
         console.log('Error status: ', err.status);
         if (err.details) console.log('Error details: ', err.details);
       }
+    } finally {
+      dispatch(setUserLoading(false))
     }
   }
 
   const handleSignUp = async (formData: FormData) => {
     await fetchSign(formData, 'signup');
-    navigate('/');
   }
   const handleSignIn = async (formData: FormData) => {
     await fetchSign(formData, 'signin');
-    navigate('/');
   }
 
-  return {handleSignUp, handleSignIn}
+  return {handleSignUp, handleSignIn, user}
 }
 
 export default useAuth

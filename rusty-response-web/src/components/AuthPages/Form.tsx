@@ -26,7 +26,7 @@ const Form: FC<Props> = ({onSubmit, sign}) => {
             </button>
             <div className={styles.row}>
                 <Text type='tiny' weight={400} color={4}>{AuthPageRedirectOffer[sign]}</Text>
-                <NavLink to={`/sign${sign ==='In' ? 'up' : 'in'}`} className={styles.link}>
+                <NavLink to={`/auth/sign${sign ==='In' ? 'up' : 'in'}`} className={styles.link}>
                     <Text type='tiny' weight={400}>Sign {sign ==='In' ? 'Up' : 'In'}</Text>
                 </NavLink>
             </div>
