@@ -1,4 +1,4 @@
-import ApiError from "./apiError";
+import ApiError from "./ApiError";
 import type { IServerError } from "./types";
 
 interface IApiRequest {
@@ -20,11 +20,10 @@ const apiRequest = async <T = any> (
   let responseData = null;
   const isJson = response.headers.get('Content-Type')?.includes('application/json');
 
-  if (isJson) {
-    responseData = await response.json().catch(() => null);
-  }
-
   if (!response.ok) {
+    if (isJson) {
+      responseData = await response.json().catch(() => null);
+    }
     if (responseData && typeof responseData === 'object' && 'error' in responseData) {
       const {error, code, details} = responseData as IServerError;
       throw new ApiError(error, Number(code), details);

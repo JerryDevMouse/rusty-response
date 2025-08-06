@@ -1,22 +1,55 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import MainLayout from "../app/layouts/MainLayout";
-import HomePage from "./HomePage/HomePage";
 import SignInPage from "./SignInPage";
 import SignUpPage from "./SignUpPage";
-import ExamplePage from "./ExamplePage/ExamplePage";
+import OverviewPage from "./dashboards/OverviewPage";
+import ServersPage from "./dashboards/ServersPage";
+import NotifiersPage from "./dashboards/NotifiersPage";
+import DocsPage from "./pages/DocsPage";
+import NotFoundPage from "./NotFoundPage"
 
 const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <Navigate to='/dashboards/overview' replace />
+    },
     {
         path: '/',
         element: <MainLayout />,
         children: [
             {
-                index: true,
-                element: <HomePage />
+                path: 'dashboards',
+                children: [
+                    {
+                        index: true,
+                        element: <Navigate to='overview' replace />
+                    },
+                    {
+                        path: 'overview',
+                        element: <OverviewPage />
+                    },
+                    {
+                        path: 'servers',
+                        element: <ServersPage />
+                    },
+                    {
+                        path: 'notifiers',
+                        element: <NotifiersPage />
+                    }
+                ]
             },
             {
-                path: 'example',
-                element: <ExamplePage />
+                path: 'pages',
+                children: [
+                    {
+                        index: true,
+                        element: <Navigate to='docs' replace />
+                    },
+                    {
+                        path: 'docs',
+                        element: <DocsPage />
+                    }
+                ]
             }
         ]
     }, 
@@ -27,6 +60,10 @@ const router = createBrowserRouter([
     {
         path: 'signup',
         element: <SignUpPage />
+    },
+    {
+        path: '*',
+        element: <NotFoundPage />
     }
 ])
 
