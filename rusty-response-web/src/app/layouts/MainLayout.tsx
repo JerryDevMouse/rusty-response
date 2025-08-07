@@ -1,14 +1,12 @@
-import { NavLink, Outlet } from 'react-router'
+import { Outlet } from 'react-router'
 import styles from './index.module.css'
-import Icon from '../../components/Icon/Icon'
+import Sidebar from '../../components/Sidebar/Sidebar'
 
 const MainLayout = () => {
 
   return (
     <div className={styles.container}>
-      <aside className={styles.sidebar}>
-        <Icon name='avatar' width={24} height={24} color={8}/>
-      </aside>
+      <Sidebar/>
       <div className={styles.containercol}>
         <header className={styles.header}>
           
