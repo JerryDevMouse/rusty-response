@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router'
 import styles from './index.module.css'
 import Sidebar from '../../components/Sidebar/Sidebar'
+import Header from '../../components/Header/Header'
 
 const MainLayout = () => {
 
@@ -8,9 +9,7 @@ const MainLayout = () => {
     <div className={styles.container}>
       <Sidebar/>
       <div className={styles.containercol}>
-        <header className={styles.header}>
-          
-        </header>
+        <Header/>
         <main className={styles.main}>
           <Outlet/>
         </main>

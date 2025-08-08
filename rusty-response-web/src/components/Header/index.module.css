@@ -1,0 +1,24 @@
+.header {
+    border-bottom: 1px solid var(--color-border);
+    padding: 20px 34px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.button {
+    background: transparent;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.left {
+    display: flex;
+    align-items: center;
+    column-gap: 33.5px;
+}
+.crumbs {
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+}
