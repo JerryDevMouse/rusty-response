@@ -2,6 +2,7 @@ import styles from './index.module.css'
 import Icon from '../Icon/Icon'
 import { Link } from 'react-router'
 import Text from '../Text'
+import Search from '../Search/Search'
 
 const Header = () => {
   return (
@@ -16,6 +17,7 @@ const Header = () => {
                 <Link to='#'><Text type='tiny'>Notifiers</Text></Link>
             </div>
         </div>
+        <Search />
     </header>
   )
 }
