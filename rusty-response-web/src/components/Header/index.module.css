@@ -11,6 +11,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 5px;
+}
+.button:hover {
+    background: transparent;
+    background: var(--color-accent);
 }
 .left {
     display: flex;
@@ -21,4 +26,7 @@
     display: flex;
     align-items: center;
     column-gap: 20px;
+}
+.crumbs a:hover > p  {
+    text-decoration: underline;
 }

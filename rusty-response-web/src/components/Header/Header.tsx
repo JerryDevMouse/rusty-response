@@ -1,14 +1,18 @@
-import styles from './index.module.css'
+import type { FC } from 'react'
 import Icon from '../Icon/Icon'
 import Search from '../Search/Search'
 import Crumbs from './Crumbs'
+import styles from './index.module.css'
+interface Props {
+  switchSidebar: VoidFunction
+}
 
-const Header = () => {
+const Header:FC<Props> = ({switchSidebar}) => {
   return (
     <header className={styles.header}>
         <div className={styles.left}>
-            <button className={styles.button}>
-                <Icon name='header_windows' width={13} height={11} color={8} />
+            <button className={styles.button} onClick={switchSidebar}>
+                <Icon name='header_windows' width={13} height={13} color={8} />
             </button>
             <Crumbs />
         </div>
