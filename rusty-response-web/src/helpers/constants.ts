@@ -1,4 +1,4 @@
-import type { TRoutes, TFontSizeCategories } from "./types";
+import type { TRoutes, TFontSizeCategories, TsidebarNav } from "./types";
 
 const fontSizeCategories: TFontSizeCategories = {
     xxl: 1.5,
@@ -22,4 +22,9 @@ const API: TRoutes = {
     notifyServer: '/notify/server/'
 }; 
 
-export {fontSizeCategories, AuthPageRedirectOffer, API}
+const sidebarNav: TsidebarNav = {
+    dashboards: ["overview", "servers", "notifiers"],
+    pages: ['docs']
+}
+
+export {fontSizeCategories, AuthPageRedirectOffer, API, sidebarNav}
