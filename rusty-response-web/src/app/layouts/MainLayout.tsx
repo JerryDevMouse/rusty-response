@@ -11,7 +11,7 @@ const MainLayout = () => {
     <div className={styles.container}>
       <Sidebar isOpen={sidebarIsOpen}/>
       <div className={styles.containercol}>
-        <Header switchSidebar={switchSidebar}/>
+        <Header isOpen={sidebarIsOpen} switchSidebar={switchSidebar}/>
         <main className={styles.main}>
           <Outlet/>
         </main>

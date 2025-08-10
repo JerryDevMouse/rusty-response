@@ -12,12 +12,15 @@ interface Props {
 }
 
 const Link: FC<Props> = ({section, name}) => {
+  const capitalizedName = capitalizeFirstLetter(name);
   return (
-    <NavLink to={`/${section}/${name}`} className={({isActive}) => 
-        `${styles.link} ${styles.row} ${isActive ? styles.active : ''}`
-    }>
+    <NavLink 
+      to={`/${section}/${name}`} 
+      className={({isActive}) => 
+        `${styles.link} ${styles.row} ${isActive ? styles.active : ''}`}
+      title={capitalizedName}>
         <Icon name={`sidebar_${name}`} width={16} height={16}></Icon>
-        <Text type='tiny'>{capitalizeFirstLetter(name)}</Text>
+        <Text type='tiny'>{capitalizedName}</Text>
     </NavLink>
   )
 }
