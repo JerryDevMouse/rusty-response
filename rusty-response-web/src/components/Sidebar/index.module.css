@@ -7,7 +7,6 @@
 }
 .sidebar p {
     opacity: 1;
-    overflow: hidden;
     transition: opacity .3s;
 }
 .sidebarclose {
@@ -15,6 +14,7 @@
     padding: 24px 15px;
 }
 .sidebarclose p {
+    overflow: hidden;
     opacity: 0;
 }
 .sidebarclose .title, 

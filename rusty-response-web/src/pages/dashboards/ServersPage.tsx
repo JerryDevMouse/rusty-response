@@ -1,8 +1,8 @@
-import React from 'react'
+import NoServers from '../../components/NoServers'
 
 const ServersPage = () => {
   return (
-    <div>ServersPage</div>
+    <NoServers text='To get started, add your first server'/>
   )
 }
 

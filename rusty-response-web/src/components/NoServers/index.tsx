@@ -1,0 +1,25 @@
+import Icon from '../Icon/Icon'
+import Text from '../Text'
+import styles from './index.module.css'
+
+const NoServers = ({text}: {text: string}) => {
+  return (
+    <div className={styles.container}>
+        <div className={styles.content}>
+            <img src="/icons/no_servers.png" alt="no servers" />
+            <div className={styles.title}>
+                <Text type='xxl' weight={600}>No servers</Text>
+            </div>
+            <div className={styles.text}>
+                <Text type='small' weight={500} color={5}>{text}</Text>
+            </div>
+            <button className={styles.button}>
+                <Icon name='plus' width={17} height={17} />
+                <Text type='small' weight={600}>Add a server</Text>
+            </button>
+        </div>
+    </div>
+  )
+}
+
+export default NoServers

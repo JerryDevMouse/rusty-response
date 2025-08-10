@@ -1,8 +1,8 @@
-import React from 'react'
+import NoServers from '../../components/NoServers'
 
 const NotifiersPage = () => {
   return (
-    <div>NotifiersPage</div>
+    <NoServers text='To set up notifications, create at least one server'/>
   )
 }
 

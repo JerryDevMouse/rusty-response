@@ -5,7 +5,7 @@ import styles from './AuthPages.module.css'
 const Container: FC<IChildren> = ({children}) => {
   return (
     <div className={styles.container}>
-        {children}
+      {children}
     </div>
 )
 }

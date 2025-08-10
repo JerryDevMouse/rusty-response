@@ -1,0 +1,14 @@
+.footer {
+    width: 100%;
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+}
+.nav {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+}
+.nav a > p:hover {
+    text-decoration: underline;
+}
