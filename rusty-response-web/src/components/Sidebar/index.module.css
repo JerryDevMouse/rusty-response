@@ -49,6 +49,7 @@
     padding: 10px 29px;
     border-radius: 12px;
     transition: background .3s ease, padding .4s ease;
+    overflow: hidden;
 }
 .link span, .user span {
     flex-shrink: 0;
