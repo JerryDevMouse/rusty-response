@@ -26,6 +26,7 @@
     display: flex;
     align-items: center;
     column-gap: 9px;
+    width: fit-content;
 }
 .col label:hover {
     cursor: pointer;
@@ -86,7 +87,6 @@
 .icon:hover {
     border: 1px solid #cdcdcd;
     color: #c9c9c9;
-    cursor: help;
 }
 .icon:hover + .helpcontent {
     display: flex;
