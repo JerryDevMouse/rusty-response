@@ -36,6 +36,13 @@ const ServersPage = () => {
           <div className={styles.col}>
             <label htmlFor="serverTimeout">
               <Text type='tiny' color={5}>Timeout</Text>
+              <div className={styles.help}>
+                <div className={styles.icon}>i</div>
+                <div className={styles.helpcontent}>
+                  <Text type='tiny' weight={600}>Timeout</Text>
+                  <Text type='tiny'>The interval between server checks (seconds)</Text>
+                </div>
+              </div>
             </label>
             <div className={styles.rowinput}>
               <input type="number" id='serverTimeout' defaultValue={10} placeholder='Enter Server Timeout'/>
@@ -46,6 +53,13 @@ const ServersPage = () => {
           <div className={styles.col}>
             <label htmlFor="serverInterval">
               <Text type='tiny' color={5}>Interval</Text>
+              <div className={styles.help}>
+                <div className={styles.icon}>i</div>
+                <div className={styles.helpcontent}>
+                  <Text type='tiny' weight={600}>Interval</Text>
+                  <Text type='tiny'>The interval between server checks (seconds)</Text>
+                </div>
+              </div>
             </label>
             <div className={styles.rowinput}>
               <input type="number" id='serverInterval' defaultValue={60} placeholder='Enter Server Interval'/>

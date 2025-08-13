@@ -22,6 +22,11 @@
     row-gap: 10px;
     flex: 1;
 }
+.col label {
+    display: flex;
+    align-items: center;
+    column-gap: 9px;
+}
 .col label:hover {
     cursor: pointer;
 }
@@ -60,4 +65,43 @@
 }
 .btnmain:hover {
     background: var(--color-main-hover);
+}
+
+.help {
+    position: relative;
+    cursor: default;
+}
+.icon {
+    width: 17px;
+    height: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 1px solid #919191;
+    color: #919191;
+    font-style: 12px;
+    transition: .3s;
+}
+.icon:hover {
+    border: 1px solid #cdcdcd;
+    color: #c9c9c9;
+    cursor: help;
+}
+.icon:hover + .helpcontent {
+    display: flex;
+}
+.helpcontent {
+    min-width: 160px;
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    row-gap: 3px;
+    border-radius: 12px;
+    background: var(--color-bg);
+    border: 1px solid #565656;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, -5px);
 }
