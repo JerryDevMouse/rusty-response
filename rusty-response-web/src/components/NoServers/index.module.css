@@ -21,7 +21,7 @@
 .text {
     margin-bottom: 15px;
 }
-.button {
+.link {
     display: flex;
     align-items: center;
     column-gap: 18px;
@@ -30,6 +30,6 @@
     border-radius: 16px;
     transition: background .3s;
 }
-.button:hover {
+.link:hover {
     background: var(--color-accent-hover);
 }

@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import Icon from '../Icon/Icon'
 import Text from '../Text'
 import styles from './index.module.css'
@@ -13,10 +14,10 @@ const NoServers = ({text}: {text: string}) => {
             <div className={styles.text}>
                 <Text type='small' weight={500} color={5}>{text}</Text>
             </div>
-            <button className={styles.button}>
+            <Link className={styles.link} to='/dashboards/servers/create'>
                 <Icon name='plus' width={17} height={17} />
                 <Text type='small' weight={600}>Add a server</Text>
-            </button>
+            </Link>
         </div>
     </div>
   )

@@ -3,11 +3,11 @@ import MainLayout from "../app/layouts/MainLayout";
 import SignInPage from "./auth/SignInPage";
 import SignUpPage from "./auth/SignUpPage";
 import OverviewPage from "./dashboards/OverviewPage";
-import ServersPage from "./dashboards/ServersPage";
+import Servers from "./dashboards/servers";
 import NotifiersPage from "./dashboards/NotifiersPage";
 import DocsPage from "./pages/DocsPage";
 import NotFoundPage from "./NotFoundPage"
-import { AuthRedirect, ProtectedRoute } from "./RouteGuards";
+// import { AuthRedirect, ProtectedRoute } from "./RouteGuards";
 
 const router = createBrowserRouter([
     {
@@ -26,7 +26,16 @@ const router = createBrowserRouter([
                     children: [
                         { index: true, element: <Navigate to='overview' replace /> },
                         { path: 'overview', element: <OverviewPage /> },
-                        { path: 'servers', element: <ServersPage /> },
+                        { path: 'servers', children: [
+                            {
+                                index: true,
+                                element: <Servers.Main />
+                            },
+                            {
+                                path: 'create',
+                                element: <Servers.CreateServer />
+                            }
+                        ] },
                         { path: 'notifiers', element: <NotifiersPage /> }
                     ]
                 },
