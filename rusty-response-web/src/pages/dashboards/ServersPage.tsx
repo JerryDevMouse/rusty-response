@@ -7,16 +7,16 @@ import { Form } from '../../components/Form'
 const ServersPage = () => {
   return (
     // <NoServers text='To get started, add your first server'/>
-    <>
+    <Form.Container>
     <Form.Title>Create Server</Form.Title>
     <Form.Section subtitle='Server Information'>
-      <Form.SectionRow>
+      <Form.Row>
         <Form.Input type='text' name='Server Name'/>
         <Form.Input type='text' name='Server URL'/>
-      </Form.SectionRow>
+      </Form.Row>
     </Form.Section>
     <Form.Section subtitle='Monitoring Settings'>
-      <Form.SectionRow>
+      <Form.Row>
         <Form.Input type='number' name='Timeout' 
           help='The interval between server checks (seconds)'
           defaultValue={10}
@@ -25,13 +25,16 @@ const ServersPage = () => {
           help='The interval between server checks (seconds)'
           defaultValue={60}
         />
-      </Form.SectionRow>
+      </Form.Row>
+      <Form.Row>
+        <Form.Slider name='Status' afterText='Active'/>
+      </Form.Row>
     </Form.Section>
     <div className={styles.btns}>
       <button className={styles.btn}><Text type='small'>Cancel</Text></button>
       <button className={styles.btnmain}><Text type='small'>Create Server</Text></button>
     </div>
-    </>
+    </Form.Container>
   )
 }
 

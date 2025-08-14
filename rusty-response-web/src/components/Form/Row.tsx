@@ -1,7 +1,7 @@
 import type { IChildren } from '../../helpers/types'
 import styles from './index.module.css'
 
-const SectionRow = ({children}: IChildren) => {
+const Row = ({children}: IChildren) => {
   return (
     <div className={styles.row}>
         {children}
@@ -9,4 +9,4 @@ const SectionRow = ({children}: IChildren) => {
   )
 }
 
-export default SectionRow
+export default Row

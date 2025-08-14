@@ -1,11 +1,15 @@
+import Container from "./Container";
 import Input from "./Input";
 import Section from "./Section";
-import SectionRow from "./SectionRow";
+import Row from "./Row";
+import Slider from "./Slider";
 import Title from "./Title";
 
 export const Form = {
+    Container,
     Title,
     Section,
-    SectionRow,
-    Input
+    Row,
+    Input,
+    Slider
 }
