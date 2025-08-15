@@ -13,10 +13,7 @@ use tower_cookies::{Cookie, Cookies};
 use tracing::debug;
 
 use crate::{
-    Settings,
-    crypt::{BcryptController, JWTController},
-    model::{Ctx, UserAction, UserActionLogBmc, UserBmc, UserClaims, UserCreate},
-    web::WebError,
+    crypt::{BcryptController, JWTController}, model::{Ctx, User, UserAction, UserActionLogBmc, UserBmc, UserClaims, UserCreate}, web::WebError, Settings
 };
 
 use super::{
@@ -39,6 +36,18 @@ pub fn routes<S>(state: AppState) -> Router<S> {
         .with_state(state)
 }
 
+#[utoipa::path(
+    post,
+    tag = "account",
+    path = "/api/v1/account/verify",
+    responses(
+        (status = 200, description = "User is authenticated"),
+        (status = 401, description = "User is not authenticated"),
+    ),
+    security(
+        ("jwt_key" = [])
+    )
+)]
 pub async fn user_verify(ctx: Ctx, State(state): State<AppState>) -> Result<Response, WebError> {
     debug!("{:?}", ctx);
     let body = json!({
@@ -49,6 +58,16 @@ pub async fn user_verify(ctx: Ctx, State(state): State<AppState>) -> Result<Resp
     Ok((StatusCode::OK, Json(body)).into_response())
 }
 
+#[utoipa::path(
+    post,
+    tag = "account",
+    path = "/api/v1/account/signin",
+    responses(
+        (status = 200, description = "User signed in successfully", body = User),
+        (status = 401, description = "Error during authentication"),
+    ),
+    request_body = UserCreate,
+)]
 pub async fn user_signin(
     State(state): State<AppState>,
     cookies: Cookies,
@@ -93,6 +112,16 @@ pub async fn user_signin(
     Ok((StatusCode::OK, Json(user)).into_response())
 }
 
+#[utoipa::path(
+    post,
+    tag = "account",
+    path = "/api/v1/account/signup",
+    responses(
+        (status = 200, description = "User signed up successfully", body = User),
+        (status = 401, description = "Error during sign up"),
+    ),
+    request_body = UserCreate,
+)]
 pub async fn user_signup(
     State(state): State<AppState>,
     cookies: Cookies,

@@ -1,10 +1,10 @@
 mod middlewares;
 use tokio::sync::mpsc::UnboundedSender;
 
-mod notifier;
-mod server;
-mod server_log;
-mod user;
+pub mod notifier;
+pub mod server;
+pub mod server_log;
+pub mod user;
 
 pub use notifier::routes as notify_routes;
 pub use server::routes as server_routes;
