@@ -1,5 +1,7 @@
 use axum::{Json, http::StatusCode, response::IntoResponse};
+use serde::Serialize;
 use serde_json::json;
+use utoipa::ToSchema;
 
 use crate::crypt::CryptError;
 
@@ -103,12 +105,19 @@ impl IntoResponse for WebError {
 
         tracing::error!("Error occurred: {:?}", self);
 
-        let body = Json(json!({
-            "error": message,
-            "code": status.as_u16(),
-            "details": if cfg!(debug_assertions) { details } else { None }
-        }));
+        let body = WebErrorSchema {
+            error: message.to_string(),
+            code: status.as_u16(),
+            details: if cfg!(debug_assertions) { details } else { None }
+        };
 
-        (status, body).into_response()
+        (status, Json(body)).into_response()
     }
+}
+
+#[derive(Debug, Clone, Serialize, ToSchema)]
+pub struct WebErrorSchema {
+    error: String,
+    code: u16,
+    details: Option<String>,
 }
