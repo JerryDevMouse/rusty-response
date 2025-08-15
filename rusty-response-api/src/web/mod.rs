@@ -23,7 +23,9 @@ use crate::{ModelManager, channel::ControlMessage, model::Ctx, notify::NotifyMan
     paths(
         routes::user::user_signin, 
         routes::user::user_verify,
-        routes::user::user_signup
+        routes::user::user_signup,
+
+        routes::server::create_server,
     ),
 )]
 struct ApiDoc;

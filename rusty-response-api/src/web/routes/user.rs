@@ -13,7 +13,7 @@ use tower_cookies::{Cookie, Cookies};
 use tracing::debug;
 
 use crate::{
-    crypt::{BcryptController, JWTController}, model::{Ctx, User, UserAction, UserActionLogBmc, UserBmc, UserClaims, UserCreate}, web::WebError, Settings
+    crypt::{BcryptController, JWTController}, model::{Ctx, User, UserAction, UserActionLogBmc, UserBmc, UserClaims, UserCreate}, web::{error::WebErrorSchema, WebError}, Settings
 };
 
 use super::{
@@ -37,12 +37,12 @@ pub fn routes<S>(state: AppState) -> Router<S> {
 }
 
 #[utoipa::path(
-    post,
+    get,
     tag = "account",
     path = "/api/v1/account/verify",
     responses(
         (status = 200, description = "User is authenticated"),
-        (status = 401, description = "User is not authenticated"),
+        (status = 401, description = "Error during verify", body = WebErrorSchema),
     ),
     security(
         ("jwt_key" = [])
@@ -64,7 +64,7 @@ pub async fn user_verify(ctx: Ctx, State(state): State<AppState>) -> Result<Resp
     path = "/api/v1/account/signin",
     responses(
         (status = 200, description = "User signed in successfully", body = User),
-        (status = 401, description = "Error during authentication"),
+        (status = 401, description = "Error during sign in", body = WebErrorSchema),
     ),
     request_body = UserCreate,
 )]
@@ -118,7 +118,7 @@ pub async fn user_signin(
     path = "/api/v1/account/signup",
     responses(
         (status = 200, description = "User signed up successfully", body = User),
-        (status = 401, description = "Error during sign up"),
+        (status = 401, description = "Error during sign up", body = WebErrorSchema),
     ),
     request_body = UserCreate,
 )]

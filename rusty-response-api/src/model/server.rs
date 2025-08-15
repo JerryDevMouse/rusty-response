@@ -3,12 +3,13 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 use sqlx::{Row, Sqlite};
 use time::PrimitiveDateTime;
+use utoipa::ToSchema;
 
 use crate::model::Page;
 
 use super::{Ctx, ModelManager};
 
-#[derive(Debug, Clone, FromRow, Serialize)]
+#[derive(Debug, Clone, FromRow, Serialize, ToSchema)]
 pub struct Server {
     pub id: i64,
     pub user_id: i64,
@@ -28,7 +29,7 @@ pub struct Server {
     pub updated_at: time::PrimitiveDateTime,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Debug, Clone, ToSchema)]
 pub struct ServerCreate {
     pub name: String,
     pub url: String,

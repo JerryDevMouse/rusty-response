@@ -10,7 +10,7 @@ use reqwest::StatusCode;
 
 use crate::{
     model::{Ctx, Server, ServerBmc, ServerCreate, UserAction, UserActionLogBmc, UserRole},
-    web::{utils::PageQuery, WebError},
+    web::{error::WebErrorSchema, utils::PageQuery, WebError},
 };
 
 use super::{AppState, middlewares::verify_token_middleware};
@@ -29,6 +29,19 @@ pub fn routes<S>(state: AppState) -> Router<S> {
         .with_state(state)
 }
 
+#[utoipa::path(
+    post,
+    path = "/api/v1/server/",
+    tag = "server",
+    responses(
+        (status = 200, description = "Server created successfully", body = Server),
+        (status = 409, description = "Server with the same name already exists", body = WebErrorSchema),
+    ),
+    security(
+        ("jwt_key" = [])
+    ),
+    request_body = ServerCreate,
+)]
 pub async fn create_server(
     State(state): State<AppState>,
     ctx: Ctx,
