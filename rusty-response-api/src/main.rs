@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use rusty_response_api::{Ctx, ModelManager, Settings, channel, web};
+use rusty_response_api::{channel, log_runtime_info, web, Ctx, ModelManager, Settings};
 use tokio::{net::TcpListener, sync::mpsc};
 use tokio_util::sync::CancellationToken;
 use tracing::{debug, info};
@@ -20,6 +20,7 @@ fn setup_tracing() {
 #[tokio::main]
 async fn main() -> Result<()> {
     setup_tracing();
+    log_runtime_info();
     let config = Settings::global().database();
 
     debug!("Setting up SQLite database at: {}.", config.path());

@@ -1,12 +1,14 @@
 mod middlewares;
+use tokio::sync::mpsc::UnboundedSender;
 
-mod notifier;
-mod server;
-mod user;
+pub mod notifier;
+pub mod server;
+pub mod server_log;
+pub mod user;
 
 pub use notifier::routes as notify_routes;
 pub use server::routes as server_routes;
-use tokio::sync::mpsc::UnboundedSender;
+pub use server_log::routes as server_log_routes;
 pub use user::routes as user_routes;
 
 use crate::{ModelManager, channel::ControlMessage, notify::NotifyManager};

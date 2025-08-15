@@ -1,5 +1,7 @@
 use axum::{Json, http::StatusCode, response::IntoResponse};
+use serde::Serialize;
 use serde_json::json;
+use utoipa::ToSchema;
 
 use crate::crypt::CryptError;
 
@@ -30,6 +32,12 @@ pub enum WebError {
 
     #[error("Not your server")]
     ServerNotAllowed,
+
+    #[error("Notifier not found")]
+    NotifierNotFound,
+
+    #[error("Not your notifier")]
+    NotifierNotAllowed,
 
     #[error(transparent)]
     NotifierError(#[from] crate::notify::Error),
@@ -77,6 +85,12 @@ impl IntoResponse for WebError {
                 "Notifier error occured.",
                 Some(e.to_string()),
             ),
+            WebError::NotifierNotFound => (StatusCode::NOT_FOUND, "Notifier not found", None),
+            WebError::NotifierNotAllowed => (
+                StatusCode::FORBIDDEN,
+                "You don't own that notifier to interact with it",
+                None,
+            ),
             WebError::DatabaseError(err) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Database error occurred. Try again later.",
@@ -91,12 +105,19 @@ impl IntoResponse for WebError {
 
         tracing::error!("Error occurred: {:?}", self);
 
-        let body = Json(json!({
-            "error": message,
-            "code": status.as_u16(),
-            "details": if cfg!(debug_assertions) { details } else { None }
-        }));
+        let body = WebErrorSchema {
+            error: message.to_string(),
+            code: status.as_u16(),
+            details: if cfg!(debug_assertions) { details } else { None }
+        };
 
-        (status, body).into_response()
+        (status, Json(body)).into_response()
     }
+}
+
+#[derive(Debug, Clone, Serialize, ToSchema)]
+pub struct WebErrorSchema {
+    error: String,
+    code: u16,
+    details: Option<String>,
 }

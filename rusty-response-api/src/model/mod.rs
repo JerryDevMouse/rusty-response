@@ -5,6 +5,9 @@ mod server_log;
 mod user;
 mod user_action;
 
+mod utils;
+pub use utils::Page;
+
 pub use notifier::{Notifier, NotifierBmc, NotifierCreate};
 pub use server::{Server, ServerBmc, ServerCreate};
 pub use server_log::{ServerLog, ServerLogBmc, ServerLogCreate, ServerLogLine};
@@ -46,7 +49,8 @@ impl ModelManager {
     }
 
     pub async fn migrate(&self) -> Result<()> {
-        let migrator = sqlx::migrate::Migrator::new(Path::new("./rusty-response-api/migrations")).await?;
+        let migrator =
+            sqlx::migrate::Migrator::new(Path::new("./rusty-response-api/migrations")).await?;
         migrator.run(&self.pool).await?;
         Ok(())
     }

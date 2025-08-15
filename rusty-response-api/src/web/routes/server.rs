@@ -1,6 +1,6 @@
 use axum::{
     Json, Router,
-    extract::{Path, State},
+    extract::{Path, Query, State},
     middleware,
     response::{IntoResponse, Response},
     routing::{get, post},
@@ -10,7 +10,7 @@ use reqwest::StatusCode;
 
 use crate::{
     model::{Ctx, Server, ServerBmc, ServerCreate, UserAction, UserActionLogBmc, UserRole},
-    web::WebError,
+    web::{error::WebErrorSchema, utils::PageQuery, WebError},
 };
 
 use super::{AppState, middlewares::verify_token_middleware};
@@ -29,6 +29,19 @@ pub fn routes<S>(state: AppState) -> Router<S> {
         .with_state(state)
 }
 
+#[utoipa::path(
+    post,
+    path = "/api/v1/server/",
+    tag = "server",
+    responses(
+        (status = 200, description = "Server created successfully", body = Server),
+        (status = 409, description = "Server with the same name already exists", body = WebErrorSchema),
+    ),
+    security(
+        ("jwt_key" = [])
+    ),
+    request_body = ServerCreate,
+)]
 pub async fn create_server(
     State(state): State<AppState>,
     ctx: Ctx,
@@ -52,12 +65,11 @@ pub async fn create_server(
 }
 
 pub async fn list_servers(
-    State(state): State<AppState>, 
-    ctx: Ctx
+    State(state): State<AppState>,
+    Query(query): Query<PageQuery>,
+    ctx: Ctx,
 ) -> Result<Response, WebError> {
-    let servers = ServerBmc::all_for_user(&state.mm, &ctx)
-        .await?;
-
+    let servers = ServerBmc::page(&state.mm, &ctx, query.offset, query.limit).await?;
     Ok((StatusCode::OK, Json(servers)).into_response())
 }
 
@@ -127,7 +139,7 @@ pub async fn remove_server(
         return Err(WebError::ServerNotAllowed);
     }
 
-    ServerBmc::remove_by_id(&state.mm, &ctx, id).await?;
+    ServerBmc::delete(&state.mm, &ctx, id).await?;
 
     state
         .control_tx

@@ -2,7 +2,7 @@ use std::sync::OnceLock;
 
 use config::{Config, Environment, File};
 use serde::Deserialize;
-use tracing::{error, trace};
+use tracing::trace;
 
 #[derive(Debug, Deserialize)]
 pub struct Network {
@@ -52,7 +52,7 @@ impl Settings {
         let s = Config::builder()
             .add_source(File::with_name(config_path.to_str().unwrap()))
             .add_source(
-                Environment::with_prefix("RP")
+                Environment::with_prefix("RR")
                     .convert_case(config::Case::Upper)
                     .separator("_"),
             )
@@ -67,7 +67,7 @@ impl Settings {
         INSTANCE.get_or_init(|| {
             let result = Settings::new();
             if let Err(e) = result {
-                error!(
+                tracing::warn!(
                     "Error reading configuration: {}. Falling back to default..",
                     e
                 );
@@ -174,5 +174,9 @@ fn default_expire_time() -> i64 {
 }
 
 fn default_database_path() -> String {
-    std::env::current_dir().unwrap().join("sqlite.db").display().to_string()
+    std::env::current_dir()
+        .unwrap()
+        .join("sqlite.db")
+        .display()
+        .to_string()
 }

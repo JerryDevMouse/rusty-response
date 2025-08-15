@@ -1,8 +1,15 @@
+use serde::{Deserialize, Serialize};
 use tokio::{signal, sync::mpsc};
 use tokio_util::sync::CancellationToken;
 use tracing::info;
 
 use crate::channel::ControlMessage;
+
+#[derive(Deserialize, Serialize)]
+pub struct PageQuery {
+    pub limit: i64,
+    pub offset: i64,
+}
 
 pub async fn shutdown_signal(
     token: CancellationToken,

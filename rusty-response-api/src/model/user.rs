@@ -4,11 +4,12 @@ use crate::model::ModelError;
 use eyre::Result;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, Sqlite};
+use utoipa::ToSchema;
 use std::fmt::Display;
 use std::str::FromStr;
 use time::PrimitiveDateTime;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default, ToSchema)]
 pub enum UserRole {
     Admin,
     #[default]
@@ -38,7 +39,7 @@ impl FromStr for UserRole {
     }
 }
 
-#[derive(Serialize, Debug, Clone, sqlx::FromRow)]
+#[derive(Serialize, Debug, Clone, sqlx::FromRow, ToSchema)]
 #[cfg_attr(feature = "test-utils", derive(Deserialize))]
 pub struct User {
     pub id: i64,
@@ -50,7 +51,7 @@ pub struct User {
     pub updated_at: time::PrimitiveDateTime,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, ToSchema)]
 #[cfg_attr(feature = "test-utils", derive(Serialize))]
 pub struct UserCreate {
     pub username: String,

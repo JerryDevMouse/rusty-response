@@ -5,7 +5,7 @@ use time::PrimitiveDateTime;
 
 use crate::{
     ModelManager,
-    model::{Ctx, Server},
+    model::{Ctx, Page, Server},
 };
 
 #[derive(Debug, Clone, Serialize)]
@@ -95,13 +95,35 @@ impl ServerLogBmc {
         Ok(log)
     }
 
-    pub async fn all_limited(
+    pub async fn delete(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<()> {
+        sqlx::query("DELETE FROM server_log WHERE id = ?")
+            .bind(id)
+            .execute(&mm.pool)
+            .await?;
+
+        Ok(())
+    }
+}
+
+// Listing API
+impl ServerLogBmc {
+    pub async fn count(mm: &ModelManager, _ctx: &Ctx) -> Result<i64> {
+        let row = sqlx::query("SELECT COUNT(*) as count FROM server_log")
+            .fetch_one(&mm.pool)
+            .await?;
+        let count = row.try_get("count")?;
+        Ok(count)
+    }
+
+    pub async fn list(
         mm: &ModelManager,
         _ctx: &Ctx,
+        id: i64,
         offset: i64,
         limit: i64,
     ) -> Result<Vec<ServerLog>> {
-        let logs = sqlx::query_as::<Sqlite, ServerLog>("SELECT * FROM server_log LIMIT ? OFFSET ?")
+        let logs = sqlx::query_as::<Sqlite, ServerLog>("SELECT * FROM server_log WHERE server_id = ? LIMIT ? OFFSET ?")
+            .bind(id)
             .bind(limit)
             .bind(offset)
             .fetch_all(&mm.pool)
@@ -110,20 +132,45 @@ impl ServerLogBmc {
         Ok(logs)
     }
 
-    pub async fn all(mm: &ModelManager, _ctx: &Ctx) -> Result<Vec<ServerLog>> {
-        let logs = sqlx::query_as::<Sqlite, ServerLog>("SELECT * FROM server_log")
+    pub async fn list_failed(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+        id: i64,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Vec<ServerLog>> {
+        let logs = sqlx::query_as::<Sqlite, ServerLog>("SELECT * FROM server_log WHERE server_id = ? AND failed = 1 LIMIT ? OFFSET ?")
+            .bind(id)
+            .bind(limit)
+            .bind(offset)
             .fetch_all(&mm.pool)
             .await?;
-
         Ok(logs)
     }
 
-    pub async fn delete(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<()> {
-        sqlx::query("DELETE FROM server_log WHERE id = ?")
-            .bind(id)
-            .execute(&mm.pool)
-            .await?;
+    pub async fn page(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+        id: i64,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Page<ServerLog>> {
+        let items = Self::list(mm, _ctx, id, offset, limit).await?;
+        let count = Self::count(mm, _ctx).await?;
 
-        Ok(())
+        Ok(Page::new(items, count, limit, offset))
+    }
+
+    pub async fn page_failed(
+        mm: &ModelManager,
+        _ctx: &Ctx,
+        id: i64,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Page<ServerLog>> {
+        let items = Self::list_failed(mm, _ctx, id, offset, limit).await?;
+        let count = Self::count(mm, _ctx).await?;
+
+        Ok(Page::new(items, count, limit, offset))
     }
 }
