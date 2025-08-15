@@ -4,6 +4,7 @@ import Section from "./Section";
 import Row from "./Row";
 import Slider from "./Slider";
 import Title from "./Title";
+import Buttons from "./Buttons";
 
 export const Form = {
     Container,
@@ -11,5 +12,6 @@ export const Form = {
     Section,
     Row,
     Input,
-    Slider
+    Slider,
+    Buttons
 }

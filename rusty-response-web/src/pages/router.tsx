@@ -7,7 +7,7 @@ import Servers from "./dashboards/servers";
 import NotifiersPage from "./dashboards/NotifiersPage";
 import DocsPage from "./pages/DocsPage";
 import NotFoundPage from "./NotFoundPage"
-// import { AuthRedirect, ProtectedRoute } from "./RouteGuards";
+import { AuthRedirect, ProtectedRoute } from "./RouteGuards";
 
 const router = createBrowserRouter([
     {
@@ -15,9 +15,9 @@ const router = createBrowserRouter([
         element: <Navigate to='/dashboards/overview' replace />
     },
     {
-        // element: <ProtectedRoute />,
-        // children: [
-            // {
+        element: <ProtectedRoute />,
+        children: [
+            {
             path: '/',
             element: <MainLayout />,
             children: [
@@ -47,20 +47,20 @@ const router = createBrowserRouter([
                     ]
                 }
             ]
-        // }, 
-        // ]
+        }, 
+        ]
     },
     {
-        // element: <AuthRedirect />,
-        // children: [
-        //     {
+        element: <AuthRedirect />,
+        children: [
+            {
                 path: 'auth',
                 children: [
                     { path: 'signin', element: <SignInPage /> },
                     { path: 'signup', element: <SignUpPage /> },
                 ]
-        //     }
-        // ]
+            }
+        ]
         
     },
     {

@@ -1,0 +1,17 @@
+.main, .gray {
+    padding: 10px 16px;
+    border-radius: 10px;
+    transition: background .3s;
+}
+.gray {
+    background: var(--color-accent);
+}
+.gray:hover {
+    background: var(--color-accent-hover);
+}
+.main {
+    background: var(--color-main);
+}
+.main:hover {
+    background: var(--color-main-hover);
+}

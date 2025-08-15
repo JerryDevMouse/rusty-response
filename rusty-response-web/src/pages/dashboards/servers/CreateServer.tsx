@@ -1,10 +1,12 @@
 import { Form } from '../../../components/Form'
-import Text from '../../../components/Text'
-import styles from '../../../components/Form/index.module.css' //temporary
+import useForm from '../../../hooks/useForm'
 
 const CreateServer = () => {
+  const createServer = () => {}; // fetch hook
+  const {handleCancel, handleSubmit} = useForm(createServer);
+
   return (
-    <Form.Container>
+    <Form.Container onSubmit={handleSubmit}>
       <Form.Title>Create Server</Form.Title>
       <Form.Section subtitle='Server Information'>
         <Form.Row>
@@ -27,10 +29,11 @@ const CreateServer = () => {
           <Form.Slider name='Status' afterText='Active'/>
         </Form.Row>
       </Form.Section>
-      <div className={styles.btns}>
-        <button className={styles.btn}><Text type='small'>Cancel</Text></button>
-        <button className={styles.btnmain}><Text type='small'>Create Server</Text></button>
-      </div>
+      <Form.Buttons 
+        handleCancel={handleCancel}
+        handleSubmit={createServer}
+        submitText='Create Server'
+      />
     </Form.Container>
   )
 }

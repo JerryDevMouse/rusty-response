@@ -40,3 +40,8 @@ export interface IUser {
 	updated_at: any
 }
 // todo: write a type for Date when @JerryDevMouse does it
+
+export interface IButtonProps extends IChildren {
+  onClick: VoidFunction,
+  type: 'main' | 'gray'
+}

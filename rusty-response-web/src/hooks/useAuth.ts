@@ -5,13 +5,6 @@ import type { IUser } from '../helpers/types';
 import { useAppDispatch, useAppSelector } from '../app/store/hooks';
 import { setUser, setUserLoading } from '../app/store/slices/userSlice';
 import { useNavigate } from 'react-router';
-const tempUser = {
-	id: 1,
-	username: "Jerry",
-	role: "user",
-	created_at: [],
-	updated_at: []
-}
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +23,7 @@ const useAuth = () => {
         method: 'POST',
         body: { username, password_raw }
       })
-      dispatch(setUser(resUser ?? tempUser));
+      dispatch(setUser(resUser));
       navigate('/');
     } catch (err) {
       if (err instanceof ApiError) {

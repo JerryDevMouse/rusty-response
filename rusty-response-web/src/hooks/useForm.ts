@@ -1,6 +1,8 @@
 import { type FormEvent } from 'react'
+import { useNavigate } from 'react-router';
 
 const useForm = (onSubmit: (formData: FormData) => void) => {
+    const navigate = useNavigate();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -9,8 +11,12 @@ const useForm = (onSubmit: (formData: FormData) => void) => {
 
         e.currentTarget.reset();
     }
+    
+    const handleCancel = () => {
+        navigate('/');
+    }
 
-    return {handleSubmit}
+    return {handleSubmit, handleCancel}
 }
 
 export default useForm
