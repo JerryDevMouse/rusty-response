@@ -42,6 +42,6 @@ export interface IUser {
 // todo: write a type for Date when @JerryDevMouse does it
 
 export interface IButtonProps extends IChildren {
-  onClick: VoidFunction,
-  type: 'main' | 'gray'
+  onClick?: VoidFunction,
+  type: 'submit' | 'button'
 }

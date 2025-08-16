@@ -1,17 +1,17 @@
-.main, .gray {
+.submit, .button {
     padding: 10px 16px;
     border-radius: 10px;
     transition: background .3s;
 }
-.gray {
+.button {
     background: var(--color-accent);
 }
-.gray:hover {
+.button:hover {
     background: var(--color-accent-hover);
 }
-.main {
+.submit {
     background: var(--color-main);
 }
-.main:hover {
+.submit:hover {
     background: var(--color-main-hover);
 }

@@ -1,8 +1,9 @@
 import { Form } from '../../../components/Form'
+import useCreateServer from '../../../hooks/servers/useCreateServer';
 import useForm from '../../../hooks/useForm'
 
 const CreateServer = () => {
-  const createServer = () => {}; // fetch hook
+  const createServer = useCreateServer();
   const {handleCancel, handleSubmit} = useForm(createServer);
 
   return (
@@ -31,7 +32,6 @@ const CreateServer = () => {
       </Form.Section>
       <Form.Buttons 
         handleCancel={handleCancel}
-        handleSubmit={createServer}
         submitText='Create Server'
       />
     </Form.Container>

@@ -25,13 +25,9 @@ const useAuth = () => {
       })
       dispatch(setUser(resUser));
       navigate('/');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // todo: single standard output for the user
-        console.log('Server error: ', err.message);
-        console.log('Error status: ', err.status);
-        if (err.details) console.log('Error details: ', err.details);
-      }
+    } catch (error) {
+      // todo: single standard output for the user  
+      if (error instanceof ApiError) error.log();
     } finally {
       dispatch(setUserLoading(false))
     }

@@ -1,7 +1,7 @@
-import styles from './index.module.css'
+import type { FC } from 'react'
 import Text from '../Text'
 import lowerFirstLetter from '../../helpers/lowerFirstLetter'
-import type { FC } from 'react'
+import styles from './index.module.css'
 interface Props {
     type: React.HTMLInputTypeAttribute,
     name: string,
