@@ -7,7 +7,7 @@ import Servers from "./dashboards/servers";
 import NotifiersPage from "./dashboards/NotifiersPage";
 import DocsPage from "./pages/DocsPage";
 import NotFoundPage from "./NotFoundPage"
-import { AuthRedirect, ProtectedRoute } from "./RouteGuards";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 const router = createBrowserRouter([
     {
@@ -51,7 +51,7 @@ const router = createBrowserRouter([
         ]
     },
     {
-        element: <AuthRedirect />,
+        element: <ProtectedRoute type="auth" />,
         children: [
             {
                 path: 'auth',

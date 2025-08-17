@@ -8,7 +8,7 @@ interface IApiRequest {
 
 const apiRequest = async <T = any> (
   endpoint: string,
-  { method = 'GET', body }: IApiRequest
+  { method = 'GET', body }: IApiRequest = {}
 ): Promise<T> => {
   const response = await fetch(`${import.meta.env.VITE_HOST}${endpoint}`, {
     method,

@@ -1,22 +1,25 @@
 import { createSlice, type PayloadAction} from "@reduxjs/toolkit";
 import type { IUser } from "../../../helpers/types";
-
 interface IState {
     currentUser: IUser | null,
     loading: boolean
 }
 
-const initialState: IState = {
-    currentUser: null,
-    loading: false
-};
+function getInitialState() {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+}
 
 const userSlice = createSlice({
     name: 'user',
-    initialState,
+    initialState: {
+        currentUser: getInitialState(),
+        loading: false
+    } as IState,
     reducers: {
         setUser: (state, action: PayloadAction<IUser | null>) => {
-            state.currentUser = action.payload
+            state.currentUser = action.payload;
+            localStorage.setItem('user', JSON.stringify(action.payload));
         },
         setUserLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload

@@ -2,17 +2,25 @@ import ApiError from '../helpers/ApiError';
 import apiRequest from '../helpers/apiRequest';
 import { API } from '../helpers/constants';
 import type { IUser } from '../helpers/types';
-import { useAppDispatch, useAppSelector } from '../app/store/hooks';
+import { useAppDispatch } from '../app/store/hooks';
 import { setUser, setUserLoading } from '../app/store/slices/userSlice';
 import { useNavigate } from 'react-router';
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const user = useAppSelector(state => state.user.currentUser);
   
   const getValues = (formData: FormData) => {
     return [formData.get('login'), formData.get('password')]
+  }
+  const verifyAuth = async () => {
+    try {
+      await apiRequest(API.verify);
+      return true;
+    } catch (error) {
+      if (error instanceof ApiError) error.log();
+      return false;
+    }
   }
 
   const fetchSign = async (formData: FormData, type: 'signup' | 'signin') => {
@@ -29,7 +37,8 @@ const useAuth = () => {
       // todo: single standard output for the user  
       if (error instanceof ApiError) error.log();
     } finally {
-      dispatch(setUserLoading(false))
+      dispatch(setUserLoading(false));
+      localStorage.setItem('lastAuth', JSON.stringify(Date.now()))
     }
   }
 
@@ -40,7 +49,7 @@ const useAuth = () => {
     await fetchSign(formData, 'signin');
   }
 
-  return {handleSignUp, handleSignIn, user}
+  return {handleSignUp, handleSignIn, verifyAuth}
 }
 
 export default useAuth
