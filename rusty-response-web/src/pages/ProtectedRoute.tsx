@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, Outlet, useNavigate } from 'react-router';
 import useAuth from '../hooks/useAuth'
-import Storage from '../helpers/storage';
+import Storage from '../helpers/Storage';
 
 const useVerifyAuth = () => {
   const [isAuth, setIsAuth] = useState<boolean | null>(null);

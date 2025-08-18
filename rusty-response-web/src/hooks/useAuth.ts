@@ -5,6 +5,7 @@ import type { IUser } from '../helpers/types';
 import { useAppDispatch } from '../app/store/hooks';
 import { setUser, setUserLoading } from '../app/store/slices/userSlice';
 import { useNavigate } from 'react-router';
+import { useCallback } from 'react';
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
@@ -13,7 +14,7 @@ const useAuth = () => {
   const getValues = (formData: FormData) => {
     return [formData.get('login'), formData.get('password')]
   }
-  const verifyAuth = async () => {
+  const verifyAuth = useCallback(async () => {
     try {
       await apiRequest(API.verify);
       return true;
@@ -21,7 +22,7 @@ const useAuth = () => {
       if (error instanceof ApiError) error.log();
       return false;
     }
-  }
+  }, [])
 
   const fetchSign = async (formData: FormData, type: 'signup' | 'signin') => {
     const [username, password_raw] = getValues(formData);
