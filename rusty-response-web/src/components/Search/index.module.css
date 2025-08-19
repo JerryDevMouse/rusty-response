@@ -1,12 +1,13 @@
-.search {
-    position: relative;
-}
 .input {
     padding: 6px 10px 6px 28px;
     border-radius: 16px;
     background: #3f3f3f;
     border: none;
     color: #dadada;
+}
+.input.gray {
+    background: #2e2e2e;
+    border: 1px solid #4d4d4d;
 }
 .input::placeholder {
     color: #656565;

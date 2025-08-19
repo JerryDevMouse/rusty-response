@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
+import useInput from './useInput'
 
 const useSearch = () => {
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    const focusInput = () => inputRef.current?.focus();
+    const {inputRef, focusInput} = useInput();
 
     useEffect(()=> {
         const inputHandler = (e: KeyboardEvent) => {

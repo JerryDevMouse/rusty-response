@@ -6,7 +6,11 @@ interface Props extends IChildren {
 
 const Container: FC<Props> = ({children, onSubmit}) => {
   return (
-    <form onSubmit={onSubmit}>{children}</form>
+    <form onSubmit={onSubmit} 
+      style={{position: 'relative'}}
+    >
+      {children}
+    </form>
   )
 }
 
