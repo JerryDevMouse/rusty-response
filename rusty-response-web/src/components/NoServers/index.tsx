@@ -9,12 +9,12 @@ const NoServers = ({text}: {text: string}) => {
     <div className={styles.container}>
         <div className={styles.content}>
             <img src={noServersIcon} alt="no servers" />
-            <div className={styles.title}>
-                <Text type='xxl' weight={600}>No servers</Text>
-            </div>
-            <div className={styles.text}>
-                <Text type='small' weight={500} color={5}>{text}</Text>
-            </div>
+            <Text type='xxl' weight={600} mbottom={6}>
+                No servers
+            </Text>
+            <Text type='small' weight={500} color={5} mbottom={15}>
+                {text}
+            </Text>
             <Link className={styles.link} to='/dashboards/servers/create'>
                 <Icon name='plus' width={17} height={17} />
                 <Text type='small' weight={600}>Add a server</Text>

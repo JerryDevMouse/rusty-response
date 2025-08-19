@@ -15,12 +15,6 @@
     max-height: 111px;
     margin-bottom: 15px;
 } 
-.title {
-    margin-bottom: 6px;
-}
-.text {
-    margin-bottom: 15px;
-}
 .link {
     display: flex;
     align-items: center;

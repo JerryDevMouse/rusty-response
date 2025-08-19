@@ -12,9 +12,9 @@ interface Props {
 const NavSection: FC<Props> = ({section}) => {
   return (
     <section className={styles.block}>
-        <div className={styles.title}>
-            <Text type='tiny' color={4}>{capitalizeFirstLetter(section)}</Text>
-        </div>
+        <Text type='tiny' color={4} mbottom={8}>
+            {capitalizeFirstLetter(section)}
+        </Text>
         <nav className={styles.nav}>
             {sidebarNav[section].map(name => (
                 <Sidebar.Link section={section} name={name} key={name}/>

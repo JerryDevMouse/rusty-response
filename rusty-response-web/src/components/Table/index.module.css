@@ -5,6 +5,7 @@
     padding: 12px 8px 12px 19px;
     border-radius: 12px;
     background: var(--color-accent);
+    margin-bottom: 12px;
 }
 .filtersBtns {
     display: flex;
@@ -13,4 +14,59 @@
 }
 .filtersBtns button {
     padding: 5px;
+}
+.table {
+    display: block;
+    flex: 1;
+    width: 100%;
+    table-layout: fixed;
+}
+.table tr {
+    display: flex;
+}
+.table td {
+    padding: 12px;
+    flex: 1;
+    min-width: 0; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.table thead {
+    display: block;
+    border-bottom: 1px solid #555555;
+}
+.table thead tr td:first-child,
+.table tbody tr td:first-child {
+    flex: 0.8;
+}
+.table thead tr td:nth-child(2),
+.table tbody tr td:nth-child(2) {
+    flex: 1.5;
+}
+.table thead tr td:nth-child(3),
+.table tbody tr td:nth-child(3) {
+    flex: 3.5;
+}
+.table thead tr td:nth-child(4),
+.table tbody tr td:nth-child(4) {
+    flex: 2.5;
+}
+.table thead tr td:nth-child(5),
+.table tbody tr td:nth-child(5) {
+    flex: 1.7;
+}
+.table tbody {
+    display: block;
+}
+.table tbody td > p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 100%;
+}
+.table tbody tr {
+    border-top: 1px solid #3f3f3f;
+    border-bottom: 1px solid #3f3f3f;
 }
