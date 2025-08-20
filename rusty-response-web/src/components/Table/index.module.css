@@ -42,7 +42,7 @@
 }
 .table thead tr td:nth-child(2),
 .table tbody tr td:nth-child(2) {
-    flex: 1.5;
+    flex: 1.8;
 }
 .table thead tr td:nth-child(3),
 .table tbody tr td:nth-child(3) {
@@ -50,7 +50,7 @@
 }
 .table thead tr td:nth-child(4),
 .table tbody tr td:nth-child(4) {
-    flex: 2.5;
+    flex: 1.5;
 }
 .table thead tr td:nth-child(5),
 .table tbody tr td:nth-child(5) {
@@ -69,4 +69,56 @@
 .table tbody tr {
     border-top: 1px solid #3f3f3f;
     border-bottom: 1px solid #3f3f3f;
+    transition: .3s;
+    position: relative;
+}
+.options {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 14px;
+    display: none;
+}
+.table tbody tr:hover {
+    background: var(--color-accent);
+    border-radius: 12px;
+}
+.table tbody tr:hover > .options {
+    display: block;
+}
+.table tbody tr:hover + tr {
+    border-top-color: transparent;
+}
+
+.table tbody tr:has(+ tr:hover) {
+    border-bottom-color: transparent;
+}
+
+.table tbody td .row {
+    display: flex;
+    align-items: center;
+    column-gap: 7px;
+}
+.table tbody td .row .circle {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+.pause .circle {
+    background: var(--color-pause);
+}
+.success .circle {
+    background: var(--color-success);
+}
+.failed .circle {
+    background: var(--color-failed);
+}
+.pause > p {
+    color: var(--color-pause);
+}
+.success > p {
+    color: var(--color-success);
+}
+.failed > p{
+    color: var(--color-failed);
 }
