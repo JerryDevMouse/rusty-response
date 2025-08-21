@@ -12,6 +12,7 @@
     align-items: center;
     column-gap: 15px;
 }
+.filtersBtns a,
 .filtersBtns button {
     padding: 5px;
 }
@@ -20,6 +21,7 @@
     flex: 1;
     width: 100%;
     table-layout: fixed;
+    margin-bottom: 24px;
 }
 .table tr {
     display: flex;
@@ -46,11 +48,11 @@
 }
 .table thead tr td:nth-child(3),
 .table tbody tr td:nth-child(3) {
-    flex: 3.5;
+    flex: 3.2;
 }
 .table thead tr td:nth-child(4),
 .table tbody tr td:nth-child(4) {
-    flex: 1.5;
+    flex: 1.7;
 }
 .table thead tr td:nth-child(5),
 .table tbody tr td:nth-child(5) {
@@ -64,7 +66,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
-    width: 100%;
+    width: 95%;
 }
 .table tbody tr {
     border-top: 1px solid #3f3f3f;
@@ -78,6 +80,7 @@
     transform: translateY(-50%);
     right: 14px;
     display: none;
+    padding: 0;
 }
 .table tbody tr:hover {
     background: var(--color-accent);
@@ -121,4 +124,31 @@
 }
 .failed > p{
     color: var(--color-failed);
+}
+/* pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    column-gap: 10px;
+}
+.btnpag {
+    max-width: 159px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25px;
+    flex: 1;
+    border-radius: 12px;
+    border: 1px solid #404040;
+    transition: .3s;
+
+}
+.btnpag.active{
+    background: var(--color-accent);
+    border: 1px solid #525252;
+}
+.btnpag:hover {
+    background: var(--color-accent-hover);
+    border: 1px solid #525252;
 }

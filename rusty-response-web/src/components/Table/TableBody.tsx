@@ -1,4 +1,5 @@
-import { useAppSelector } from '../../app/store/hooks'
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/store/hooks'
 import Icon from '../Icon/Icon';
 import Text from '../Text';
 import Status from './Status';
@@ -6,6 +7,7 @@ import styles from './index.module.css'
 
 const TableBody = () => {
   const servers = useAppSelector(state => state.servers.servers);
+
   return (
     <tbody>
         {servers.map(server => (
@@ -34,9 +36,11 @@ const TableBody = () => {
                     statusCode={server.last_seen_status_code}
                     />
                 </td>
-                <button className={styles.options}>
-                    <Icon name='dots' width={16} height={16} />
-                </button>
+                <td className={styles.options}>
+                    <button>
+                        <Icon name='dots' width={16} height={16} />
+                    </button>
+                </td>
             </tr>
         ))}
     </tbody>

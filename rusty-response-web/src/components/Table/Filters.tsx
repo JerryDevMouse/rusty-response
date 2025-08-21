@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import useInput from '../../hooks/useInput'
 import Icon from '../Icon/Icon'
 import Search from '../Search'
@@ -8,9 +9,9 @@ const Filters = () => {
   return (
     <section className={styles.filters}>
         <div className={styles.filtersBtns}>
-            <button>
+            <Link to={'/dashboards/servers/create'}>
                 <Icon name='plus' height={10} width={10} />
-            </button>
+            </Link>
             <button>
                 <Icon name='list_sort' height={10} width={10} />
             </button>
