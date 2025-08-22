@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/store/hooks'
+import { Link } from 'react-router';
+import { useAppSelector } from '../../app/store/hooks'
 import Icon from '../Icon/Icon';
 import Text from '../Text';
 import Status from './Status';
 import styles from './index.module.css'
+import useModalById from '../../hooks/useModalById';
 
 const TableBody = () => {
-  const servers = useAppSelector(state => state.servers.servers);
-
+    const servers = useAppSelector(state => state.servers.servers);
+    const {modalId, resetModalId, toggleModalId} = useModalById();
+    
   return (
     <tbody>
         {servers.map(server => (
-            <tr key={server.id}>
+            <tr key={server.id} onMouseLeave={() => resetModalId(server.id)}>
                 <td>
                     <Text type='tiny'>{server.id}</Text>
                 </td>
@@ -36,10 +38,20 @@ const TableBody = () => {
                     statusCode={server.last_seen_status_code}
                     />
                 </td>
-                <td className={styles.options}>
+                <td className={styles.options} title='Options' onClick={() => toggleModalId(server.id)}>
                     <button>
                         <Icon name='dots' width={16} height={16} />
                     </button>
+                </td>
+                <td className={`${styles.modal} ${modalId === server.id ? styles.show : ''}`}>
+                    <Link to={''}>
+                        <Icon name='visit' width={10} height={10} />
+                        <Text type='tiny'>Visit</Text>
+                    </Link>
+                    <Link to={''}>
+                        <Icon name='edit' width={10} height={10} />
+                        <Text type='tiny'>Edit</Text>
+                    </Link>
                 </td>
             </tr>
         ))}

@@ -74,20 +74,61 @@
     transition: .3s;
     position: relative;
 }
+/* options */
 .options {
+    width: 30px;
+    height: 30px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     right: 14px;
     display: none;
+    justify-content: center;
+    align-items: center;
     padding: 0;
+    border-radius: 10px;
+    transition: background .3s;
 }
+.options:hover {
+    background: var(--color-accent-hover);
+}
+.table tbody td.modal {
+    padding: 8px;
+}
+.modal {
+    display: none;
+    flex-direction: column;
+    row-gap: 4px;
+    border-radius: 12px;
+    border: 1px solid #565656;
+    background: var(--color-bg);
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    right: 0;
+}
+.modal.show {
+    display: flex;
+}
+.modal a {
+    display: flex;
+    column-gap: 10px;
+    align-items: center;
+    padding: 5px 25px 5px 5px;   
+    border-radius: 5px; 
+    transition: background .3s;
+}
+.modal a:hover {
+    background: var(--color-accent);
+}
+
+/* options */
 .table tbody tr:hover {
     background: var(--color-accent);
     border-radius: 12px;
 }
 .table tbody tr:hover > .options {
-    display: block;
+    display: flex;
 }
 .table tbody tr:hover + tr {
     border-top-color: transparent;

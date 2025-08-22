@@ -19,6 +19,7 @@ const Icon: FC<Props> = ({name, width, height, color}) => {
         maskSize: 'contain',
         maskRepeat: 'no-repeat',
         background: color ? `rgba(255, 255, 255, 0.${color})` : 'white',
+        flexShrink: 0
     }}>
     </span>
   )
