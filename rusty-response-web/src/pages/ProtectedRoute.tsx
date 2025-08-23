@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Navigate, Outlet, useNavigate } from 'react-router';
 import useAuth from '../hooks/useAuth'
 import Storage from '../helpers/Storage';
@@ -10,30 +10,42 @@ const useVerifyAuth = () => {
   const {verifyAuth} = useAuth();
   const navigate = useNavigate();
 
+  const fetchVerify = useCallback(async (): Promise<boolean> => {          
+    const lastAuth = Storage.get<number>('lastAuth');
+    if (!lastAuth) {
+      setIsAuth(false);
+      return false;
+    }
+    
+    const timePassed = Date.now() - lastAuth;
+    if (timePassed < 3_600_000) {
+      setIsAuth(true);
+      return true;
+    }
+    
+    const tokenIsValid = await verifyAuth();
+    if (tokenIsValid) {
+      const remainingTime = Math.max(300_000, 3_600_000 - timePassed);
+      Storage.set('lastAuth', Date.now() - 3_600_000 + remainingTime)
+      setIsAuth(true);
+      return true;
+    } else {
+      Storage.remove('lastAuth');
+      setIsAuth(false);
+      return false
+    }
+  }, [verifyAuth]);
+
   useEffect(() => {
-    const fetchVerify = async () => {          
-      const lastAuth = Storage.get<number>('lastAuth');
-      if (!lastAuth) return navigate('/auth/signin');
-      
-      const timePassed = Date.now() - lastAuth;
-      if (timePassed < 3_600_000) {
-        setIsAuth(true);
-        return;
-      }
-      
-      const tokenIsValid = await verifyAuth();
-      if (tokenIsValid) {
-        const remainingTime = Math.max(300_000, 3_600_000 - timePassed);
-        Storage.set('lastAuth', Date.now() - 3_600_000 + remainingTime)
-        setIsAuth(true);
-      } else {
-        Storage.remove('lastAuth');
-        navigate('/auth/signin');
+    const checkAuth = async () => {
+      const authenticated = await fetchVerify();
+      if (!authenticated) {
+        navigate('/auth/signin', { replace: true })
       }
     }
-    fetchVerify();
+    checkAuth();
 
-    intervalRef.current = setInterval(fetchVerify, 300_000);
+    intervalRef.current = setInterval(checkAuth, 300_000);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);

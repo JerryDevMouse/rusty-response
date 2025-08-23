@@ -1,11 +1,12 @@
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
+import { useAppDispatch } from '../app/store/hooks';
 import ApiError from '../helpers/ApiError';
 import apiRequest from '../helpers/apiRequest';
 import { API } from '../helpers/constants';
 import type { IUser } from '../helpers/types';
-import { useAppDispatch } from '../app/store/hooks';
 import { setUser, setUserLoading } from '../app/store/slices/userSlice';
-import { useNavigate } from 'react-router';
-import { useCallback } from 'react';
+import Storage from '../helpers/Storage';
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +15,7 @@ const useAuth = () => {
   const getValues = (formData: FormData) => {
     return [formData.get('login'), formData.get('password')]
   }
-  const verifyAuth = useCallback(async () => {
+  const verifyAuth = useCallback(async (): Promise<boolean> => {
     try {
       await apiRequest(API.verify);
       return true;
@@ -33,13 +34,13 @@ const useAuth = () => {
         body: { username, password_raw }
       })
       dispatch(setUser(resUser));
+      Storage.set('lastAuth', Date.now())
       navigate('/');
     } catch (error) {
       // todo: single standard output for the user  
       if (error instanceof ApiError) error.log();
     } finally {
       dispatch(setUserLoading(false));
-      localStorage.setItem('lastAuth', JSON.stringify(Date.now()))
     }
   }
 
