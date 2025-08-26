@@ -3,6 +3,8 @@ import ApiError from "../../helpers/ApiError";
 import apiRequest from "../../helpers/apiRequest";
 import { API } from "../../helpers/constants";
 import type { IServer } from "../../types/servers";
+import { useAppDispatch } from "../../app/store/hooks";
+import { addServer } from "../../app/store/slices/serversSlice";
 
 function getData (formData: FormData) {
     return [
@@ -16,6 +18,8 @@ function getData (formData: FormData) {
 
 function useCreateServer() {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
     const createServer = async (formData: FormData) => {
         const [name, url, timeout, interval, is_turned_on] 
         = getData(formData);
@@ -29,7 +33,7 @@ function useCreateServer() {
                     is_turned_on
                 }
             })
-            console.log(resServer);
+            dispatch(addServer(resServer));
             navigate('/dashboards/servers')
         } catch (error) {
             if (error instanceof ApiError) error.log()

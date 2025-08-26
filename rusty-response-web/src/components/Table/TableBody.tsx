@@ -5,10 +5,12 @@ import Text from '../Text';
 import Status from './Status';
 import styles from './index.module.css'
 import useModalById from '../../hooks/useModalById';
+import useDeleteServer from '../../hooks/servers/useDeleteServer';
 
 const TableBody = () => {
     const servers = useAppSelector(state => state.servers.servers);
     const {modalId, resetModalId, toggleModalId} = useModalById();
+    const deleteServer = useDeleteServer();
     
   return (
     <tbody>
@@ -52,6 +54,10 @@ const TableBody = () => {
                         <Icon name='edit' width={10} height={10} />
                         <Text type='tiny'>Edit</Text>
                     </Link>
+                    <button onClick={() => deleteServer(server.id)}>
+                        <Icon name='delete' width={10} height={10} />
+                        <Text type='tiny'>Delete</Text>
+                    </button>
                 </td>
             </tr>
         ))}

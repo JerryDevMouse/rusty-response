@@ -1,10 +1,10 @@
 import Text from '../Text'
 import Icon from '../Icon/Icon'
-import useGetServers from '../../hooks/servers/useGetServers';
 import styles from './index.module.css'
+import useServersPagination from '../../hooks/servers/useServersPagination';
 
 const Pagination = () => {
-    const {pages, page, setPage, incrementPage, decrementPage} = useGetServers();
+    const {pages, page, setPage, incrementPage, decrementPage} = useServersPagination();
 
   return (
     <section className={styles.pagination}>

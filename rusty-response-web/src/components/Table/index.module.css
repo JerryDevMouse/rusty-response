@@ -60,6 +60,7 @@
 }
 .table tbody {
     display: block;
+    min-height: 233px;
 }
 .table tbody td > p {
     white-space: nowrap;
@@ -110,7 +111,8 @@
 .modal.show {
     display: flex;
 }
-.modal a {
+.modal a,
+.modal button {
     display: flex;
     column-gap: 10px;
     align-items: center;
@@ -118,7 +120,8 @@
     border-radius: 5px; 
     transition: background .3s;
 }
-.modal a:hover {
+.modal a:hover,
+.modal button:hover {
     background: var(--color-accent);
 }
 

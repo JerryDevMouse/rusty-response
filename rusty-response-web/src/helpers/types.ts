@@ -11,7 +11,7 @@ export type TFontSizeCategories = {
     [key in TFontSize]: number
 }
 
-export type TIconName = 'arrow_left' | 'arrow_right' | 'arrow_top' | 'avatar' | 'bitrix' | 'date' | 'discord' | 'header_windows' | 'list_sort' | 'no_servers'| 'overview_failed'| 'overview_notifiers'| 'overview_pause'| 'overview_servers'| 'overview_success'| 'plus'| 'search'| 'sidebar_docs'| 'sidebar_notifiers'| 'sidebar_overview'| 'sidebar_servers'| 'telegram' | 'dots' | 'visit' | 'edit'
+export type TIconName = 'arrow_left' | 'arrow_right' | 'arrow_top' | 'avatar' | 'bitrix' | 'date' | 'discord' | 'header_windows' | 'list_sort' | 'no_servers'| 'overview_failed'| 'overview_notifiers'| 'overview_pause'| 'overview_servers'| 'overview_success'| 'plus'| 'search'| 'sidebar_docs'| 'sidebar_notifiers'| 'sidebar_overview'| 'sidebar_servers'| 'telegram' | 'dots' | 'visit' | 'edit' | 'delete'
 
 export type TSidebarNavSection = 'dashboards' | 'pages';
 export type TSidebarNavName = 'overview' | 'servers' | 'notifiers' | 'docs';
