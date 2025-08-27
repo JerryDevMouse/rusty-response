@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react'
 import { Form } from '../../../components/Form'
 import useForm from '../../../hooks/useForm'
 const notifierOperatorsList = [
@@ -34,6 +35,8 @@ const notifierOperatorsList = [
 ]
 
 const CreateNotifier = () => {
+    const [option, setOption] = useState<string>('Telegram');
+    const callSetOption = useCallback((value: string) => setOption(value), [])
   const createNotifier = () => {};
   const {handleCancel, handleSubmit} = useForm(createNotifier);
 
@@ -42,19 +45,20 @@ const CreateNotifier = () => {
       <Form.Title>Create Server</Form.Title>
       <Form.Section subtitle='Notifier Information'>
         <Form.Row>
-          <Form.Select options={notifierOperatorsList}/>
+          <Form.Select options={notifierOperatorsList} 
+            option={option} setOption={callSetOption}
+            name='Provider'
+          />
+        </Form.Row>
+        <Form.Row>
+            {notifierOperatorsList.find(({name}) => name === option)?.fields.map(({name, type}) => (
+                <Form.Input type={type} name={name} />
+            ))}
         </Form.Row>
       </Form.Section>
-      <Form.Section subtitle='Monitoring Settings'>
+      <Form.Section subtitle='Notifier Settings'>
         <Form.Row>
-          <Form.Input type='number' name='Timeout' 
-            help='The interval between server checks (seconds)'
-            defaultValue={10}
-          />
-          <Form.Input type='number' name='Interval'
-            help='The interval between server checks (seconds)'
-            defaultValue={60}
-          />
+          <Form.Input type='text' name='Message' />
         </Form.Row>
         <Form.Row>
           <Form.Slider name='Status' afterText='Active'/>
@@ -62,7 +66,7 @@ const CreateNotifier = () => {
       </Form.Section>
       <Form.Buttons 
         handleCancel={handleCancel}
-        submitText='Create Server'
+        submitText='Create Notifier'
       />
     </Form.Container>
   )

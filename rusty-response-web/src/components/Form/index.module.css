@@ -221,3 +221,14 @@
     justify-content: center;
     row-gap: 8px;
 }
+.hide {
+    padding: 0;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.col .noCursor:hover {
+    cursor: default;
+}
