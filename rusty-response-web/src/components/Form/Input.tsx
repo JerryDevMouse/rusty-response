@@ -27,11 +27,11 @@ const Input: FC<Props> = ({type, name, help, defaultValue}) => {
         {type === 'number' ?             
             <div className={styles.rowinput}>
               <input type="number" id={camelName} name={camelName} 
-                defaultValue={defaultValue} placeholder={`Enter ${name}`}/>
+                defaultValue={defaultValue} placeholder={`Enter ${name}`} required/>
               <Text type='tiny'>seconds</Text>
             </div>
             :
-            <input type={type} id={camelName} name={camelName} placeholder={`Enter ${name}`}/>
+            <input type={type} id={camelName} name={camelName} placeholder={`Enter ${name}`} required/>
         }
     </div>
   )

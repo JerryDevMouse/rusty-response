@@ -5,6 +5,7 @@ import Row from "./Row";
 import Slider from "./Slider";
 import Title from "./Title";
 import Buttons from "./Buttons";
+import Select from "./Select";
 
 export const Form = {
     Container,
@@ -13,5 +14,6 @@ export const Form = {
     Row,
     Input,
     Slider,
-    Buttons
+    Buttons,
+    Select
 }

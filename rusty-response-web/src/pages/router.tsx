@@ -4,7 +4,7 @@ import SignInPage from "./auth/SignInPage";
 import SignUpPage from "./auth/SignUpPage";
 import OverviewPage from "./dashboards/OverviewPage";
 import Servers from "./dashboards/servers";
-import NotifiersPage from "./dashboards/NotifiersPage";
+import Notifiers from "./dashboards/notifiers";
 import DocsPage from "./pages/DocsPage";
 import NotFoundPage from "./NotFoundPage"
 import { ProtectedRoute } from "./ProtectedRoute";
@@ -36,7 +36,16 @@ const router = createBrowserRouter([
                                 element: <Servers.CreateServer />
                             }
                         ] },
-                        { path: 'notifiers', element: <NotifiersPage /> }
+                        { path: 'notifiers', children: [
+                            {
+                                index: true,
+                                element: <Notifiers.CreateNotifier />
+                            },
+                            // {
+                            //     path: 'create',
+                            //     element: <Notifiers.CreateNotifier />
+                            // }
+                        ] },
                     ]
                 },
                 {

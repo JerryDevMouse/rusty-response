@@ -4,16 +4,33 @@ import type { TFontColorShape, TIconName } from '../../helpers/types'
 interface Props {
     name: TIconName,
     width: number,
-    height: number,
+    height?: number,
     color?: TFontColorShape
 }
+const COLORED_ICONS = new Set(['telegram', 'bitrix', 'discord']);
 
 const Icon: FC<Props> = ({name, width, height, color}) => {
+  const isColored = COLORED_ICONS.has(name);
+  if (isColored) {
+      return (
+        <img 
+          src={`/icons/${name}.svg`}
+          width={width}
+          height={height ?? width}
+          alt={`icon ${name}`}
+          style={{
+            display: 'inline-block',
+            flexShrink: 0
+          }}
+        >
+      </img>
+    )
+  }
   return (
       <span style={{
         display: 'inline-block',
         width: `${width}px`,
-        height: `${height}px`,
+        height: `${height ?? width}px`,
         maskImage: `url('/icons/${name}.svg')`,
         maskPosition: 'center',
         maskSize: 'contain',
