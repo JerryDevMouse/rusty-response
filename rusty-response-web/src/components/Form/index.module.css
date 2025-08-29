@@ -24,6 +24,7 @@
     flex-direction: column;
     row-gap: 10px;
     flex: 1;
+    position: relative;
 }
 .col > label {
     display: flex;
@@ -34,13 +35,15 @@
 .col label:hover {
     cursor: pointer;
 }
-.col input {
+.col input, 
+.col textarea {
     padding: 12px;
     border-radius: 12px;
     background: #2f2f2f;
     border: 1px solid #595959;
     color: white;
 }
+
 .rowinput {
     display: flex;
     align-items: center;
@@ -231,4 +234,39 @@
 }
 .col .noCursor:hover {
     cursor: default;
+}
+/* textarea */
+
+.col textarea {
+    resize: vertical;
+}
+
+.popup {
+    position: absolute;
+    padding: 5px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    background: var(--color-bg);
+    border: 1px solid #565656
+}
+.popup li {
+    list-style-type: none;
+    padding: 5px 40px 5px 10px;
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: background .3s;
+}
+.popup li.active {
+    background: var(--color-accent);
+}
+.popup li.active::after {
+    content: 'Tab';
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
 }

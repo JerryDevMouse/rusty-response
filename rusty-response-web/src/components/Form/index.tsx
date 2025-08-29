@@ -6,6 +6,7 @@ import Slider from "./Slider";
 import Title from "./Title";
 import Buttons from "./Buttons";
 import Select from "./Select";
+import TextArea from "./TextArea";
 
 export const Form = {
     Container,
@@ -15,5 +16,6 @@ export const Form = {
     Input,
     Slider,
     Buttons,
-    Select
+    Select,
+    TextArea
 }

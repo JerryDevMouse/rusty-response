@@ -42,7 +42,7 @@ const CreateNotifier = () => {
 
   return (
     <Form.Container onSubmit={handleSubmit}>
-      <Form.Title>Create Server</Form.Title>
+      <Form.Title>Create Notifier</Form.Title>
       <Form.Section subtitle='Notifier Information'>
         <Form.Row>
           <Form.Select options={notifierOperatorsList} 
@@ -52,13 +52,13 @@ const CreateNotifier = () => {
         </Form.Row>
         <Form.Row>
             {notifierOperatorsList.find(({name}) => name === option)?.fields.map(({name, type}) => (
-                <Form.Input type={type} name={name} />
+              <Form.Input key={name} type={type} name={name} />
             ))}
         </Form.Row>
       </Form.Section>
       <Form.Section subtitle='Notifier Settings'>
         <Form.Row>
-          <Form.Input type='text' name='Message' />
+          <Form.TextArea name='Message'/>
         </Form.Row>
         <Form.Row>
           <Form.Slider name='Status' afterText='Active'/>
