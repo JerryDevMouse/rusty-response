@@ -1,6 +1,5 @@
 use axum::{Json, http::StatusCode, response::IntoResponse};
 use serde::Serialize;
-use serde_json::json;
 use utoipa::ToSchema;
 
 use crate::crypt::CryptError;
