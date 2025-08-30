@@ -39,12 +39,12 @@ const router = createBrowserRouter([
                         { path: 'notifiers', children: [
                             {
                                 index: true,
-                                element: <Notifiers.CreateNotifier />
+                                element: <Notifiers.Main />
                             },
-                            // {
-                            //     path: 'create',
-                            //     element: <Notifiers.CreateNotifier />
-                            // }
+                            {
+                                path: 'create',
+                                element: <Notifiers.CreateNotifier />
+                            }
                         ] },
                     ]
                 },
