@@ -1,43 +1,13 @@
-import { useCallback, useState } from 'react'
 import { Form } from '../../../components/Form'
 import useForm from '../../../hooks/useForm'
-const notifierOperatorsList = [
-  {
-    name: 'Telegram',
-    fields: [
-      {
-        name: 'Chat Id',
-        type: 'string'
-      },
-      {
-        name: 'Token',
-        type: 'number'
-      },
-    ]
-  },
-  {
-    name: 'Discord',
-    fields: [
-      {
-        name: 'Discord Webhook',
-        type: 'string'
-      },
-      {
-        name: 'Embed Title',
-        type: 'string'
-      },
-      {
-        name: 'Embed Footer Content',
-        type: 'string'
-      },
-    ]
-  }
-]
+import { notifierOperatorsList } from '../../../helpers/constants';
+import useCreateNotifier from '../../../hooks/notifiers/useCreateNotifier';
 
 const CreateNotifier = () => {
-    const [option, setOption] = useState<string>('Telegram');
-    const callSetOption = useCallback((value: string) => setOption(value), [])
-  const createNotifier = () => {};
+  const { createNotifier, servers, optionServer, optionProvider,
+    setOptionServer, setOptionProvider
+  } = useCreateNotifier();
+
   const {handleCancel, handleSubmit} = useForm(createNotifier);
 
   return (
@@ -45,15 +15,21 @@ const CreateNotifier = () => {
       <Form.Title>Create Notifier</Form.Title>
       <Form.Section subtitle='Notifier Information'>
         <Form.Row>
+          <Form.Select options={servers} 
+            option={optionServer} 
+            setOption={setOptionServer}
+            name='Server Name'
+          />
           <Form.Select options={notifierOperatorsList} 
-            option={option} setOption={callSetOption}
+            option={optionProvider} setOption={setOptionProvider}
             name='Provider'
+            icons
           />
         </Form.Row>
         <Form.Row>
-            {notifierOperatorsList.find(({name}) => name === option)?.fields.map(({name, type}) => (
-              <Form.Input key={name} type={type} name={name} />
-            ))}
+          {notifierOperatorsList.find(({name}) => name === optionProvider)?.fields.map(({name, type}) => (
+            <Form.Input key={name} type={type} name={name} />
+          ))}
         </Form.Row>
       </Form.Section>
       <Form.Section subtitle='Notifier Settings'>

@@ -4,21 +4,18 @@ import type { TIconName } from '../../helpers/types';
 import Text from '../Text';
 import Icon from '../Icon/Icon';
 import styles from './index.module.css'
+import type { INotifyOperator } from '../../types/notifiers';
+import type { IServer } from '../../types/servers';
 
 interface Props {
-    options: {
-        name: string;
-        fields: {
-            name: string;
-            type: string;
-        }[];
-    }[],
+    options: INotifyOperator[] | IServer[],
     name: string, 
     option: string, 
-    setOption: (value: string) => void
+    setOption?: (value: string) => void,
+    icons?: boolean
 }
 
-const Select = ({options, name, option, setOption}: Props) => {
+const Select = ({options, name, option, setOption, icons = false}: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef<HTMLDivElement>(null)
     
@@ -29,7 +26,7 @@ const Select = ({options, name, option, setOption}: Props) => {
     }
 
     const selectOption = (newOption: string) => {
-        setOption(newOption)
+        setOption && setOption(newOption)
         setIsOpen(false)
     }
 
@@ -54,9 +51,9 @@ const Select = ({options, name, option, setOption}: Props) => {
         <div className={styles.select} ref={selectRef}>
             <div className={styles.selectTop} onClick={toggleOpen}>
                 <div className={styles.row}>
-                    <Icon name={lowerFirstLetter(option) as TIconName} 
+                    {icons && <Icon name={lowerFirstLetter(option) as TIconName} 
                         width={20} height={20}
-                    />
+                    />}
                     <Text type='tiny'>{ option }</Text>
                 </div>
                 <div className={styles.selectArrows}>
@@ -72,9 +69,9 @@ const Select = ({options, name, option, setOption}: Props) => {
                             onClick={() => selectOption(name)}
                             className={`${name === option ? styles.selected : ''} `}
                         >
-                            <Icon name={lowerFirstLetter(name) as TIconName} 
+                            {icons && <Icon name={lowerFirstLetter(name) as TIconName} 
                                 width={20} height={20}
-                            />
+                            />}
                             {name}
                         </li>
                     ))}

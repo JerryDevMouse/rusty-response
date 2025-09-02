@@ -20,7 +20,7 @@ const NotifierCard = () => {
           <div className={styles.operators}>
             <Link to=''><Icon name='telegram' width={25} /></Link>
             <Link to=''><Icon name='discord' width={25} /></Link>
-            <Link to='' className={styles.add}>
+            <Link to='/dashboards/notifiers/create' className={styles.add}>
               <Icon name='plus' width={10}></Icon>
             </Link>
           </div>
