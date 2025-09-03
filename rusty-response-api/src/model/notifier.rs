@@ -189,9 +189,10 @@ impl NotifierBmc {
 impl NotifierBmc {
     pub async fn count(
         mm: &ModelManager,
-        _ctx: &Ctx,
+        ctx: &Ctx,
     ) -> Result<i64> {
-        let row = sqlx::query("SELECT COUNT(*) as count FROM notifier")
+        let row = sqlx::query("SELECT COUNT(*) as count FROM notifier WHERE user_id = ?")
+            .bind(ctx.user_id)
             .fetch_one(&mm.pool)
             .await?;
 
@@ -223,6 +224,50 @@ impl NotifierBmc {
         let items = Self::list(mm, ctx, offset, limit).await?;
         let count = Self::count(mm, ctx).await?;
 
+        Ok(Page::new(items, count, limit, offset))
+    }
+
+    pub async fn count_by_server(
+        mm: &ModelManager,
+        ctx: &Ctx,
+        sid: i64,
+    ) -> Result<i64> {
+        let row = sqlx::query("SELECT COUNT(*) as count FROM notifier WHERE server_id = ? AND user_id = ?")
+            .bind(sid)
+            .bind(ctx.user_id)
+            .fetch_one(&mm.pool)
+            .await?;
+
+        let count = row.try_get("count")?;
+        Ok(count)
+    }
+
+    pub async fn list_by_server(
+        mm: &ModelManager,
+        ctx: &Ctx,
+        sid: i64,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Vec<Notifier>> {
+        let result = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE server_id = ? AND user_id = ? LIMIT ? OFFSET ?")
+            .bind(sid)
+            .bind(ctx.user_id)
+            .bind(limit)
+            .bind(offset)
+            .fetch_all(&mm.pool)
+            .await?;
+        Ok(result)
+    }
+
+    pub async fn page_by_server(
+        mm: &ModelManager,
+        ctx: &Ctx,
+        sid: i64,
+        offset: i64,
+        limit: i64
+    ) -> Result<Page<Notifier>> {
+        let items = Self::list_by_server(mm, ctx, sid, offset, limit).await?;
+        let count = Self::count(mm, ctx).await?;
         Ok(Page::new(items, count, limit, offset))
     }
 }
