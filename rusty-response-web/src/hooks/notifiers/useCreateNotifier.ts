@@ -8,8 +8,8 @@ import ApiError from '../../helpers/ApiError';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 
 const useCreateNotifier = () => {
-    const servers = useAppSelector(state => state.servers.servers);
-    const newNotifierServerId = useAppSelector(state => state.notifiers.new_notifier.server_id);
+    const servers = useAppSelector(state => state.servers.servers.list);
+    const newNotifierServerId = useAppSelector(state => state.servers.new_notifier.server_id);
 
     const [optionProvider, setOptionProvider] = useState<string>('Telegram');
     const callSetOptionProvider = useCallback((value: string) => setOptionProvider(value), []);

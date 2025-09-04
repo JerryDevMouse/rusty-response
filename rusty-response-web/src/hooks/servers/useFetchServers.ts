@@ -10,7 +10,7 @@ const useFetchServers = () => {
     const dispatch = useAppDispatch();
     const currentPage = useAppSelector(state => state.servers.page.current);
     const offset = useAppSelector(state => state.servers.offset);
-    const servers = useAppSelector(state => state.servers.servers);
+    const servers = useAppSelector(state => state.servers.servers.list);
     const deleteCount = useAppSelector(state => state.servers.deleteCount);
 
     useEffect(() => {

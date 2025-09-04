@@ -8,7 +8,7 @@ import useModalById from '../../hooks/useModalById';
 import useDeleteServer from '../../hooks/servers/useDeleteServer';
 
 const TableBody = () => {
-    const servers = useAppSelector(state => state.servers.servers);
+    const servers = useAppSelector(state => state.servers.servers.list);
     const {modalId, resetModalId, toggleModalId} = useModalById();
     const deleteServer = useDeleteServer();
     
