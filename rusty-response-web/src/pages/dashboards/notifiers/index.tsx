@@ -1,9 +1,9 @@
 import Main from "./Main"
-import CreateNotifier from "./CreateNotifier"
+import FormNotifier from "./FormNotifier"
 
 const index = {
     Main,
-    CreateNotifier,
+    FormNotifier,
 }
 
 export default index

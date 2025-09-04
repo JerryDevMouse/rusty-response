@@ -16,11 +16,10 @@ interface IState {
         current: number,
         max: number
     },
+    newServerId: IServer['id'] | null,
     deleteCount: number,
     notifiersLoading: boolean,
-    new_notifier: INotify | {
-        server_id: INotify['server_id'] | null
-    }
+    newNotifierServerId: IServer['id'] | null
 }
 
 const serversSlice = createSlice({
@@ -36,10 +35,9 @@ const serversSlice = createSlice({
             max: 0
         },
         deleteCount: 0,
+        newServerId: null,
         notifiersLoading: false,
-        new_notifier: {
-            server_id: null
-        },
+        newNotifierServerId: null
     } as IState,
     reducers: {
         setServers: (state, action: PayloadAction<IServer[]>) => {
@@ -74,19 +72,19 @@ const serversSlice = createSlice({
         changeServersOffset: (state, action: PayloadAction<number>) => {
             state.offset = (action.payload - 1) * COUNT_SERVERS
         },
-        setNewNotifier: (state, action: PayloadAction<INotify>) => {
-            state.new_notifier = action.payload
-        },
         setNewNotifierServerId: (state, action: PayloadAction<INotify['server_id']>) => {
-            state.new_notifier.server_id = action.payload
-        }
+            state.newNotifierServerId = action.payload
+        },
+        setNewServerId: (state, action: PayloadAction<IServer['id']>) => {
+            state.newServerId = action.payload
+        },
     }
 })
 
 export const {
     setServers, setNotifiers, addServer, deleteServerById, setServersLoading,
     changeServersMaxPage, setServersCurrentPage, changeServersOffset,
-    setNewNotifier, setNewNotifierServerId, setNotifiersLoading
+    setNewNotifierServerId, setNotifiersLoading, setNewServerId
 } = serversSlice.actions;
 
 export default serversSlice.reducer;

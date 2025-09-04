@@ -1,14 +1,15 @@
-import { Form } from '../../../components/Form'
-import useForm from '../../../hooks/useForm'
+import { Form } from '../../../components/Form';
+import useForm from '../../../hooks/useForm';
+import useFormNotifier from '../../../hooks/notifiers/useFormNotifier';
 import { notifierOperatorsList } from '../../../helpers/constants';
-import useCreateNotifier from '../../../hooks/notifiers/useCreateNotifier';
 
-const CreateNotifier = () => {
-  const { createNotifier, servers, optionServer, optionProvider,
-    setOptionServer, setOptionProvider
-  } = useCreateNotifier();
-
-  const {handleCancel, handleSubmit} = useForm(createNotifier);
+interface Props {
+    requestMethod: 'POST' | 'PUT'
+}
+const FormNotifier = ({requestMethod}: Props) => {
+    const { onSubmitRequest, servers, optionProvider, 
+      optionServer, setOptionProvider, setOptionServer } = useFormNotifier(requestMethod);
+    const {handleCancel, handleSubmit} = useForm(onSubmitRequest);
 
   return (
     <Form.Container onSubmit={handleSubmit}>
@@ -48,4 +49,4 @@ const CreateNotifier = () => {
   )
 }
 
-export default CreateNotifier
+export default FormNotifier

@@ -7,9 +7,9 @@ import apiRequest from '../../helpers/apiRequest';
 import ApiError from '../../helpers/ApiError';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 
-const useCreateNotifier = () => {
+const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
     const servers = useAppSelector(state => state.servers.servers.list);
-    const newNotifierServerId = useAppSelector(state => state.servers.new_notifier.server_id);
+    const newNotifierServerId = useAppSelector(state => state.servers.newNotifierServerId);
 
     const [optionProvider, setOptionProvider] = useState<string>('Telegram');
     const callSetOptionProvider = useCallback((value: string) => setOptionProvider(value), []);
@@ -33,12 +33,12 @@ const useCreateNotifier = () => {
             const camelName = lowerFirstLetter(field.name).replaceAll(' ', '');
             const value = formData.get(camelName);
             if (value !== null) {
-            credentials[toSnakeCase(camelName)] = field.type === 'number' ? Number(value) : value;
+                credentials[toSnakeCase(camelName)] = field.type === 'number' ? Number(value) : value;
+            }
         }
-    }
-
-    return credentials;
+        return credentials;
     };
+
     const getData = (formData: FormData) => {
         const provider = lowerFirstLetter(optionProvider);
         const serverId = servers.find(s => s.name === optionServer)?.id;
@@ -51,16 +51,14 @@ const useCreateNotifier = () => {
         }
     } 
 
-    const createNotifier = async (formData: FormData) => {
+    const onSubmitRequest = async (formData: FormData) => {
         const data = getData(formData);
-        console.log(data);
         
         try {
-            const newNotifier = await apiRequest(API.notify, {
-                method: 'POST',
+            const response = await apiRequest(API.notify, {
+                method: requestMethod,
                 body: data
             });
-            console.log(newNotifier);
         } catch (error) {
             if (error instanceof ApiError) error.log();
         }
@@ -70,8 +68,8 @@ const useCreateNotifier = () => {
     return {servers,
         optionProvider, setOptionProvider: callSetOptionProvider,
         optionServer, setOptionServer: callSetOptionServer,
-        createNotifier
+        onSubmitRequest
     }
 }
 
-export default useCreateNotifier
+export default useFormNotifier

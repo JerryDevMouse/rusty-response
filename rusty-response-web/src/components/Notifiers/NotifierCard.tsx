@@ -1,9 +1,10 @@
 import Text from '../Text'
 import Icon from '../Icon/Icon'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import styles from './index.module.css'
-import type { IStateServer } from '../../app/store/slices/serversSlice'
+import { setNewNotifierServerId, type IStateServer } from '../../app/store/slices/serversSlice'
 import type { INotify } from '../../types/notifiers'
+import { useAppDispatch } from '../../app/store/hooks'
 interface Props {
   serverId: IStateServer['id'],
   serverName: IStateServer['name'],
@@ -12,12 +13,18 @@ interface Props {
 }
 
 const NotifierCard = ({serverId, serverName, serverURL, notifiers}: Props) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const notifiersProviders = notifiers.reduce((acc, n) => {
     const isAlreadyHas = acc.includes(n.provider);
     if (isAlreadyHas) return acc
     return [...acc, n.provider]
   }, [] as INotify['provider'][]);
 
+  const handleClickAddNotifier = () => {
+    dispatch(setNewNotifierServerId(serverId));
+    navigate('/dashboards/notifiers/create');
+  }
   return (
     <div className={styles.notifier}>
       <div className={styles.top}>
@@ -35,9 +42,9 @@ const NotifierCard = ({serverId, serverName, serverURL, notifiers}: Props) => {
             {notifiersProviders.map(provider => 
               <Link key={provider} to=''><Icon name={provider} width={25} /></Link>
             )}
-            <Link to='/dashboards/notifiers/create' className={styles.add}>
+            <button className={styles.add} onClick={handleClickAddNotifier}>
               <Icon name='plus' width={10}></Icon>
-            </Link>
+            </button>
           </div>
           <button className={styles.options}>
             <Icon name='dots' width={20}/>

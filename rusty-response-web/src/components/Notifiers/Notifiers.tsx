@@ -18,7 +18,6 @@ const Notifiers = () => {
       const notifiers = await apiRequest<IResponse<INotify>>(API.notify + '?limit=10&offset=0', {method: 'GET'});
       dispatch(setNotifiers(notifiers.items))
       dispatch(setNotifiersLoading(false))
-      console.log(notifiers);
     }
     fetchNotifiers();
   }, []);
