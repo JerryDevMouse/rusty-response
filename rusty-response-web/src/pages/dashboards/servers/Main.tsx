@@ -1,9 +1,9 @@
+import { useAppSelector } from '../../../app/store/hooks'
 import NoServers from '../../../components/NoServers'
 import Table from '../../../components/Table'
-import useFetchServers from '../../../hooks/servers/useFetchServers';
 
 const Main = () => {
-  const servers = useFetchServers();
+  const servers = useAppSelector(state => state.servers.servers.list);
 
   return (
     <>

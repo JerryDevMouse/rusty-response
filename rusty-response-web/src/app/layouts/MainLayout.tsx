@@ -4,9 +4,11 @@ import Header from '../../components/Header/Header'
 import useSwitchSidebar from '../../hooks/useSwitchSidebar'
 import { Sidebar } from '../../components/Sidebar'
 import Footer from '../../components/Footer'
+import useFetchData from '../../hooks/useFetchData'
 
 const MainLayout = () => {
   const {sidebarIsOpen, switchSidebar} = useSwitchSidebar();
+  useFetchData();
   
   return (
     <div className={styles.container}>

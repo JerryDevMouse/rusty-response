@@ -1,16 +1,15 @@
 import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
+import { changeServersMaxPage, setServers, setServersLoading } from '../../app/store/slices/serversSlice';
 import type { IResponse } from '../../helpers/types';
 import type { IServer } from '../../types/servers';
 import apiRequest from '../../helpers/apiRequest';
 import { API } from '../../helpers/constants';
-import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
-import { changeServersMaxPage, setServers, setServersLoading } from '../../app/store/slices/serversSlice';
 
 const useFetchServers = () => {
     const dispatch = useAppDispatch();
     const currentPage = useAppSelector(state => state.servers.page.current);
     const offset = useAppSelector(state => state.servers.offset);
-    const servers = useAppSelector(state => state.servers.servers.list);
     const deleteCount = useAppSelector(state => state.servers.deleteCount);
 
     useEffect(() => {
@@ -23,8 +22,6 @@ const useFetchServers = () => {
         }
         fetchServers();
     }, [currentPage, deleteCount]);
-    
-    return servers
 }
 
 export default useFetchServers

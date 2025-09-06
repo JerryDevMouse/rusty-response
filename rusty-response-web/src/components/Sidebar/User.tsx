@@ -7,8 +7,8 @@ const User = () => {
     const userName = useAppSelector(state => state.user.currentUser?.username)
   return (
     <div className={`${styles.row} ${styles.user}`}>
-        <Icon name='avatar' width={24} height={24} color={8}/>
-        <Text type='small'>{userName ?? 'user'}</Text>
+      <Icon name='avatar' width={24} height={24} color={8}/>
+      <Text type='small'>{userName ?? 'user'}</Text>
     </div>
   )
 }
