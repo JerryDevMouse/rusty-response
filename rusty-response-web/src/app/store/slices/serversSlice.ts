@@ -27,7 +27,7 @@ const serversSlice = createSlice({
     initialState: {
         servers: {
             list: [],
-            loading: false,
+            loading: true,
         },
         offset: 0,
         page: {

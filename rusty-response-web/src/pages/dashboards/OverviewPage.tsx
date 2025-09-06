@@ -1,8 +1,8 @@
-import React from 'react'
+import Loading from '../../components/Loading'
 
 const OverviewPage = () => {
   return (
-    <div>OverviewPage</div>
+    <Loading type='block'/>
   )
 }
 

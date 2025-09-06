@@ -4,10 +4,11 @@ import Table from '../../../components/Table'
 
 const Main = () => {
   const servers = useAppSelector(state => state.servers.servers.list);
+  const loading = useAppSelector(state => state.servers.servers.loading)
 
   return (
     <>
-    {servers.length > 0 ?
+    {!loading && servers.length > 0 ?
       <Table />
     :
       <NoServers text='To get started, add your first server'/>

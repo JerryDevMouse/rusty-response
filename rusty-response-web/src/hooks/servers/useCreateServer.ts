@@ -36,7 +36,10 @@ function useCreateServer() {
             dispatch(addServer(resServer));
             navigate('/dashboards/servers')
         } catch (error) {
-            if (error instanceof ApiError) error.log()
+            if (error instanceof ApiError) {
+                error.log();
+                if (error.status === 401) navigate('/auth/signin');
+            }
         }
     }
 

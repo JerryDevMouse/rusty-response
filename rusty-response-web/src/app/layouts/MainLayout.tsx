@@ -1,10 +1,10 @@
-import { Outlet } from 'react-router'
 import styles from './index.module.css'
 import Header from '../../components/Header/Header'
 import useSwitchSidebar from '../../hooks/useSwitchSidebar'
 import { Sidebar } from '../../components/Sidebar'
 import Footer from '../../components/Footer'
 import useFetchData from '../../hooks/useFetchData'
+import MainContent from '../../components/MainContent'
 
 const MainLayout = () => {
   const {sidebarIsOpen, switchSidebar} = useSwitchSidebar();
@@ -15,9 +15,7 @@ const MainLayout = () => {
       <Sidebar isOpen={sidebarIsOpen}/>
       <div className={styles.gridcontainer}>
         <Header isOpen={sidebarIsOpen} switchSidebar={switchSidebar}/>
-        <main className={styles.main}>
-          <Outlet/>
-        </main>
+        <MainContent />
         <Footer/>
       </div>
     </div>
