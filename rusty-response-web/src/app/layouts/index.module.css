@@ -13,3 +13,6 @@
     padding: 28px;
     position: relative;
 }
+.main > div {
+    height: 100%;
+}

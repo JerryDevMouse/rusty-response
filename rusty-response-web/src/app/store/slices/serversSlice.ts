@@ -51,11 +51,24 @@ const serversSlice = createSlice({
             })
         },
         addServer: (state, action: PayloadAction<IServer>) => {
-            state.servers.list.push({...action.payload, notifiers: []});
+            if (state.servers.list.length < 5) {
+                state.servers.list.push({...action.payload, notifiers: []});
+            } else {
+                state.deleteCount--;
+            }
         },
         deleteServerById: (state, action: PayloadAction<IServer['id']>) => {
             state.servers.list = state.servers.list.filter(({id}) => id !== action.payload);
-            state.deleteCount++;
+            if (
+                state.servers.list.length === 0 && 
+                state.page.current !== 1 && 
+                state.page.current === state.page.max
+            ) {
+                state.page.current--;
+                state.page.max--;
+            } else {
+                state.deleteCount++;
+            }
         },
         setServersLoading: (state, action: PayloadAction<boolean>) => {
             state.servers.loading = action.payload

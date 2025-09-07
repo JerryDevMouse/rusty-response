@@ -1,12 +1,13 @@
 import { useAppDispatch } from "../../app/store/hooks";
 import { deleteServerById } from "../../app/store/slices/serversSlice";
-import ApiError from "../../helpers/ApiError";
 import apiRequest from "../../helpers/apiRequest";
 import { API } from "../../helpers/constants";
+import useCatchError from "../useCatchError";
 
 
 const useDeleteServer = () => {
     const dispatch = useAppDispatch();
+    const catchError = useCatchError();
 
     const deleteServer = async (id: number) => {
         try {
@@ -15,7 +16,7 @@ const useDeleteServer = () => {
             )
             dispatch(deleteServerById(id))
         } catch (error) {
-            if (error instanceof ApiError) error.log()
+            catchError(error)
         }
     }
 

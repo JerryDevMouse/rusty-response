@@ -4,7 +4,7 @@ interface ConditionalLoaderProps {
   isLoading: boolean,
   children: React.ReactNode,
   loader: React.ReactNode,
-  isTable: boolean,
+  isTable?: boolean,
   minHeight?: string;
 }
 

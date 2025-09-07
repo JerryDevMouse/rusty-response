@@ -50,6 +50,8 @@
 .container {
     position: relative;
     min-height: 200px;
+    display: flex;
+    flex-direction: column;
 }
 
 .loaderWrapper {
@@ -70,6 +72,7 @@
 }
 
 .content {
+    height: 100%;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
 }
