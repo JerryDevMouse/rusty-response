@@ -1,14 +1,25 @@
 import styles from './index.module.css'
+interface Props {
+  type?: 'full' | 'block'
+}
 
-const Loading = ({type = 'block'}: {type?: 'full' | 'block'}) => {
+export const Loading = ({type = 'block'}: Props) => {
   return (
     <div className={styles[type]}>
-        <AnimLoading />
+      <AnimLoading />
     </div>
   )
 }
 
-export default Loading
+export const LoadingTable = ({type = 'block'}: Props) => {
+  return (
+    <tr className={styles[type]}>
+      <td className={styles[type]}>
+        <AnimLoading />
+      </td>
+    </tr>
+  )
+}
 
 export const AnimLoading = () => {
   return (

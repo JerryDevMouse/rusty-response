@@ -8,7 +8,7 @@ const Main = () => {
 
   return (
     <>
-    {!loading && servers.length > 0 ?
+    {(loading || !loading && servers.length > 0) ?
       <Table />
     :
       <NoServers text='To get started, add your first server'/>

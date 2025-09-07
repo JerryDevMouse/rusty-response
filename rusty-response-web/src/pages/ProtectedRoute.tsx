@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
 import useVerifyAuth from '../hooks/useVerifyAuth';
-import Loading from '../components/Loading';
+import { Loading } from '../components/Loading';
 
 export const ProtectedRoute = ({type}: {type?: 'auth'}) => {
   const isAuth = useVerifyAuth();  
