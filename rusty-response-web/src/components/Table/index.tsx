@@ -1,5 +1,5 @@
 import { useAppSelector } from '../../app/store/hooks';
-import { LoadingTable } from '../Loading';
+import Loading from '../Loading';
 import Text from '../Text'
 import Filters from './Filters'
 import styles from './index.module.css'
@@ -16,13 +16,16 @@ const Table = () => {
     <Filters />
     <table className={styles.table}>
         <TableHead />
-        {!loading ? 
+        <Loading.ConditionalLoader
+          isLoading={loading}
+          loader={
+            <tbody className={styles.loading}>
+              <Loading.Table />
+            </tbody>
+          }
+        >
           <TableBody />
-        :
-          <tbody className={styles.loading}>
-            <LoadingTable type='block'/>
-          </tbody>
-        }
+        </Loading.ConditionalLoader>
     </table>
     <Pagination />
   </>

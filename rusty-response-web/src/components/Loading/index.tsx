@@ -1,32 +1,13 @@
-import styles from './index.module.css'
-interface Props {
-  type?: 'full' | 'block'
+import Animation from './Animation'
+import Table from './Table'
+import Basic from './Basic'
+import ConditionalLoader from './ConditionalLoader';
+
+const Loading = {
+  Animation,
+  Table,
+  Basic,
+  ConditionalLoader
 }
 
-export const Loading = ({type = 'block'}: Props) => {
-  return (
-    <div className={styles[type]}>
-      <AnimLoading />
-    </div>
-  )
-}
-
-export const LoadingTable = ({type = 'block'}: Props) => {
-  return (
-    <tr className={styles[type]}>
-      <td className={styles[type]}>
-        <AnimLoading />
-      </td>
-    </tr>
-  )
-}
-
-export const AnimLoading = () => {
-  return (
-    <div className={styles.row}>
-        <span className={styles.circle}></span>
-        <span className={styles.circle}></span>
-        <span className={styles.circle}></span>
-    </div>
-  )
-}
+export default Loading;

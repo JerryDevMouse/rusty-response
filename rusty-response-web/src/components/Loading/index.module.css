@@ -46,3 +46,32 @@
         transform: translateY(0);
     }
 }
+/* conditional */
+.container {
+  position: relative;
+  min-height: 200px;
+}
+
+.loaderWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.loaderWrapper.visible {
+  opacity: 1;
+}
+
+.content {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.content.visible {
+  opacity: 1;
+}
