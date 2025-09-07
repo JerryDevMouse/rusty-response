@@ -6,7 +6,7 @@ import type { IServer } from '../../types/servers';
 import apiRequest from '../../helpers/apiRequest';
 import { API } from '../../helpers/constants';
 import { useMinimumDelay } from '../useMinimumDelay';
-import ApiError from '../../helpers/ApiError';
+import useCatchError from '../useCatchError';
 
 const useFetchServers = () => {
     const dispatch = useAppDispatch();
@@ -14,6 +14,7 @@ const useFetchServers = () => {
     const offset = useAppSelector(state => state.servers.offset);
     const deleteCount = useAppSelector(state => state.servers.deleteCount);
     const withMinimumDelay = useMinimumDelay(700);
+    const catchError = useCatchError();
 
     useEffect(() => {
         const fetchServers = async () => {
@@ -26,7 +27,7 @@ const useFetchServers = () => {
                 dispatch(changeServersMaxPage(res.total));
                 
             } catch (error) {
-                if (error instanceof ApiError) error.log();
+                catchError(error);
             } finally {
                 dispatch(setServersLoading(false))
             }

@@ -6,12 +6,13 @@ import type { IResponse } from '../../helpers/types';
 import type { INotify } from '../../types/notifiers';
 import { API } from '../../helpers/constants';
 import { useMinimumDelay } from '../useMinimumDelay';
-import ApiError from '../../helpers/ApiError';
+import useCatchError from '../useCatchError';
 
 const useFetchNotifiers = () => {
     const dispatch = useAppDispatch();
     const maxPage = useAppSelector(state => state.servers.page.max);
     const withMinimumDelay = useMinimumDelay(700);
+    const catchError = useCatchError();
 
     useEffect(() => {
         const fetchNotifiers = async () => {            
@@ -22,7 +23,7 @@ const useFetchNotifiers = () => {
                 ;
                 dispatch(setNotifiers(notifiers.items))
             } catch (error) {
-                if (error instanceof ApiError) error.log();
+                catchError(error);
             } finally {
                 dispatch(setNotifiersLoading(false))
             }
