@@ -3,11 +3,9 @@ import styles from './index.module.css'
 
 const Table = () => {
   return (
-    <tr className={styles.block}>
-      <td className={styles.block}>
-        <Animation />
-      </td>
-    </tr>
+    <td className={styles.block}>
+      <Animation />
+    </td>
   )
 }
 export default Table

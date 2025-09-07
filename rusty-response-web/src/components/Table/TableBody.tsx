@@ -13,7 +13,7 @@ const TableBody = () => {
     const deleteServer = useDeleteServer();
     
   return (
-    <tbody>
+    <>
         {servers.map(server => (
             <tr key={server.id} onMouseLeave={() => resetModalId(server.id)}>
                 <td>
@@ -61,7 +61,7 @@ const TableBody = () => {
                 </td>
             </tr>
         ))}
-    </tbody>
+    </>
   )
 }
 

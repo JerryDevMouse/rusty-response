@@ -196,8 +196,3 @@
     background: var(--color-accent-hover);
     border: 1px solid #525252;
 }
-.loading {
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-}

@@ -15,17 +15,16 @@ const Table = () => {
     <Text type='xl' weight={600} mbottom={18}>Servers List</Text>
     <Filters />
     <table className={styles.table}>
-        <TableHead />
-        <Loading.ConditionalLoader
-          isLoading={loading}
-          loader={
-            <tbody className={styles.loading}>
-              <Loading.Table />
-            </tbody>
-          }
-        >
-          <TableBody />
-        </Loading.ConditionalLoader>
+      <TableHead />
+      <Loading.ConditionalLoader
+        isTable
+        isLoading={loading}
+        loader={
+          <Loading.Table />
+        }
+      >
+        <TableBody />
+      </Loading.ConditionalLoader>
     </table>
     <Pagination />
   </>
