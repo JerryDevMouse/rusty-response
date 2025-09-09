@@ -1,6 +1,6 @@
 import type { IChildren } from "../../helpers/types"
 interface Props extends IChildren {
-    condition: boolean,
+    condition: boolean | unknown,
     fallback?: React.ReactNode
 }
 

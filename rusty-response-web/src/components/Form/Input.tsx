@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import Text from '../Text'
 import lowerFirstLetter from '../../helpers/lowerFirstLetter'
 import styles from './index.module.css'
+import ContentCondition from '../ContentCodition'
 interface Props {
     type: React.HTMLInputTypeAttribute,
     name: string,
@@ -24,15 +25,18 @@ const Input: FC<Props> = ({type, name, help, defaultValue}) => {
                 </div>
             }
         </label>
-        {(type === 'number' && defaultValue) ?             
+        <ContentCondition
+            condition={type === 'number' && defaultValue} 
+            fallback={            
+                <input type={type} id={camelName} name={camelName} placeholder={`Enter ${name}`} required/>
+            }   
+        >
             <div className={styles.rowinput}>
                 <input type="number" id={camelName} name={camelName} 
                     defaultValue={defaultValue} placeholder={`Enter ${name}`} required/>
                 <Text type='tiny'>seconds</Text>
             </div>
-            :
-            <input type={type} id={camelName} name={camelName} placeholder={`Enter ${name}`} required/>
-        }
+        </ContentCondition>
     </div>
   )
 }

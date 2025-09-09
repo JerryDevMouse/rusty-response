@@ -1,4 +1,5 @@
 import { useAppSelector } from '../../../app/store/hooks'
+import ContentCondition from '../../../components/ContentCodition';
 import NoServers from '../../../components/NoServers'
 import Table from '../../../components/Table'
 
@@ -7,13 +8,12 @@ const Main = () => {
   const loading = useAppSelector(state => state.servers.servers.loading)
 
   return (
-    <>
-    {(loading || !loading && servers.length > 0) ?
+    <ContentCondition
+      condition={loading || !loading && servers.length > 0}
+      fallback={<NoServers text='To get started, add your first server'/>}
+    >
       <Table />
-    :
-      <NoServers text='To get started, add your first server'/>
-    }
-    </>
+    </ContentCondition>
   )
 }
 

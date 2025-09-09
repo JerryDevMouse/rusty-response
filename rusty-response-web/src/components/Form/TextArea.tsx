@@ -1,4 +1,5 @@
 import useTextArea from "../../hooks/TextArea/useTextArea";
+import ContentCondition from "../ContentCodition";
 import Text from "../Text";
 import styles from './index.module.css'
 
@@ -26,26 +27,27 @@ const TextArea = ({name, defaultValue = ''}: Props) => {
             name={camelName}
             placeholder="For example: server: {{server.name}}"
         />
-        {popupPos && suggestions.length > 0 && (
-        <ul
-            className={styles.popup}
-            style={{ bottom: popupPos.top - 10, left: popupPos.left + 30 }}
+        <ContentCondition
+            condition={popupPos && suggestions.length > 0}
         >
-            {suggestions.map((sug, i) => (
-                <li
-                    key={sug.full}
-                    className={i === selectedIndex ? styles.active : ""}
-                    onMouseDown={(e) => {
-                        e.preventDefault();
-                        applySuggestion(sug);
-                    }}
-                    onMouseEnter={() => setSelectedIndex(i)}
-                >
-                    {sug.value}
-                </li>
-            ))}
-        </ul>
-        )}
+            <ul className={styles.popup}
+                style={{ bottom: popupPos!.top - 10, left: popupPos!.left + 30 }}
+            >
+                {suggestions.map((sug, i) => (
+                    <li
+                        key={sug.full}
+                        className={i === selectedIndex ? styles.active : ""}
+                        onMouseDown={(e) => {
+                            e.preventDefault();
+                            applySuggestion(sug);
+                        }}
+                        onMouseEnter={() => setSelectedIndex(i)}
+                    >
+                        {sug.value}
+                    </li>
+                ))}
+            </ul>
+        </ContentCondition>
     </div>
   );
 };

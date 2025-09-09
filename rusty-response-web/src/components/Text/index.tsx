@@ -13,15 +13,15 @@ interface Props extends IChildren {
 const Text: FC<Props> = ({children, weight, type, color, mbottom}) => {
   return (
     <p
-        className={styles.text}
-        style={{
-            fontWeight: weight ?? '',
-            fontSize: fontSizeCategories[type] + 'rem',
-            color: color ? `rgba(255, 255, 255, 0.${color})` : '',
-            marginBottom: mbottom ? `${mbottom / 16}rem` : ''
-        }}
+      className={styles.text}
+      style={{
+          fontWeight: weight ?? '',
+          fontSize: fontSizeCategories[type] + 'rem',
+          color: color ? `rgba(255, 255, 255, 0.${color})` : '',
+          marginBottom: mbottom ? `${mbottom / 16}rem` : ''
+      }}
     >
-        {children}
+      {children}
     </p>
   )
 }

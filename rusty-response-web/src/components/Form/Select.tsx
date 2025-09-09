@@ -30,7 +30,6 @@ const Select = ({options, name, option, setOption, icons = false}: Props) => {
         setIsOpen(false)
     }
 
-
     const handleClickOutside = (e: Event) => {
         if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
             setIsOpen(false)
