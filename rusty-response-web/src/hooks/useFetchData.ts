@@ -1,9 +1,8 @@
-import useFetchNotifiers from './notifiers/useFetchNotifiers';
 import useFetchServers from './servers/useFetchServers';
 
 const useFetchData = () => {
   useFetchServers();
-  useFetchNotifiers()
+  // todo: fetch notifiers?
 }
 
 export default useFetchData

@@ -1,17 +1,13 @@
-import { useAppSelector } from '../../../app/store/hooks'
 import ContentCondition from '../../../components/ContentCodition';
 import Loading from '../../../components/Loading';
 import NoServers from '../../../components/NoServers'
 import Notifiers from '../../../components/Notifiers/Notifiers'
 import Pagination from '../../../components/Pagination';
 import Text from "../../../components/Text"
+import useNotifiers from '../../../hooks/notifiers/useNotifiers';
 
 const Main = () => {
-  const servers = useAppSelector(state => state.servers.servers);
-  const loadingNotifiers = useAppSelector(state => state.servers.notifiersLoading);
-  
-  const isLoading = servers.loading || loadingNotifiers;
-  const hasContent = servers.list.length > 0 || isLoading;
+  const {hasContent, isLoading} = useNotifiers()
 
   return (
     <ContentCondition 

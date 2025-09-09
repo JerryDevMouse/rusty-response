@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction} from "@reduxjs/toolkit";
 import type { IServer } from "../../../types/servers";
 import type { INotify } from "../../../types/notifiers";
+import { getNotifiers } from "../thunks/getNotifiers";
 const COUNT_SERVERS = 5; //on page
 export interface IStateServer extends IServer {
     notifiers: INotify[]
@@ -10,6 +11,7 @@ interface IState {
     servers: {
         list: IStateServer[],
         loading: boolean,
+        lastUpdate: number,
     },
     offset: number,
     page: {
@@ -28,6 +30,7 @@ const serversSlice = createSlice({
         servers: {
             list: [],
             loading: true,
+            lastUpdate: 0
         },
         offset: 0,
         page: {
@@ -43,11 +46,14 @@ const serversSlice = createSlice({
         setServers: (state, action: PayloadAction<IServer[]>) => {
             const serversWithNotifiers = action.payload.map(s => ({...s, notifiers: []}))
             state.servers.list = serversWithNotifiers;
+            state.servers.lastUpdate = Date.now();
         },
         setNotifiers: (state, action: PayloadAction<INotify[]>) => {
             action.payload.map(notify => {
                 const serverIndex = state.servers.list.findIndex(s => s.id === notify.server_id);
-                state.servers.list[serverIndex].notifiers.push(notify)
+                if (serverIndex !== -1) {
+                    state.servers.list[serverIndex].notifiers.push(notify)
+                }
             })
         },
         addServer: (state, action: PayloadAction<IServer>) => {
@@ -91,6 +97,23 @@ const serversSlice = createSlice({
         setNewServerId: (state, action: PayloadAction<IServer['id']>) => {
             state.newServerId = action.payload
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getNotifiers.pending, (state) => {
+            state.notifiersLoading = true;
+        })
+        .addCase(getNotifiers.fulfilled, (state, action: PayloadAction<INotify[]>) => {            
+            action.payload.map(notify => {
+                const serverIndex = state.servers.list.findIndex(s => s.id === notify.server_id);
+                if (serverIndex !== -1) {
+                    state.servers.list[serverIndex]?.notifiers.push(notify)
+                }                
+            })
+            state.notifiersLoading = false
+        })
+        .addCase(getNotifiers.rejected, (state) => {
+            state.notifiersLoading = false
+        })
     }
 })
 
