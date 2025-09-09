@@ -3,7 +3,7 @@ import Loading from '../Loading';
 import Text from '../Text'
 import Filters from './Filters'
 import styles from './index.module.css'
-import Pagination from './Pagination';
+import Pagination from '../Pagination';
 import TableBody from './TableBody';
 import TableHead from './TableHead';
 
