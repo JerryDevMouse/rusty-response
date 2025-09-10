@@ -46,7 +46,7 @@ const TableBody = () => {
                     </button>
                 </td>
                 <td className={`${styles.modal} ${modalId === server.id ? styles.show : ''}`}>
-                    <Link to={''}>
+                    <Link to={`/dashboards/servers/${server.id}`}>
                         <Icon name='visit' width={10} height={10} />
                         <Text type='tiny'>Visit</Text>
                     </Link>

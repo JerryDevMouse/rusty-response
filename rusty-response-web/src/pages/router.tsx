@@ -34,6 +34,10 @@ const router = createBrowserRouter([
                             {
                                 path: 'create',
                                 element: <Servers.CreateServer />
+                            },
+                            {
+                                path: ':id',
+                                element: <Servers.ServerPage />
                             }
                         ] },
                         { path: 'notifiers', children: [
