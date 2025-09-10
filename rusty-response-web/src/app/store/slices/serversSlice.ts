@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction} from "@reduxjs/toolkit";
 import type { IServer } from "../../../types/servers";
 import type { INotify } from "../../../types/notifiers";
-import { getNotifiers } from "../thunks/getNotifiers";
 const COUNT_SERVERS = 5; //on page
 export interface IStateServer extends IServer {
     notifiers: INotify[]
@@ -97,23 +96,6 @@ const serversSlice = createSlice({
         setNewServerId: (state, action: PayloadAction<IServer['id']>) => {
             state.newServerId = action.payload
         },
-    },
-    extraReducers: (builder) => {
-        builder.addCase(getNotifiers.pending, (state) => {
-            state.notifiersLoading = true;
-        })
-        .addCase(getNotifiers.fulfilled, (state, action: PayloadAction<INotify[]>) => {            
-            action.payload.map(notify => {
-                const serverIndex = state.servers.list.findIndex(s => s.id === notify.server_id);
-                if (serverIndex !== -1) {
-                    state.servers.list[serverIndex]?.notifiers.push(notify)
-                }                
-            })
-            state.notifiersLoading = false
-        })
-        .addCase(getNotifiers.rejected, (state) => {
-            state.notifiersLoading = false
-        })
     }
 })
 
