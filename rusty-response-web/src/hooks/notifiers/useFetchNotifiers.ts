@@ -19,7 +19,7 @@ const useFetchNotifiers = () => {
                     dispatch(setNotifiersLoading(true))
                     const responseFindTotal = await apiRequest<IResponse<INotify>>(API.notify + '?limit=10&offset=0'); // temporarily, until the API route is redesigned 
                     if (responseFindTotal.total === responseFindTotal.items.length) {
-                        dispatch(setNotifiers(responseFindTotal.items))
+                        dispatch(setNotifiers(responseFindTotal.items));
                     }
                     const finalResponse = await apiRequest<IResponse<INotify>>(API.notify + `?limit=${responseFindTotal.total}&offset=0`);
                     dispatch(setNotifiers(finalResponse.items))
