@@ -17,6 +17,10 @@ interface IState {
         current: number,
         max: number
     },
+    separateServer: {
+        server: IStateServer | null,
+        loading: boolean
+    }
     newServerId: IServer['id'] | null,
     deleteCount: number,
     notifiersLoading: boolean,
@@ -35,6 +39,10 @@ const serversSlice = createSlice({
         page: {
             current: 1,
             max: 0
+        },
+        separateServer: {
+            server: null, 
+            loading: true
         },
         deleteCount: 0,
         newServerId: null,
@@ -96,13 +104,23 @@ const serversSlice = createSlice({
         setNewServerId: (state, action: PayloadAction<IServer['id']>) => {
             state.newServerId = action.payload
         },
+        setSeparateServer: (state, action: PayloadAction<IStateServer | null>) => {
+            state.separateServer.server = action.payload
+        },
+        setSeparateServerNotifiers: (state, action: PayloadAction<INotify[] | []>) => {
+            state.separateServer.server!.notifiers = action.payload
+        },
+        setSeparateServerLoading: (state, action: PayloadAction<boolean>) => {
+            state.separateServer.loading = action.payload
+        }
     }
 })
 
 export const {
     setServers, setNotifiers, addServer, deleteServerById, setServersLoading,
     changeServersMaxPage, setServersCurrentPage, changeServersOffset,
-    setNewNotifierServerId, setNotifiersLoading, setNewServerId
+    setNewNotifierServerId, setNotifiersLoading, setNewServerId,
+    setSeparateServer, setSeparateServerNotifiers, setSeparateServerLoading
 } = serversSlice.actions;
 
 export default serversSlice.reducer;

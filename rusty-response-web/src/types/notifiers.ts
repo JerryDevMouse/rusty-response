@@ -8,7 +8,7 @@ export interface INotifyOperator {
         type: string;
     }[];
 }
-type TProvider = 'telegram' | 'discord'; // todo: | 'bitrix'
+export type TProvider = 'telegram' | 'discord'; // todo: | 'bitrix'
 
 export interface INotify {
 	id: number,

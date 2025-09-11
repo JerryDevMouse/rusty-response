@@ -27,11 +27,9 @@ const TextArea = ({name, defaultValue = ''}: Props) => {
             name={camelName}
             placeholder="For example: server: {{server.name}}"
         />
-        <ContentCondition
-            condition={popupPos && suggestions.length > 0}
-        >
+        {popupPos && suggestions.length > 0 && 
             <ul className={styles.popup}
-                style={{ bottom: popupPos!.top - 10, left: popupPos!.left + 30 }}
+                style={{ bottom: popupPos.top - 10, left: popupPos.left + 30 }}
             >
                 {suggestions.map((sug, i) => (
                     <li
@@ -47,7 +45,7 @@ const TextArea = ({name, defaultValue = ''}: Props) => {
                     </li>
                 ))}
             </ul>
-        </ContentCondition>
+        }    
     </div>
   );
 };

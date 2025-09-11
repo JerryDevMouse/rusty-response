@@ -19,7 +19,7 @@ const API: TRoutes = {
     verify: '/api/v1/account/verify',
     server: '/api/v1/server/',
     notify: '/api/v1/notify/',
-    notifyServer: '/notify/server/'
+    notifyServer: '/api/v1/notify/server/'
 }; 
 
 const sidebarNav: TsidebarNav = {

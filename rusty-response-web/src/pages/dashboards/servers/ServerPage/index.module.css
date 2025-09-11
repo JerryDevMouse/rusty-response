@@ -1,8 +1,13 @@
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 23px;
+}
 .tabs {
     display: flex;
     align-items: center;
     column-gap: 20px;
-    margin-bottom: 23px;
 }
 .tabButton {
     color: rgba(255, 255, 255, 0.4);

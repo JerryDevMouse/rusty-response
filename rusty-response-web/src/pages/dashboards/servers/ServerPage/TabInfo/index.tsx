@@ -1,14 +1,10 @@
-import useGetServerById from '../../../../../hooks/servers/useGetServerById'
-import type { IServer } from '../../../../../types/servers'
+import { useAppSelector } from '../../../../../app/store/hooks'
 import RowInfo from './RowInfo'
 import SectionInfo from './SectionInfo'
-interface Props {
-  id: IServer['id']
-}
 
-const TabInfo = ({id}: Props) => {
-  const {server} = useGetServerById(id);
-  if (!server) return 'Error'
+const TabInfo = () => {
+  const server = useAppSelector(state => state.servers.separateServer.server)
+  if (!server) return 'Error' //todo: catchError and loading
 
   return (
       <>
