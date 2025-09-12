@@ -6,6 +6,7 @@ import Status from './Status';
 import styles from './index.module.css'
 import useModalById from '../../hooks/useModalById';
 import useDeleteServer from '../../hooks/servers/useDeleteServer';
+import ModalOptions from '../ModalOptions';
 
 const TableBody = () => {
     const servers = useAppSelector(state => state.servers.servers.list);
@@ -45,20 +46,23 @@ const TableBody = () => {
                         <Icon name='dots' width={16} height={16} />
                     </button>
                 </td>
-                <td className={`${styles.modal} ${modalId === server.id ? styles.show : ''}`}>
-                    <Link to={`/dashboards/servers/${server.id}`}>
-                        <Icon name='visit' width={10} height={10} />
-                        <Text type='tiny'>Visit</Text>
-                    </Link>
-                    <Link to={''}>
-                        <Icon name='edit' width={10} height={10} />
-                        <Text type='tiny'>Edit</Text>
-                    </Link>
-                    <button onClick={() => deleteServer(server.id)}>
-                        <Icon name='delete' width={10} height={10} />
-                        <Text type='tiny'>Delete</Text>
-                    </button>
-                </td>
+                <ModalOptions isShow={modalId === server.id} isTable >
+                    <ModalOptions.OptionLink 
+                        iconName='visit'    
+                        to={`/dashboards/servers/${server.id}`}
+                        label='Visit'
+                    />
+                    <ModalOptions.OptionLink 
+                        iconName='edit'    
+                        to={``}
+                        label='Edit'
+                    />
+                    <ModalOptions.OptionButton 
+                        iconName='delete'
+                        handleClick={() => deleteServer(server.id)}
+                        label='Delete'
+                    />
+                </ModalOptions>
             </tr>
         ))}
     </>

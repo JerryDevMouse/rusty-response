@@ -96,36 +96,6 @@
 .table tbody td.modal {
     padding: 8px;
 }
-.modal {
-    display: none;
-    flex-direction: column;
-    row-gap: 4px;
-    border-radius: 12px;
-    border: 1px solid #565656;
-    background: var(--color-bg);
-    position: absolute;
-    z-index: 1;
-    top: 100%;
-    right: 0;
-}
-.modal.show {
-    display: flex;
-}
-.modal a,
-.modal button {
-    display: flex;
-    column-gap: 10px;
-    align-items: center;
-    padding: 5px 25px 5px 5px;   
-    border-radius: 5px; 
-    transition: background .3s;
-}
-.modal a:hover,
-.modal button:hover {
-    background: var(--color-accent);
-}
-
-/* options */
 .table tbody tr:hover {
     background: var(--color-accent);
     border-radius: 12px;
