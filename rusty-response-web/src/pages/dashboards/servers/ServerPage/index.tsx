@@ -38,7 +38,7 @@ const ServerPage = () => {
                     </button>
                 ))}
             </div>
-            <ButtonOptions size={28}/>
+            <ButtonOptions size={28} id={id ?? ''}/>
         </div>
         <Loading.ConditionalLoader
             isLoading={loading}
