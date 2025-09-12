@@ -10,9 +10,10 @@ interface Props {
     provider: TProvider
 }
 const SectionNotifiers = ({provider}: Props) => {
+
     const notifiers = useAppSelector(state => state.servers.separateServer.server?.notifiers);
-    
     const [isShowContent, setIsShowContent] = useState<boolean>(true);
+    
   return (
     <section className={`${styles.section} ${!isShowContent ? styles.hide : ''}`}>
         <div className={styles.head}>

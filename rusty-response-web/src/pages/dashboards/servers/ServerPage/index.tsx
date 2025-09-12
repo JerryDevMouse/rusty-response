@@ -2,18 +2,27 @@ import { useState } from "react"
 import Text from "../../../../components/Text"
 import styles from './index.module.css'
 import TabInfo from "./TabInfo"
-import { useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import TabNotifiers from "./TabNotifiers"
 import TabLogs from "./TabLogs"
 import ButtonOptions from "./TabNotifiers/ButtonOptions"
 import useGetServerById from "../../../../hooks/useGetDataById"
 import Loading from "../../../../components/Loading"
 import { useAppSelector } from "../../../../app/store/hooks"
+import useDeleteServer from "../../../../hooks/servers/useDeleteServer"
+import ModalOptions from "../../../../components/ModalOptions"
 const tabs = ['Info', 'Notifiers', 'Logs']
 
 const ServerPage = () => {
     const {id} = useParams();
     useGetServerById(Number(id));
+
+    const navigate = useNavigate();
+    const deleteServer = useDeleteServer();
+    const handleDeleteServer = () => {
+        deleteServer(Number(id));
+        navigate('/dashboards/servers');
+    }
 
     const [tab, setTab] = useState(tabs[0]);
     const loading = useAppSelector(state => state.servers.separateServer.loading)
@@ -38,7 +47,18 @@ const ServerPage = () => {
                     </button>
                 ))}
             </div>
-            <ButtonOptions size={28} id={id ?? ''}/>
+            <ButtonOptions size={28}>
+                <ModalOptions.OptionLink 
+                    iconName='edit'    
+                    to={`/dashboards/servers/edit/${id}`}
+                    label='Edit'
+                />
+                <ModalOptions.OptionButton 
+                    iconName='delete'
+                    handleClick={handleDeleteServer}
+                    label='Delete'
+                />
+            </ButtonOptions>
         </div>
         <Loading.ConditionalLoader
             isLoading={loading}

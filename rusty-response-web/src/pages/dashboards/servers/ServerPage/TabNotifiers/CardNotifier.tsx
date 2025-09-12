@@ -1,6 +1,7 @@
 import ButtonOptions from './ButtonOptions'
 import Text from '../../../../../components/Text'
 import styles from './index.module.css'
+import ModalOptions from '../../../../../components/ModalOptions'
 interface Props {
     id: number,
     active: boolean
@@ -13,7 +14,10 @@ const CardNotifier = ({id, active}: Props) => {
     <div className={styles.card}>
         <div className={styles.cardTop}>
             <Text type="tiny" weight={500}>id: {id}</Text>
-            <ButtonOptions />
+            <ButtonOptions>
+                <ModalOptions.OptionButton label='Edit' iconName='edit' handleClick={() => {}}/>
+                <ModalOptions.OptionButton label='Delete' iconName='delete' handleClick={() => {}}/>
+            </ButtonOptions>
         </div>
         <div className={`${styles.status} ${!active ? styles.inactive : ''}`}>
             <Text type="tiny">{activeText}</Text>

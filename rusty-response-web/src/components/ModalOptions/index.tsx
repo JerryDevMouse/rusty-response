@@ -5,17 +5,18 @@ import OptionLink from './OptionLink'
 interface Props extends IChildren {
     isShow: boolean,
     isTable?: boolean,
+    onMouseLeave: VoidFunction
 }
 
-const Modal = ({children, isShow, isTable = false}: Props) => {
+const Modal = ({children, isShow, isTable = false, onMouseLeave}: Props) => {
     if (isTable) return (
-        <td className={`${styles.modal} ${isShow ? styles.show : ''}`}>
+        <td className={`${styles.modal} ${isShow ? styles.show : ''}`} onMouseLeave={onMouseLeave}>
             {children}
         </td>
     )
 
   return (
-    <div className={`${styles.modal} ${isShow ? styles.show : ''}`}>
+    <div className={`${styles.modal} ${isShow ? styles.show : ''}`} onMouseLeave={onMouseLeave}>
         {children}
     </div>
   )
