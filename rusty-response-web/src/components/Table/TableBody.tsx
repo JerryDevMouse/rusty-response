@@ -1,4 +1,3 @@
-import { Link } from 'react-router';
 import { useAppSelector } from '../../app/store/hooks'
 import Icon from '../Icon/Icon';
 import Text from '../Text';
@@ -54,7 +53,7 @@ const TableBody = () => {
                     />
                     <ModalOptions.OptionLink 
                         iconName='edit'    
-                        to={``}
+                        to={`/dashboards/servers/edit/${server.id}`}
                         label='Edit'
                     />
                     <ModalOptions.OptionButton 

@@ -33,7 +33,11 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: 'create',
-                                element: <Servers.CreateServer />
+                                element: <Servers.FormServer type='Create' />
+                            },
+                            {
+                                path: 'edit/:id',
+                                element: <Servers.FormServer type='Edit' />
                             },
                             {
                                 path: ':id',

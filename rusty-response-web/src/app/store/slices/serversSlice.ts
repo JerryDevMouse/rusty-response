@@ -70,6 +70,12 @@ const serversSlice = createSlice({
                 state.deleteCount--;
             }
         },
+        editServer: (state, action: PayloadAction<IServer>) => {
+            const serverIndex = state.servers.list.findIndex(s => s.id === action.payload.id);
+            if (serverIndex !== -1) {
+                state.servers.list[serverIndex] = {...action.payload, notifiers: []}
+            }
+        },
         deleteServerById: (state, action: PayloadAction<IServer['id']>) => {
             state.servers.list = state.servers.list.filter(({id}) => id !== action.payload);
             if (
@@ -117,7 +123,7 @@ const serversSlice = createSlice({
 })
 
 export const {
-    setServers, setNotifiers, addServer, deleteServerById, setServersLoading,
+    setServers, setNotifiers, addServer, editServer, deleteServerById, setServersLoading,
     changeServersMaxPage, setServersCurrentPage, changeServersOffset,
     setNewNotifierServerId, setNotifiersLoading, setNewServerId,
     setSeparateServer, setSeparateServerNotifiers, setSeparateServerLoading

@@ -7,10 +7,11 @@ interface Props {
     type: React.HTMLInputTypeAttribute,
     name: string,
     help?: string,
-    defaultValue?: number
+    defaultValue?: number | string
 }
 const Input: FC<Props> = ({type, name, help, defaultValue}) => {
     const camelName = lowerFirstLetter(name).replaceAll(' ', '');
+        
   return (
     <div className={styles.col}>
         <label htmlFor={camelName}>
@@ -28,7 +29,7 @@ const Input: FC<Props> = ({type, name, help, defaultValue}) => {
         <ContentCondition
             condition={type === 'number' && defaultValue} 
             fallback={            
-                <input type={type} id={camelName} name={camelName} placeholder={`Enter ${name}`} required/>
+                <input type={type} id={camelName} name={camelName} placeholder={`Enter ${name}`} defaultValue={defaultValue} required/>
             }   
         >
             <div className={styles.rowinput}>

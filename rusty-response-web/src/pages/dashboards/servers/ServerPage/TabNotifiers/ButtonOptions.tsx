@@ -19,7 +19,7 @@ const ButtonOptions = ({size = 24}: Props) => {
       >
           <Icon name="dots" width={16} />
       </button>
-      <ModalOptions isShow={isShow} isTable >
+      <ModalOptions isShow={isShow} >
         <ModalOptions.OptionLink 
             iconName='edit'    
             to={``}
