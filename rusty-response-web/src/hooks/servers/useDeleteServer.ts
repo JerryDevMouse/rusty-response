@@ -1,7 +1,7 @@
 import { useAppDispatch } from "../../app/store/hooks";
 import { deleteServerById } from "../../app/store/slices/serversSlice";
 import apiRequest from "../../helpers/apiRequest";
-import { API } from "../../helpers/constants";
+import { API } from "../../constants/api";
 import useCatchError from "../useCatchError";
 
 

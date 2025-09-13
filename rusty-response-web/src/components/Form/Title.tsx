@@ -1,6 +1,6 @@
 import Text from '../Text'
 import styles from './index.module.css'
-import type { IChildren } from '../../helpers/types'
+import type { IChildren } from '../../types'
 
 const Title = ({children}: IChildren) => {
   return (

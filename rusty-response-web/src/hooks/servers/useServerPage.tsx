@@ -5,20 +5,20 @@ import useGetServerDataById from './useGetServerDataById';
 import TabInfo from '../../pages/dashboards/servers/ServerPage/TabInfo';
 import TabNotifiers from '../../pages/dashboards/servers/ServerPage/TabNotifiers';
 import TabLogs from '../../pages/dashboards/servers/ServerPage/TabLogs';
-import { tabs } from '../../helpers/constants';
+import { serverPageTabs } from '../../constants/text';
 
 const useServerPage = () => {
     const {id} = useParams();
     useGetServerDataById(Number(id));
     
-    const [tab, setTab] = useState(tabs[0]);
+    const [tab, setTab] = useState(serverPageTabs[0]);
     const callSetTab = useCallback((value: string) => setTab(value), [])
     const loading = useAppSelector(state => state.servers.separateServer.loading)
 
     const RenderTab = () => {
-        if (tab === tabs[0]) return <TabInfo />
-        if (tab === tabs[1]) return <TabNotifiers />
-        if (tab === tabs[2]) return <TabLogs />
+        if (tab === serverPageTabs[0]) return <TabInfo />
+        if (tab === serverPageTabs[1]) return <TabNotifiers />
+        if (tab === serverPageTabs[2]) return <TabLogs />
     }
 
     return {

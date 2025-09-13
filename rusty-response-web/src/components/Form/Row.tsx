@@ -1,4 +1,4 @@
-import type { IChildren } from '../../helpers/types'
+import type { IChildren } from '../../types'
 import styles from './index.module.css'
 
 const Row = ({children}: IChildren) => {

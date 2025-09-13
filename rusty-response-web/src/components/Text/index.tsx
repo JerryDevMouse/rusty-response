@@ -1,7 +1,8 @@
 import type { FC } from 'react'
-import { fontSizeCategories } from '../../helpers/constants'
-import type { IChildren, TFontColorShape, TFontSize } from '../../helpers/types'
+import type { IChildren } from '../../types'
+import { fontSizeCategories } from '../../constants/styles'
 import styles from './index.module.css'
+import type { TFontColorShape, TFontSize } from '../../types/ui'
 
 interface Props extends IChildren {
     weight?: 400 | 500 | 600,

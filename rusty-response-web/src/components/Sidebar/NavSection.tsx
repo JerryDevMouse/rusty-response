@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { sidebarNav } from '../../helpers/constants'
+import { sidebarNav } from '../../constants/text'
 import Text from '../Text'
 import styles from './index.module.css'
-import type { TSidebarNavSection } from '../../helpers/types'
+import type { TSidebarNavSection } from '../../types/ui'
 import { Sidebar } from '../Sidebar'
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter'
 interface Props {

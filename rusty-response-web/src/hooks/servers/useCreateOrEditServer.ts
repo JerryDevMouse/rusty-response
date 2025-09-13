@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import apiRequest from "../../helpers/apiRequest";
-import { API } from "../../helpers/constants";
+import { API } from "../../constants/api";
 import type { IServer } from "../../types/servers";
 import { useAppDispatch } from "../../app/store/hooks";
 import { addServer, editServer, setSeparateServer, setSeparateServerLoading } from "../../app/store/slices/serversSlice";

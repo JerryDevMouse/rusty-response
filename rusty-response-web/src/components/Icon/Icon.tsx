@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import type { TFontColorShape, TIconName } from '../../helpers/types'
+import type { TFontColorShape, TIconName } from '../../types/ui';
 
 interface Props {
     name: TIconName,

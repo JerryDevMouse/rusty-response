@@ -1,4 +1,4 @@
-import type { IUser } from "../helpers/types";
+import type { IUser } from "../types/api";
 import type { IServer } from "./servers";
 
 export interface INotifyOperator {

@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import type { IChildren } from '../../helpers/types'
+import type { IChildren } from '../../types'
 interface Props extends IChildren {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }

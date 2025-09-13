@@ -1,6 +1,6 @@
 import { type FC } from 'react'
-import type { IChildren } from '../../helpers/types'
 import styles from './AuthPages.module.css'
+import type { IChildren } from '../../types'
 
 const Container: FC<IChildren> = ({children}) => {
   return (

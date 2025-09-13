@@ -1,5 +1,5 @@
 import Text from '../../../../../components/Text'
-import type { IChildren } from '../../../../../helpers/types'
+import type { IChildren } from '../../../../../types'
 import styles from '../index.module.css'
 interface Props extends IChildren {
     title: string

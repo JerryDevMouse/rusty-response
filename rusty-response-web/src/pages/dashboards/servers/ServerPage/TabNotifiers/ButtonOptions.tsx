@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Icon from '../../../../../components/Icon/Icon'
 import ModalOptions from '../../../../../components/ModalOptions'
 import styles from './index.module.css'
-import type { IChildren } from '../../../../../helpers/types'
+import type { IChildren } from '../../../../../types'
 interface Props extends IChildren {
     size?: number
 }

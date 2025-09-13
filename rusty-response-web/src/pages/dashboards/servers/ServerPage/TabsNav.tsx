@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import ModalOptions from '../../../../components/ModalOptions';
 import Text from '../../../../components/Text';
-import { tabs } from '../../../../helpers/constants';
+import { serverPageTabs } from '../../../../constants/text';
 import styles from './index.module.css'
 import ButtonOptions from './TabNotifiers/ButtonOptions';
 import useDeleteServer from '../../../../hooks/servers/useDeleteServer';
@@ -22,7 +22,7 @@ const TabsNav = ({tab, setTab, serverId}: Props) => {
   return (
     <div className={styles.top}>
         <div className={styles.tabs}>
-            {tabs.map(name => (
+            {serverPageTabs.map(name => (
                 <button 
                     key={name}
                     className={`${styles.tabButton} ${tab === name ? styles.active : ''}`}

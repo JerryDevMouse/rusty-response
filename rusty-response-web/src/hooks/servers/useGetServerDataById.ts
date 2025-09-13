@@ -3,9 +3,9 @@ import { useAppDispatch, useAppSelector } from "../../app/store/hooks";
 import useCatchError from "../useCatchError";
 import { setSeparateServer, setSeparateServerLoading, setSeparateServerNotifiers } from "../../app/store/slices/serversSlice";
 import apiRequest from "../../helpers/apiRequest";
-import { API } from "../../helpers/constants";
+import { API } from "../../constants/api";
 import type { IServer } from "../../types/servers";
-import type { IResponse } from "../../helpers/types";
+import type { IResponse } from "../../types/api";
 import type { INotify } from "../../types/notifiers";
 
 const useGetServerDataById = (id: IServer["id"]) => {    

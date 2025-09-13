@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import type { IChildren } from '../../helpers/types'
+import type { IChildren } from '../../types'
 import Text from '../Text'
 import styles from './index.module.css'
 interface Props extends IChildren {

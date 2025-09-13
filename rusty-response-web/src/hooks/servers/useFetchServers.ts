@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { changeServersMaxPage, setServers, setServersLoading } from '../../app/store/slices/serversSlice';
-import type { IResponse } from '../../helpers/types';
+import type { IResponse } from '../../types/api';
 import type { IServer } from '../../types/servers';
 import apiRequest from '../../helpers/apiRequest';
-import { API } from '../../helpers/constants';
+import { API } from '../../constants/api';
 import { useMinimumDelay } from '../useMinimumDelay';
 import useCatchError from '../useCatchError';
 

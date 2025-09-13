@@ -3,7 +3,7 @@ import { NavLink } from 'react-router';
 import Text from '../Text';
 import { AuthPages } from '.';
 import useForm from '../../hooks/useForm';
-import { AuthPageRedirectOffer } from '../../helpers/constants';
+import { authPageRedirectOffer } from '../../constants/text';
 import styles from './AuthPages.module.css'
 interface Props {
     onSubmit: (formData: FormData) => void; 
@@ -25,7 +25,7 @@ const Form: FC<Props> = ({onSubmit, sign}) => {
                 <Text type='small' weight={400}>Sign {sign}</Text>
             </button>
             <div className={styles.row}>
-                <Text type='tiny' weight={400} color={4}>{AuthPageRedirectOffer[sign]}</Text>
+                <Text type='tiny' weight={400} color={4}>{authPageRedirectOffer[sign]}</Text>
                 <NavLink to={`/auth/sign${sign ==='In' ? 'up' : 'in'}`} className={styles.link}>
                     <Text type='tiny' weight={400}>Sign {sign ==='In' ? 'Up' : 'In'}</Text>
                 </NavLink>

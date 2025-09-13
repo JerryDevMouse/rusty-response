@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import lowerFirstLetter from '../../helpers/lowerFirstLetter';
-import type { TIconName } from '../../helpers/types';
 import Text from '../Text';
 import Icon from '../Icon/Icon';
 import styles from './index.module.css'
 import type { INotifyOperator } from '../../types/notifiers';
 import type { IServer } from '../../types/servers';
+import type { TIconName } from '../../types/ui';
 
 interface Props {
     options: INotifyOperator[] | IServer[],

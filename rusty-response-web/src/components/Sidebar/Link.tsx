@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import { NavLink } from 'react-router'
 import Icon from '../Icon/Icon'
 import Text from '../Text'
-import type { TSidebarNavName, TSidebarNavSection } from '../../helpers/types'
+import type { TSidebarNavName, TSidebarNavSection } from '../../types/ui'
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter'
 import styles from './index.module.css'
 

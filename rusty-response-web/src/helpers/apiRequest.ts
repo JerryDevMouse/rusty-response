@@ -1,5 +1,5 @@
 import ApiError from "./ApiError";
-import type { IServerError } from "./types";
+import type { IServerError } from "../types/api";
 
 interface IApiRequest {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE',

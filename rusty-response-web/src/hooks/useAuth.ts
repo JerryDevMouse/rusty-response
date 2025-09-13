@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router';
 import { useAppDispatch } from '../app/store/hooks';
 import ApiError from '../helpers/ApiError';
 import apiRequest from '../helpers/apiRequest';
-import { API } from '../helpers/constants';
-import type { IUser } from '../helpers/types';
+import { API } from '../constants/api';
+import type { IUser } from '../types/api';
 import { setUser, setUserLoading } from '../app/store/slices/userSlice';
 import Storage from '../helpers/Storage';
 

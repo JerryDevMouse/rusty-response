@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import Icon from '../Icon/Icon'
 import Text from '../Text'
-import type { TIconName } from '../../helpers/types'
+import type { TIconName } from '../../types/ui'
 interface Props {
     to: string,
     iconName?: TIconName,

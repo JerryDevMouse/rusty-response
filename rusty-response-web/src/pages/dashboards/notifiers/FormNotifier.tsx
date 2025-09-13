@@ -1,7 +1,7 @@
 import { Form } from '../../../components/Form';
 import useForm from '../../../hooks/useForm';
 import useFormNotifier from '../../../hooks/notifiers/useFormNotifier';
-import { notifierOperatorsList } from '../../../helpers/constants';
+import { notifierProviderFields } from '../../../constants/notifiers';
 
 interface Props {
     requestMethod: 'POST' | 'PUT'
@@ -21,14 +21,14 @@ const FormNotifier = ({requestMethod}: Props) => {
             setOption={setOptionServer}
             name='Server Name'
           />
-          <Form.Select options={notifierOperatorsList} 
+          <Form.Select options={notifierProviderFields} 
             option={optionProvider} setOption={setOptionProvider}
             name='Provider'
             icons
           />
         </Form.Row>
         <Form.Row>
-          {notifierOperatorsList.find(({name}) => name === optionProvider)?.fields.map(({name, type}) => (
+          {notifierProviderFields.find(({name}) => name === optionProvider)?.fields.map(({name, type}) => (
             <Form.Input key={name} type={type} name={name} />
           ))}
         </Form.Row>

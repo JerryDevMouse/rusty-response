@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks'
 import apiRequest from '../../helpers/apiRequest'
-import type { IResponse } from '../../helpers/types'
+import type { IResponse } from '../../types/api'
 import type { INotify } from '../../types/notifiers'
-import { API } from '../../helpers/constants'
+import { API } from '../../constants/api'
 import { setNotifiers, setNotifiersLoading } from '../../app/store/slices/serversSlice'
 import useCatchError from '../useCatchError'
 

@@ -1,6 +1,6 @@
+import type { TIconName } from '../../types/ui'
 import Icon from '../Icon/Icon'
 import Text from '../Text'
-import type { TIconName } from '../../helpers/types'
 interface Props {
     handleClick: VoidFunction,
     iconName?: TIconName,

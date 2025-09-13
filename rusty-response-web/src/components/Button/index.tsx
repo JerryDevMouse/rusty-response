@@ -1,7 +1,11 @@
 import type { FC } from 'react'
-import type { IButtonProps } from '../../helpers/types'
 import Text from '../Text'
 import styles from './index.module.css'
+import type { IChildren } from '../../types'
+export interface IButtonProps extends IChildren {
+  onClick?: VoidFunction,
+  type: 'submit' | 'button'
+}
 
 const Button: FC<IButtonProps>= ({children, onClick, type}) => {
   return (

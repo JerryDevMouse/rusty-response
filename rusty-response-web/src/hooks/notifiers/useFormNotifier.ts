@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react'
 import { useAppSelector } from '../../app/store/hooks';
-import { API, notifierOperatorsList } from '../../helpers/constants';
+import { API } from '../../constants/api';
 import lowerFirstLetter from '../../helpers/lowerFirstLetter';
 import type { INotify } from '../../types/notifiers';
 import apiRequest from '../../helpers/apiRequest';
 import ApiError from '../../helpers/ApiError';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
+import { notifierProviderFields } from '../../constants/notifiers';
 
 const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
     const servers = useAppSelector(state => state.servers.servers.list);
@@ -23,7 +24,7 @@ const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
         str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 
     const getOperatorFields = (formData: FormData, operator: INotify['provider']) => {
-        const providerFields = notifierOperatorsList.find(o => o.name === capitalizeFirstLetter(operator))?.fields;
+        const providerFields = notifierProviderFields.find(o => o.name === capitalizeFirstLetter(operator))?.fields;
         
         if (!providerFields) return {};
 
