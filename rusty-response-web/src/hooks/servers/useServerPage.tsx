@@ -17,7 +17,7 @@ const useServerPage = () => {
 
     const RenderTab = () => {
         if (tab === serverPageTabs[0]) return <TabInfo />
-        if (tab === serverPageTabs[1]) return <TabNotifiers />
+        if (tab === serverPageTabs[1]) return <TabNotifiers serverId={Number(id)} />
         if (tab === serverPageTabs[2]) return <TabLogs />
     }
 

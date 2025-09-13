@@ -10,13 +10,13 @@ import { notifierProviderFields } from '../../constants/notifiers';
 
 const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
     const servers = useAppSelector(state => state.servers.servers.list);
-    const newNotifierServerId = useAppSelector(state => state.servers.newNotifierServerId);
+    const separateNotifier = useAppSelector(state => state.servers.separateNotifier.notifier);
 
-    const [optionProvider, setOptionProvider] = useState<string>('Telegram');
+    const [optionProvider, setOptionProvider] = useState<string>(separateNotifier.provider ?? 'Telegram');
     const callSetOptionProvider = useCallback((value: string) => setOptionProvider(value), []);
 
     const [optionServer, setOptionServer] = useState<string>(
-        servers.find(s => s.id === newNotifierServerId)?.name ?? 'serverName'
+        servers.find(s => s.id === separateNotifier.server_id)?.name ?? 'Select Server'
     );
     const callSetOptionServer= useCallback((value: string) => setOptionServer(value), []);
 

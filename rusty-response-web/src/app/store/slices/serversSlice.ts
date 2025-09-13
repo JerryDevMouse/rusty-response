@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction} from "@reduxjs/toolkit";
 import type { IServer } from "../../../types/servers";
 import type { INotify } from "../../../types/notifiers";
+import { initialNotifier } from "../../../constants/notifiers";
 const COUNT_SERVERS = 5; //on page
 export interface IStateServer extends IServer {
     notifiers: INotify[]
@@ -24,7 +25,10 @@ interface IState {
     newServerId: IServer['id'] | null,
     deleteCount: number,
     notifiersLoading: boolean,
-    newNotifierServerId: IServer['id'] | null
+    separateNotifier: {
+        notifier: INotify,
+        loading: boolean
+    },
 }
 
 const serversSlice = createSlice({
@@ -47,7 +51,10 @@ const serversSlice = createSlice({
         deleteCount: 0,
         newServerId: null,
         notifiersLoading: false,
-        newNotifierServerId: null
+        separateNotifier: {
+            notifier: initialNotifier,
+            loading: true
+        }
     } as IState,
     reducers: {
         setServers: (state, action: PayloadAction<IServer[]>) => {
@@ -104,8 +111,8 @@ const serversSlice = createSlice({
         changeServersOffset: (state, action: PayloadAction<number>) => {
             state.offset = (action.payload - 1) * COUNT_SERVERS
         },
-        setNewNotifierServerId: (state, action: PayloadAction<INotify['server_id']>) => {
-            state.newNotifierServerId = action.payload
+        setSeparateNotifier: (state, action: PayloadAction<INotify>) => {
+            state.separateNotifier.notifier = action.payload
         },
         setNewServerId: (state, action: PayloadAction<IServer['id']>) => {
             state.newServerId = action.payload
@@ -125,7 +132,7 @@ const serversSlice = createSlice({
 export const {
     setServers, setNotifiers, addServer, editServer, deleteServerById, setServersLoading,
     changeServersMaxPage, setServersCurrentPage, changeServersOffset,
-    setNewNotifierServerId, setNotifiersLoading, setNewServerId,
+    setSeparateNotifier, setNotifiersLoading, setNewServerId,
     setSeparateServer, setSeparateServerNotifiers, setSeparateServerLoading
 } = serversSlice.actions;
 

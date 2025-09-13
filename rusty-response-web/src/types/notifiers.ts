@@ -10,15 +10,21 @@ export interface INotifyOperator {
 }
 export type TProvider = 'telegram' | 'discord'; // todo: | 'bitrix'
 
+export interface ITelegramCredentials {
+	chat_id: number | null,
+	token: string | null
+}
+export interface IDiscordCredentials {
+	chat_id: number | null,
+	token: string | null
+}
+
 export interface INotify {
 	id: number,
 	user_id: IUser['id'],
 	server_id: IServer['id'],
 	provider: TProvider,
-	credentials: {
-		"chat_id": -444444444,
-		"token": "TOKEN"
-	},
+	credentials: ITelegramCredentials | IDiscordCredentials,
 	format: string,
 	active: boolean,
 	created_at: any,

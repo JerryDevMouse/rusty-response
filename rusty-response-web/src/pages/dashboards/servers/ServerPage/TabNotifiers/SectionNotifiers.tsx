@@ -6,12 +6,15 @@ import CardNotifier from './CardNotifier';
 import type { TProvider } from '../../../../../types/notifiers';
 import capitalizeFirstLetter from '../../../../../helpers/capitalizeFirstLetter';
 import { useAppSelector } from '../../../../../app/store/hooks';
+import useNotifierOptions from '../../../../../hooks/notifiers/useNotifierOptions';
 interface Props {
-    provider: TProvider
+    provider: TProvider,
+    serverId: number
 }
-const SectionNotifiers = ({provider}: Props) => {
+const SectionNotifiers = ({provider, serverId}: Props) => {
     const notifiers = useAppSelector(state => state.servers.separateServer.server?.notifiers);
     const [isShowContent, setIsShowContent] = useState<boolean>(true);
+    const {addNotifier} = useNotifierOptions();
     
   return (
     <section className={`${styles.section} ${!isShowContent ? styles.hide : ''}`}>
@@ -38,7 +41,7 @@ const SectionNotifiers = ({provider}: Props) => {
                     active={n.active} 
                 />
             ))}
-            <button className={styles.add}>
+            <button className={styles.add} onClick={() => addNotifier(serverId, provider)}>
                 <Icon name="plus" width={12}/>
                 <Text type="small" weight={500}>Add Notifier</Text>
             </button>
