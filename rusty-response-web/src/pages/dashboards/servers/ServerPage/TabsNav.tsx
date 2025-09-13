@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router';
+import useServerOptions from '../../../../hooks/servers/useServerOptions';
 import ModalOptions from '../../../../components/ModalOptions';
-import Text from '../../../../components/Text';
 import { serverPageTabs } from '../../../../constants/text';
-import styles from './index.module.css'
 import ButtonOptions from './TabNotifiers/ButtonOptions';
-import useDeleteServer from '../../../../hooks/servers/useDeleteServer';
+import Text from '../../../../components/Text';
+import styles from './index.module.css'
 interface Props {
     tab: string,
     setTab: (value: string) => void,
@@ -13,7 +13,7 @@ interface Props {
 
 const TabsNav = ({tab, setTab, serverId}: Props) => {
     const navigate = useNavigate();
-    const deleteServer = useDeleteServer();
+    const {deleteServer} = useServerOptions();
     const handleDeleteServer = () => {
         deleteServer(serverId);
         navigate('/dashboards/servers');

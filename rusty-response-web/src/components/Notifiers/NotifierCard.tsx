@@ -5,6 +5,9 @@ import { type IStateServer } from '../../app/store/slices/serversSlice'
 import Text from '../Text'
 import Icon from '../Icon/Icon'
 import styles from './index.module.css'
+import ModalOptions from '../ModalOptions'
+import useServerOptions from '../../hooks/servers/useServerOptions'
+import { useState } from 'react'
 interface Props {
   serverId: IStateServer['id'],
   serverName: IStateServer['name'],
@@ -13,7 +16,9 @@ interface Props {
 }
 
 const NotifierCard = ({serverId, serverName, serverURL, notifiers}: Props) => {
+  const [isShowModal, setIsShowModal] = useState(false);
   const {addNotifier} = useNotifierOptions();
+  const {deleteServer} = useServerOptions()
 
   const notifiersProviders = notifiers.reduce((acc, n) => {
     const isAlreadyHas = acc.includes(n.provider);
@@ -42,9 +47,28 @@ const NotifierCard = ({serverId, serverName, serverURL, notifiers}: Props) => {
               <Icon name='plus' width={10}></Icon>
             </button>
           </div>
-          <button className={styles.options}>
-            <Icon name='dots' width={20}/>
-          </button>
+          <div style={{position: 'relative'}}>
+            <button className={styles.options} onClick={() => setIsShowModal(c => !c)}>
+              <Icon name='dots' width={20}/>
+            </button>
+            <ModalOptions isShow={isShowModal} onMouseLeave={() => setIsShowModal(false)}>
+              <ModalOptions.OptionLink 
+                  iconName='visit'    
+                  to={`/dashboards/servers/${serverId}`}
+                  label='Visit'
+              />
+              <ModalOptions.OptionLink 
+                  iconName='edit'    
+                  to={`/dashboards/servers/edit/${serverId}`}
+                  label='Edit'
+              />
+              <ModalOptions.OptionButton 
+                  iconName='delete'
+                  handleClick={() => deleteServer(serverId)}
+                  label='Delete'
+              />
+            </ModalOptions>
+          </div>
         </div>
       </div>
     </div>

@@ -1,11 +1,10 @@
-import { useAppDispatch } from "../../app/store/hooks";
-import { deleteServerById } from "../../app/store/slices/serversSlice";
-import apiRequest from "../../helpers/apiRequest";
-import { API } from "../../constants/api";
-import useCatchError from "../useCatchError";
+import { useAppDispatch } from '../../app/store/hooks';
+import { deleteServerById } from '../../app/store/slices/serversSlice';
+import { API } from '../../constants/api';
+import apiRequest from '../../helpers/apiRequest';
+import useCatchError from '../useCatchError';
 
-
-const useDeleteServer = () => {
+const useServerOptions = () => {
     const dispatch = useAppDispatch();
     const catchError = useCatchError();
 
@@ -20,7 +19,7 @@ const useDeleteServer = () => {
         }
     }
 
-    return deleteServer;
+    return {deleteServer}
 }
 
-export default useDeleteServer
+export default useServerOptions

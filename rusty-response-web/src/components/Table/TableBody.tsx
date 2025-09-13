@@ -1,16 +1,16 @@
 import { useAppSelector } from '../../app/store/hooks'
+import useServerOptions from '../../hooks/servers/useServerOptions';
 import Icon from '../Icon/Icon';
 import Text from '../Text';
 import Status from './Status';
-import styles from './index.module.css'
 import useModalById from '../../hooks/useModalById';
-import useDeleteServer from '../../hooks/servers/useDeleteServer';
 import ModalOptions from '../ModalOptions';
+import styles from './index.module.css'
 
 const TableBody = () => {
     const servers = useAppSelector(state => state.servers.servers.list);
     const {modalId, resetModalId, toggleModalId} = useModalById();
-    const deleteServer = useDeleteServer();
+    const {deleteServer} = useServerOptions();
     
   return (
     <>
@@ -45,7 +45,7 @@ const TableBody = () => {
                         <Icon name='dots' width={16} height={16} />
                     </button>
                 </td>
-                <ModalOptions isShow={modalId === server.id} isTable >
+                <ModalOptions isShow={modalId === server.id} isTable onMouseLeave={() => resetModalId(modalId)}>
                     <ModalOptions.OptionLink 
                         iconName='visit'    
                         to={`/dashboards/servers/${server.id}`}
