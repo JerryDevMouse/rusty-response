@@ -1,14 +1,14 @@
 import { useEffect, useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "../app/store/hooks";
-import useCatchError from "./useCatchError";
-import { setSeparateServer, setSeparateServerLoading, setSeparateServerNotifiers } from "../app/store/slices/serversSlice";
-import apiRequest from "../helpers/apiRequest";
-import { API } from "../helpers/constants";
-import type { IServer } from "../types/servers";
-import type { IResponse } from "../helpers/types";
-import type { INotify } from "../types/notifiers";
+import { useAppDispatch, useAppSelector } from "../../app/store/hooks";
+import useCatchError from "../useCatchError";
+import { setSeparateServer, setSeparateServerLoading, setSeparateServerNotifiers } from "../../app/store/slices/serversSlice";
+import apiRequest from "../../helpers/apiRequest";
+import { API } from "../../helpers/constants";
+import type { IServer } from "../../types/servers";
+import type { IResponse } from "../../helpers/types";
+import type { INotify } from "../../types/notifiers";
 
-const useGetDataById = (id: IServer["id"]) => {    
+const useGetServerDataById = (id: IServer["id"]) => {    
   const dispatch = useAppDispatch();
   const servers = useAppSelector((state) => state.servers.servers.list);
   const catchError = useCatchError();
@@ -56,4 +56,4 @@ const useGetDataById = (id: IServer["id"]) => {
   }, [id]);
 };
 
-export default useGetDataById;
+export default useGetServerDataById;

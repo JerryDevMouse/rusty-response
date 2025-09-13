@@ -60,4 +60,7 @@ const notifierOperatorsList = [
   }
 ]
 
-export {fontSizeCategories, AuthPageRedirectOffer, API, sidebarNav, notifierOperatorsList}
+const tabs = ['Info', 'Notifiers', 'Logs']
+
+
+export {fontSizeCategories, AuthPageRedirectOffer, API, sidebarNav, notifierOperatorsList, tabs}
