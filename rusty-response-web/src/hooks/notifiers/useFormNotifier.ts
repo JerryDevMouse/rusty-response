@@ -12,7 +12,9 @@ const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
     const servers = useAppSelector(state => state.servers.servers.list);
     const separateNotifier = useAppSelector(state => state.servers.separateNotifier.notifier);
 
-    const [optionProvider, setOptionProvider] = useState<string>(separateNotifier.provider ?? 'Telegram');
+    const [optionProvider, setOptionProvider] = useState<string>(
+        separateNotifier.provider ? capitalizeFirstLetter(separateNotifier.provider) : 'Telegram'
+    );
     const callSetOptionProvider = useCallback((value: string) => setOptionProvider(value), []);
 
     const [optionServer, setOptionServer] = useState<string>(

@@ -92,6 +92,7 @@ const serversSlice = createSlice({
             ) {
                 state.page.current--;
                 state.page.max--;
+                state.offset -= 5;
             } else {
                 state.deleteCount++;
             }

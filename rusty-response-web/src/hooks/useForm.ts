@@ -12,9 +12,14 @@ const useForm = (onSubmit: (formData: FormData) => void) => {
         e.currentTarget.reset();
     }
     
-    const handleCancel = () => {
-        navigate('/');
-    }
+    const handleCancel = () => {        
+            const currentHistoryIndex = window.history.state?.idx || 0;
+            if (currentHistoryIndex > 0) {
+                navigate(-1);
+            } else {
+                navigate('/');
+            }
+        }
 
     return {handleSubmit, handleCancel}
 }
