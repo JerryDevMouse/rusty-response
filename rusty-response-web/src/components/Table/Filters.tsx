@@ -9,11 +9,11 @@ const Filters = () => {
   return (
     <section className={styles.filters}>
         <div className={styles.filtersBtns}>
-            <Link to={'/dashboards/servers/create'}>
-                <Icon name='plus' height={10} width={10} />
+            <Link to={'/dashboards/servers/create'} title='Create Server'>
+                <Icon name='plus' width={10} />
             </Link>
             <button>
-                <Icon name='list_sort' height={10} width={10} />
+                <Icon name='list_sort' width={10} />
             </button>
         </div>
         <Search onSubmit={e => e.preventDefault()}>

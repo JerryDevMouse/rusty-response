@@ -6,6 +6,7 @@ import { useAppDispatch } from "../../app/store/hooks";
 import { addServer, editServer, setSeparateServer, setSeparateServerLoading } from "../../app/store/slices/serversSlice";
 import useCatchError from "../useCatchError";
 import { useEffect } from "react";
+import useModalUI from "../useModalUI";
 
 function getData (formData: FormData) {
     return [
@@ -16,12 +17,14 @@ function getData (formData: FormData) {
         Boolean(formData.get('status')),
     ]
 } 
+type TCreateOrServer = 'Create' | 'Edit'
 
-function useCreateOrEditServer(type: 'Create' | 'Edit') {
+function useCreateOrEditServer(type: TCreateOrServer) {
     const {id} = useParams();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const catchError = useCatchError();
+    const {showModal} = useModalUI();
 
     useEffect(() => {
         if (type === 'Edit') {
@@ -66,7 +69,10 @@ function useCreateOrEditServer(type: 'Create' | 'Edit') {
             } else {
                 dispatch(editServer(resServer))
             }
-            navigate('/dashboards/servers')
+            navigate('/dashboards/servers');
+            showModal(
+                `Successfully ${getPastTense(type)}`, "success"
+            )
         } catch (error) {
             catchError(error)
         }
@@ -76,3 +82,8 @@ function useCreateOrEditServer(type: 'Create' | 'Edit') {
 }
 
 export default useCreateOrEditServer
+
+function getPastTense(type: TCreateOrServer) {
+    if (type === 'Create') return 'created';
+    return type.toLowerCase() + 'ed';
+}

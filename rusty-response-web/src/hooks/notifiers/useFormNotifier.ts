@@ -7,6 +7,8 @@ import apiRequest from '../../helpers/apiRequest';
 import ApiError from '../../helpers/ApiError';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import { notifierProviderFields } from '../../constants/notifiers';
+import useModalUI from '../useModalUI';
+import useCatchError from '../useCatchError';
 
 const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
     const servers = useAppSelector(state => state.servers.servers.list);
@@ -21,6 +23,9 @@ const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
         servers.find(s => s.id === separateNotifier.server_id)?.name ?? 'Select Server'
     );
     const callSetOptionServer= useCallback((value: string) => setOptionServer(value), []);
+
+    const {showModal} = useModalUI();
+    const catchError = useCatchError()
 
     const toSnakeCase = (str: string) => 
         str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
@@ -62,10 +67,14 @@ const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
                 method: requestMethod,
                 body: data
             });
+            showModal(
+                `Succesfully ${requestMethod === 'POST' ? 'created' : 'updated'}`, 
+                'success'
+            )
         } catch (error) {
-            if (error instanceof ApiError) error.log();
+            catchError(error)
         }
-
+        // todo: return true false
     };
 
     return {servers,

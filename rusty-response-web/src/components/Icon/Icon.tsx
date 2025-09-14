@@ -1,13 +1,16 @@
 import { type FC } from 'react'
-import type { TFontColorShape, TIconName } from '../../types/ui';
+import type { TFontColorShape, TIconName, TModalIconPath } from '../../types/ui';
 
 interface Props {
-    name: TIconName,
+    name: TIconName | TModalIconPath,
     width: number,
     height?: number,
     color?: TFontColorShape
 }
-const COLORED_ICONS = new Set(['telegram', 'bitrix', 'discord']);
+const COLORED_ICONS: Set<TIconName | TModalIconPath> = new Set([
+  'telegram', 'bitrix', 'discord',
+  "modal/copy", "modal/error", "modal/loading", "modal/success"
+]);
 
 const Icon: FC<Props> = ({name, width, height, color}) => {
   const isColored = COLORED_ICONS.has(name);

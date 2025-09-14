@@ -8,7 +8,6 @@ import useNotifiers from '../../../hooks/notifiers/useNotifiers';
 
 const Main = () => {
   const {hasContent, isLoading} = useNotifiers()
-
   return (
     <ContentCondition 
       condition={hasContent}

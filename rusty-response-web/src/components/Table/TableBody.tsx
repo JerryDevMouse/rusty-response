@@ -26,7 +26,7 @@ const TableBody = () => {
                     <Text type='tiny'>{server.url}</Text>
                 </td>
                 <td>
-                    <Text type='tiny'>{server.last_seen_reason ?? 'No errors'}</Text>
+                    <Text type='tiny'>{server.last_seen_reason || 'No errors'}</Text>
                 </td>
                 <td>
                     <div className={styles.row}>

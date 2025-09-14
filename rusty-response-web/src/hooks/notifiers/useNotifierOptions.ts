@@ -12,6 +12,7 @@ const useNotifierOptions = () => {
         server_id, 
         ...(provider && {provider}) 
     }));
+    // todo types
     navigate('/dashboards/notifiers/create');
   }
 

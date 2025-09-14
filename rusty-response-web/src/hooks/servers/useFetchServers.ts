@@ -25,7 +25,6 @@ const useFetchServers = () => {
                 );
                 dispatch(setServers(res.items));
                 dispatch(changeServersMaxPage(res.total));
-                
             } catch (error) {
                 catchError(error);
             } finally {

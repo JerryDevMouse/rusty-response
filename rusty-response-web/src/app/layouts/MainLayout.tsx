@@ -5,6 +5,7 @@ import { Sidebar } from '../../components/Sidebar'
 import Footer from '../../components/Footer'
 import useFetchData from '../../hooks/useFetchData'
 import MainContent from '../../components/MainContent'
+import ModalUI from '../../components/ModalUI'
 
 const MainLayout = () => {
   const {sidebarIsOpen, switchSidebar} = useSwitchSidebar();
@@ -17,6 +18,7 @@ const MainLayout = () => {
         <Header isOpen={sidebarIsOpen} switchSidebar={switchSidebar}/>
         <MainContent />
         <Footer/>
+        <ModalUI />
       </div>
     </div>
   )

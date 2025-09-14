@@ -7,10 +7,12 @@ import { API } from '../constants/api';
 import type { IUser } from '../types/api';
 import { setUser, setUserLoading } from '../app/store/slices/userSlice';
 import Storage from '../helpers/Storage';
+import useModalUI from './useModalUI';
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const {showModal} = useModalUI();
   
   const getValues = (formData: FormData) => {
     return [formData.get('login'), formData.get('password')]
@@ -28,7 +30,7 @@ const useAuth = () => {
   const fetchSign = async (formData: FormData, type: 'signup' | 'signin') => {
     const [username, password_raw] = getValues(formData);
     try {
-      dispatch(setUserLoading(true))
+      dispatch(setUserLoading(true));
       const resUser = await apiRequest<IUser>(API[type], {
         method: 'POST',
         body: { username, password_raw }
@@ -36,9 +38,9 @@ const useAuth = () => {
       dispatch(setUser(resUser));
       Storage.set('lastAuth', Date.now())
       navigate('/');
+      showModal('Successfully login', 'success')
     } catch (error) {
-      // todo: single standard output for the user  
-      if (error instanceof ApiError) error.log();
+      showModal(error instanceof ApiError ? error.message : 'Unexpected error', 'error');
     } finally {
       dispatch(setUserLoading(false));
     }

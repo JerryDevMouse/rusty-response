@@ -1,15 +1,21 @@
 import { useNavigate } from "react-router"
 import ApiError from "../helpers/ApiError";
+import useModalUI from "./useModalUI";
 
 const useCatchError = () => {
     const navigate = useNavigate();
+    const {showModal} = useModalUI();
 
     const catchError = (error: unknown) => {
         if (error instanceof ApiError) {
-            error.log();
-            if (error.status === 401) navigate('/auth/signin')
+            showModal(error.message, "error")
+            if (error.status === 401) {
+                setTimeout(() => {
+                    navigate('/auth/signin');
+                }, 3000)
+            }
         } else {
-            console.log('Unexpected error');
+            showModal('Unexpected error', "error")
         }
     }
     return catchError

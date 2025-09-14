@@ -8,8 +8,6 @@ const useForm = (onSubmit: (formData: FormData) => void) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         onSubmit(formData);
-
-        e.currentTarget.reset();
     }
     
     const handleCancel = () => {        
