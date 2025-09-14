@@ -160,6 +160,14 @@ impl NotifierBmc {
         Ok(rows)
     }
 
+    pub async fn all_by_server(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<Vec<Notifier>> {
+        let rows = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE server_id = ?")
+            .bind(id)
+            .fetch_all(&mm.pool)
+            .await?;
+        Ok(rows)
+    }
+
     pub async fn get(mm: &ModelManager, _ctx: &Ctx, id: i64) -> Result<Option<Notifier>> {
         let result = sqlx::query_as::<Sqlite, Notifier>("SELECT * FROM notifier WHERE id = ?")
             .bind(id)

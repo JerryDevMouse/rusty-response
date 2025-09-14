@@ -1,6 +1,6 @@
 use axum::{
     Json, Router,
-    extract::{Path, Query, State},
+    extract::{Path, State},
     middleware,
     response::{IntoResponse, Response},
     routing::{get, post, put},
@@ -10,7 +10,7 @@ use serde_json::json;
 
 use crate::{
     model::{Ctx, Notifier, NotifierBmc, NotifierCreate, ServerBmc, UserRole},
-    web::{WebError, utils::PageQuery},
+    web::WebError,
 };
 
 use super::{AppState, middlewares::verify_token_middleware};
@@ -52,9 +52,8 @@ async fn notifier_add(
 async fn notifier_list(
     State(state): State<AppState>,
     ctx: Ctx,
-    Query(query): Query<PageQuery>,
 ) -> Result<Response, WebError> {
-    let notifiers = NotifierBmc::page(&state.mm, &ctx, query.offset, query.limit).await?;
+    let notifiers = NotifierBmc::all(&state.mm, &ctx).await?;
     Ok((StatusCode::OK, Json(notifiers)).into_response())
 }
 
@@ -62,7 +61,6 @@ async fn notifier_list_by_server(
     State(state): State<AppState>,
     ctx: Ctx,
     Path(id): Path<i64>,
-    Query(query): Query<PageQuery>,
 ) -> Result<Response, WebError> {
     let server = ServerBmc::get_by_id(&state.mm, &ctx, id).await?;
     if server.is_none() {
@@ -75,7 +73,7 @@ async fn notifier_list_by_server(
     }
 
     let notifiers =
-        NotifierBmc::page_by_server(&state.mm, &ctx, id, query.offset, query.limit).await?;
+        NotifierBmc::all_by_server(&state.mm, &ctx, id).await?;
 
     Ok((StatusCode::OK, Json(notifiers)).into_response())
 }
