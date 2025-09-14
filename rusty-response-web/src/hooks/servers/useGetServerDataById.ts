@@ -5,7 +5,6 @@ import { setSeparateServer, setSeparateServerLoading, setSeparateServerNotifiers
 import apiRequest from "../../helpers/apiRequest";
 import { API } from "../../constants/api";
 import type { IServer } from "../../types/servers";
-import type { IResponse } from "../../types/api";
 import type { INotify } from "../../types/notifiers";
 
 const useGetServerDataById = (id: IServer["id"]) => {    
@@ -15,10 +14,10 @@ const useGetServerDataById = (id: IServer["id"]) => {
 
   const fetchNotifiers = useCallback(async () => {
     try {
-        const serverNotifiers = await apiRequest<IResponse<INotify>>(
-        `${API.notifyServer}${id}?limit=999&offset=0`
+        const serverNotifiers = await apiRequest<INotify[]>(
+        `${API.notifyServer}${id}`
         );
-        dispatch(setSeparateServerNotifiers(serverNotifiers.items));
+        dispatch(setSeparateServerNotifiers(serverNotifiers));
     } catch (err) {
         catchError(err);
     }

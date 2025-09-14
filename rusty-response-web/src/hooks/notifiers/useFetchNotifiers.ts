@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks'
 import apiRequest from '../../helpers/apiRequest'
-import type { IResponse } from '../../types/api'
 import type { INotify } from '../../types/notifiers'
 import { API } from '../../constants/api'
 import { setNotifiers, setNotifiersLoading } from '../../app/store/slices/serversSlice'
@@ -17,13 +16,8 @@ const useFetchNotifiers = () => {
             const getNotifiers = async () => {
                 try {
                     dispatch(setNotifiersLoading(true))
-                    const responseFindTotal = await apiRequest<IResponse<INotify>>(API.notify + '?limit=10&offset=0'); // temporarily, until the API route is redesigned 
-                    if (responseFindTotal.total === responseFindTotal.items.length) {
-                        dispatch(setNotifiers(responseFindTotal.items));
-                        return;
-                    }
-                    const finalResponse = await apiRequest<IResponse<INotify>>(API.notify + `?limit=${responseFindTotal.total}&offset=0`);
-                    dispatch(setNotifiers(finalResponse.items))
+                    const finalResponse = await apiRequest<INotify[]>(API.notify);
+                    dispatch(setNotifiers(finalResponse))
                 } catch(error) {
                     catchError(error)
                 } finally {
