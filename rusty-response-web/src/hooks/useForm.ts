@@ -1,13 +1,16 @@
 import { type FormEvent } from 'react'
 import { useNavigate } from 'react-router';
 
-const useForm = (onSubmit: (formData: FormData) => void) => {
+const useForm = (onSubmit: (formData: FormData) => void | Promise<boolean>) => {
     const navigate = useNavigate();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        onSubmit(formData);
+        const isSuccess = onSubmit(formData);
+        if (isSuccess) {
+            handleCancel()
+        }
     }
     
     const handleCancel = () => {        

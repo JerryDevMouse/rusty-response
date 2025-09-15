@@ -1,16 +1,18 @@
 import { useCallback, useState } from 'react'
-import { useAppSelector } from '../../app/store/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { API } from '../../constants/api';
 import lowerFirstLetter from '../../helpers/lowerFirstLetter';
 import type { INotify } from '../../types/notifiers';
 import apiRequest from '../../helpers/apiRequest';
-import ApiError from '../../helpers/ApiError';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import { notifierProviderFields } from '../../constants/notifiers';
 import useModalUI from '../useModalUI';
 import useCatchError from '../useCatchError';
+import toSnakeCase from '../../helpers/toSnakeCase';
+import { setSeparateNotifier } from '../../app/store/slices/serversSlice';
 
-const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
+const useFormNotifier = (type: 'Create' | 'Edit') => {
+    // todo: fetch notify by id, if not in state
     const servers = useAppSelector(state => state.servers.servers.list);
     const separateNotifier = useAppSelector(state => state.servers.separateNotifier.notifier);
 
@@ -25,10 +27,8 @@ const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
     const callSetOptionServer= useCallback((value: string) => setOptionServer(value), []);
 
     const {showModal} = useModalUI();
-    const catchError = useCatchError()
-
-    const toSnakeCase = (str: string) => 
-        str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    const catchError = useCatchError();
+    const dispatch = useAppDispatch();
 
     const getOperatorFields = (formData: FormData, operator: INotify['provider']) => {
         const providerFields = notifierProviderFields.find(o => o.name === capitalizeFirstLetter(operator))?.fields;
@@ -50,12 +50,13 @@ const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
     const getData = (formData: FormData) => {
         const provider = lowerFirstLetter(optionProvider);
         const serverId = servers.find(s => s.name === optionServer)?.id;
+        
         return {
             server_id: serverId,
             provider,
             credentials: getOperatorFields(formData, provider as INotify['provider']),
             format: formData.get('message'),
-            active: formData.get('status'),
+            active: Boolean(formData.get('status')),
         }
     } 
 
@@ -63,21 +64,23 @@ const useFormNotifier = (requestMethod: 'POST' | 'PUT') => {
         const data = getData(formData);
         
         try {
-            const response = await apiRequest(API.notify, {
-                method: requestMethod,
+            await apiRequest(`${API.notify}${type === 'Edit' ? separateNotifier.id : ''}`, {
+                method: type === 'Create' ? 'POST' : 'PUT',
                 body: data
             });
             showModal(
-                `Succesfully ${requestMethod === 'POST' ? 'created' : 'updated'}`, 
+                `Succesfully ${type === 'Create' ? 'created' : 'updated'}`, 
                 'success'
             )
+            dispatch(setSeparateNotifier({}))
+            return true;
         } catch (error) {
-            catchError(error)
+            catchError(error);
+            return false;
         }
-        // todo: return true false
     };
 
-    return {servers,
+    return {servers, separateNotifier,
         optionProvider, setOptionProvider: callSetOptionProvider,
         optionServer, setOptionServer: callSetOptionServer,
         onSubmitRequest

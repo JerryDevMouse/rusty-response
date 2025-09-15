@@ -1,5 +1,3 @@
-import type { INotify } from "../types/notifiers"
-
 export const notifierProviderFields = [
   {
     name: 'Telegram',
@@ -32,18 +30,3 @@ export const notifierProviderFields = [
     ]
   }
 ]
-
-export const initialNotifier: INotify = {
-  id: 0,
-  active: false,
-  created_at: '',
-  credentials: {
-    chat_id: null,
-    token: null
-  },
-  format: '',
-  provider: "telegram",
-  server_id: 0,
-  updated_at: '',
-  user_id: 0
-}

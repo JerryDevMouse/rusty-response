@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction} from "@reduxjs/toolkit";
 import type { IServer } from "../../../types/servers";
 import type { INotify } from "../../../types/notifiers";
-import { initialNotifier } from "../../../constants/notifiers";
 const COUNT_SERVERS = 5; //on page
 export interface IStateServer extends IServer {
     notifiers: INotify[]
@@ -26,7 +25,7 @@ interface IState {
     deleteCount: number,
     notifiersLoading: boolean,
     separateNotifier: {
-        notifier: INotify,
+        notifier: Partial<INotify>,
         loading: boolean
     },
 }
@@ -52,8 +51,8 @@ const serversSlice = createSlice({
         newServerId: null,
         notifiersLoading: false,
         separateNotifier: {
-            notifier: initialNotifier,
-            loading: true
+            notifier: {},
+            loading: false
         }
     } as IState,
     reducers: {
@@ -97,6 +96,12 @@ const serversSlice = createSlice({
                 state.deleteCount++;
             }
         },
+        deleteNotifierById: (state, action: PayloadAction<number>) => {
+            if (state.separateServer.server) {
+                state.separateServer.server.notifiers =
+                    state.separateServer.server.notifiers.filter(n => n.id !== action.payload);
+            }
+        },
         setServersLoading: (state, action: PayloadAction<boolean>) => {
             state.servers.loading = action.payload
         },
@@ -112,7 +117,7 @@ const serversSlice = createSlice({
         changeServersOffset: (state, action: PayloadAction<number>) => {
             state.offset = (action.payload - 1) * COUNT_SERVERS
         },
-        setSeparateNotifier: (state, action: PayloadAction<INotify>) => {
+        setSeparateNotifier: (state, action: PayloadAction<Partial<INotify>>) => {
             state.separateNotifier.notifier = action.payload
         },
         setNewServerId: (state, action: PayloadAction<IServer['id']>) => {
@@ -133,7 +138,7 @@ const serversSlice = createSlice({
 export const {
     setServers, setNotifiers, addServer, editServer, deleteServerById, setServersLoading,
     changeServersMaxPage, setServersCurrentPage, changeServersOffset,
-    setSeparateNotifier, setNotifiersLoading, setNewServerId,
+    setSeparateNotifier, setNotifiersLoading, setNewServerId, deleteNotifierById,
     setSeparateServer, setSeparateServerNotifiers, setSeparateServerLoading
 } = serversSlice.actions;
 

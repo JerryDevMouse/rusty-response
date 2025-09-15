@@ -29,11 +29,13 @@ const FormServer = ({type}: {type: 'Create' | 'Edit'}) => {
             help='The interval between server checks (seconds)'
             key={server.server?.timeout}
             defaultValue={server.server?.timeout ?? 10}
+            seconds
             />
           <Form.Input type='number' name='Interval'
             help='The interval between server checks (seconds)'
             key={server.server?.interval}
             defaultValue={server.server?.interval ?? 60}
+            seconds
           />
         </Form.Row>
         <Form.Row>

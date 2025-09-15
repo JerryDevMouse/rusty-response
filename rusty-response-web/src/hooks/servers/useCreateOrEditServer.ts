@@ -73,8 +73,10 @@ function useCreateOrEditServer(type: TCreateOrServer) {
             showModal(
                 `Successfully ${getPastTense(type)}`, "success"
             )
+            return true
         } catch (error) {
             catchError(error)
+            return false
         }
     }
 

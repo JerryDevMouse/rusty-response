@@ -37,8 +37,7 @@ const SectionNotifiers = ({provider, serverId}: Props) => {
             {notifiers && notifiers?.length > 0 && notifiers.filter(n => n.provider === provider).map(n => (
                 <CardNotifier 
                     key={n.id}
-                    id={n.id}
-                    active={n.active} 
+                    notifier={n}
                 />
             ))}
             <button className={styles.add} onClick={() => addNotifier(serverId, provider)}>

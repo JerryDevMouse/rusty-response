@@ -51,11 +51,11 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: 'create',
-                                element: <Notifiers.FormNotifier requestMethod="POST" />
+                                element: <Notifiers.FormNotifier type='Create' />
                             },
                             {
-                                path: 'change',
-                                element: <Notifiers.FormNotifier requestMethod="PUT" />
+                                path: 'edit/:id',
+                                element: <Notifiers.FormNotifier type='Edit' />
                             }
                         ] },
                     ]

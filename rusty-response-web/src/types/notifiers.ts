@@ -15,9 +15,18 @@ export interface ITelegramCredentials {
 	token: string | null
 }
 export interface IDiscordCredentials {
-	chat_id: number | null,
-	token: string | null
+	discord_webhook: string,
+	embed_title: string,
+	embed_footer_content: string
 }
+
+export const getCredentialValue = (credentials: ITelegramCredentials | IDiscordCredentials | undefined, name: string): string => {
+	const key = name.toLowerCase().replaceAll(' ', '_'); 
+	if (credentials && key in credentials) {		
+		return String(credentials[key as never]) || '';
+	}
+	return '';
+};
 
 export interface INotify {
 	id: number,
