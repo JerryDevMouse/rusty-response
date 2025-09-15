@@ -1,9 +1,9 @@
 import ButtonOptions from './ButtonOptions'
 import Text from '../../../../../components/Text'
-import styles from './index.module.css'
 import ModalOptions from '../../../../../components/ModalOptions'
 import type { INotify } from '../../../../../types/notifiers'
 import useNotifierOptions from '../../../../../hooks/notifiers/useNotifierOptions'
+import styles from './index.module.css'
 interface Props {
     notifier: INotify
 }

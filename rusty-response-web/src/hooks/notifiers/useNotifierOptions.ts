@@ -21,18 +21,19 @@ const useNotifierOptions = () => {
     navigate('/dashboards/notifiers/create');
   }
 
-  const editNotifier = (notifier: INotify) => {
+  const editNotifier = (notifier: Partial<INotify>) => {
     dispatch(setSeparateNotifier(notifier));
     navigate(`/dashboards/notifiers/edit/${notifier.id}`);
   }
 
-  const deleteNotifier = async (id: number) => {
+  const deleteNotifier = async (id: number, isNavigateBack?: boolean) => {
     try {
       await apiRequest(`${API.notify}${id}`, {
         method: 'DELETE',
       })
-      dispatch(deleteNotifierById(id))
-      showModal('Succesfully deleted', 'success')
+      dispatch(deleteNotifierById(id));
+      showModal('Succesfully deleted', 'success');
+      isNavigateBack && navigate(-1);
     } catch (error) {
       catchError(error)
     }    

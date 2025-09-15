@@ -9,7 +9,7 @@ interface Props {
 
 const OptionButton = ({handleClick, iconName, label}: Props) => {
   return (
-    <button onClick={handleClick}>
+    <button onClick={handleClick} type='button'>
         {iconName && <Icon name={iconName} width={10} height={10} />}
         <Text type='tiny'>{label}</Text>
     </button>

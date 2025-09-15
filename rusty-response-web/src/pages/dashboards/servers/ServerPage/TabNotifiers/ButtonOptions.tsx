@@ -4,13 +4,15 @@ import ModalOptions from '../../../../../components/ModalOptions'
 import styles from './index.module.css'
 import type { IChildren } from '../../../../../types'
 interface Props extends IChildren {
-    size?: number
+    size?: number,
+    right?: boolean
 }
-const ButtonOptions = ({size = 24, children}: Props) => {
+// todo change directory
+const ButtonOptions = ({size = 24, children, right}: Props) => {
     const [isShow, setIsShow] = useState(false);
 
   return (
-    <div style={{position: 'relative'}}>
+    <div className={`${styles.optcontainer} ${right ? styles.right : ''}`}>
         <button 
             onClick={() => setIsShow(c => !c)}
             className={styles.options} 
@@ -18,6 +20,7 @@ const ButtonOptions = ({size = 24, children}: Props) => {
                 width: size,
                 height: size
             }}
+            type='button'
         >
             <Icon name="dots" width={16} />
         </button>

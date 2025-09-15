@@ -3,6 +3,9 @@ import useForm from '../../../hooks/useForm';
 import useFormNotifier from '../../../hooks/notifiers/useFormNotifier';
 import { notifierProviderFields } from '../../../constants/notifiers';
 import { getCredentialValue } from '../../../types/notifiers';
+import ButtonOptions from '../servers/ServerPage/TabNotifiers/ButtonOptions';
+import ModalOptions from '../../../components/ModalOptions';
+import useNotifierOptions from '../../../hooks/notifiers/useNotifierOptions';
 interface Props {
     type: 'Create' | 'Edit'
 }
@@ -11,9 +14,17 @@ const FormNotifier = ({type}: Props) => {
   const { onSubmitRequest, servers, optionProvider, 
     optionServer, setOptionProvider, setOptionServer, separateNotifier } = useFormNotifier(type);
   const {handleCancel, handleSubmit} = useForm(onSubmitRequest);
+  const {deleteNotifier} = useNotifierOptions();
 
   return (
     <Form.Container onSubmit={handleSubmit}>
+      {type === 'Edit' && 
+          <ButtonOptions right size={28}>
+            <ModalOptions.OptionButton label='Delete' iconName='delete' 
+                handleClick={() => deleteNotifier(separateNotifier.id!, true)}
+            />
+          </ButtonOptions>
+        }
       <Form.Title>{type} Notifier</Form.Title>
       <Form.Section subtitle='Notifier Information'>
         <Form.Row>

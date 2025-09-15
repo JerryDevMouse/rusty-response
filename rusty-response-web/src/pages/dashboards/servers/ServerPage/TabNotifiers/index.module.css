@@ -76,6 +76,13 @@
 .inactive > p {
     color: #D5A656;
 }
+.optcontainer {
+    position: relative;
+}
+.optcontainer.right {
+    position: absolute;
+    right: 0;
+}
 .options {
     display: flex;
     justify-content: center;
