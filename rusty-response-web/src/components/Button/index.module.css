@@ -1,0 +1,17 @@
+.submit, .button {
+    padding: 10px 16px;
+    border-radius: 10px;
+    transition: background .3s;
+}
+.button {
+    background: var(--color-accent);
+}
+.button:hover {
+    background: var(--color-accent-hover);
+}
+.submit {
+    background: var(--color-main);
+}
+.submit:hover {
+    background: var(--color-main-hover);
+}

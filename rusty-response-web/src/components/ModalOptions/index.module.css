@@ -1,0 +1,29 @@
+.modal {
+    display: none;
+    flex-direction: column;
+    row-gap: 4px;
+    border-radius: 12px;
+    border: 1px solid #565656;
+    background: var(--color-bg);
+    padding: 10px;
+    position: absolute;
+    z-index: 2;
+    top: 100%;
+    right: 0;
+}
+.modal.show {
+    display: flex;
+}
+.modal a,
+.modal button {
+    display: flex;
+    column-gap: 10px;
+    align-items: center;
+    padding: 5px 25px 5px 10px;   
+    border-radius: 5px; 
+    transition: background .3s;
+}
+.modal a:hover,
+.modal button:hover {
+    background: var(--color-accent);
+}

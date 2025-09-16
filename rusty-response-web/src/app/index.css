@@ -1,0 +1,10 @@
+@import url('./css/fonts.css');
+@import url('./css/null.css');
+@import url('./css/variables.css');
+
+body {
+  background: var(--color-bg);
+  font-family: var(--font-family);
+  color: white;
+  overflow-x: hidden;
+}

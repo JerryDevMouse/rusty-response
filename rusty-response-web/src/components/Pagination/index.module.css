@@ -1,0 +1,26 @@
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    column-gap: 10px;
+}
+.button {
+    max-width: 159px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25px;
+    flex: 1;
+    border-radius: 12px;
+    border: 1px solid #404040;
+    transition: .3s;
+
+}
+.button.active{
+    background: var(--color-accent);
+    border: 1px solid #525252;
+}
+.button:hover {
+    background: var(--color-accent-hover);
+    border: 1px solid #525252;
+}

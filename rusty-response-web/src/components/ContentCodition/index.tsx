@@ -1,0 +1,16 @@
+import type { IChildren } from "../../types"
+
+interface Props extends IChildren {
+    condition: boolean | unknown,
+    fallback?: React.ReactNode
+}
+
+const ContentCondition: React.FC<Props> = ({
+    condition,
+    children,
+    fallback = null
+}) => {
+  return condition ? children : fallback
+}
+
+export default ContentCondition

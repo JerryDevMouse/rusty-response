@@ -1,0 +1,6 @@
+.text {
+    display: inline-block;
+    width: fit-content;
+    line-height: 150%;
+    font-family: var(--font-family);
+}

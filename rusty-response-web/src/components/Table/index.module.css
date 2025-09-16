@@ -1,0 +1,151 @@
+.filters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 8px 12px 19px;
+    border-radius: 12px;
+    background: var(--color-accent);
+    margin-bottom: 12px;
+}
+.filtersBtns {
+    display: flex;
+    align-items: center;
+    column-gap: 15px;
+}
+.filtersBtns a,
+.filtersBtns button {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    transition: background .3s;
+}
+.filtersBtns a:hover,
+.filtersBtns button:hover {
+    background: var(--color-accent-hover);
+}
+.table {
+    display: block;
+    flex: 1;
+    width: 100%;
+    table-layout: fixed;
+    margin-bottom: 24px;
+}
+.table tr {
+    display: flex;
+}
+.table td {
+    padding: 12px;
+    flex: 1;
+    min-width: 0; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.table thead {
+    display: block;
+    border-bottom: 1px solid #555555;
+}
+.table thead tr td:first-child,
+.table tbody tr td:first-child {
+    flex: 0.65;
+}
+.table thead tr td:nth-child(2),
+.table tbody tr td:nth-child(2) {
+    flex: 1.4;
+}
+.table thead tr td:nth-child(3),
+.table tbody tr td:nth-child(3) {
+    flex: 2.5;
+}
+.table thead tr td:nth-child(4),
+.table tbody tr td:nth-child(4) {
+    flex: 1.7;
+}
+.table thead tr td:nth-child(5),
+.table tbody tr td:nth-child(5) {
+    flex: 1.7;
+}
+.table tbody {
+    display: block;
+    min-height: 233px;
+}
+.table tbody td > p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 95%;
+}
+.table tbody tr {
+    border-top: 1px solid #3f3f3f;
+    border-bottom: 1px solid #3f3f3f;
+    transition: .3s;
+    position: relative;
+}
+/* options */
+.options {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 14px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border-radius: 10px;
+    transition: background .3s;
+}
+.options:hover {
+    background: var(--color-accent-hover);
+}
+.table tbody td.modal {
+    padding: 8px;
+}
+.table tbody tr:hover {
+    background: var(--color-accent);
+    border-radius: 12px;
+}
+.table tbody tr:hover > .options {
+    display: flex;
+}
+.table tbody tr:hover + tr {
+    border-top-color: transparent;
+}
+
+.table tbody tr:has(+ tr:hover) {
+    border-bottom-color: transparent;
+}
+
+.table tbody td .row {
+    display: flex;
+    align-items: center;
+    column-gap: 7px;
+}
+.table tbody td .row .circle {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+.pause .circle {
+    background: var(--color-pause);
+}
+.success .circle {
+    background: var(--color-success);
+}
+.failed .circle {
+    background: var(--color-failed);
+}
+.pause > p {
+    color: var(--color-pause);
+}
+.success > p {
+    color: var(--color-success);
+}
+.failed > p{
+    color: var(--color-failed);
+}

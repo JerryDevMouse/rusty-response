@@ -1,0 +1,29 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+} 
+.content img {
+    max-width: 141px;
+    max-height: 111px;
+    margin-bottom: 15px;
+} 
+.link {
+    display: flex;
+    align-items: center;
+    column-gap: 18px;
+    padding: 16px 19px;
+    background: var(--color-accent);
+    border-radius: 16px;
+    transition: background .3s;
+}
+.link:hover {
+    background: var(--color-accent-hover);
+}
