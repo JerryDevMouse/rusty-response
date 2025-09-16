@@ -1,6 +1,7 @@
 use std::{collections::BTreeMap, sync::Arc, time::Duration};
 
 use axum::http;
+use reqwest::StatusCode;
 use tokio::{
     sync::{Mutex, mpsc},
     task::JoinHandle,
@@ -296,8 +297,12 @@ pub async fn setup_monitoring_future(
                         );
                     }
 
+                    let last_seen_status =
+                        StatusCode::from_u16(server.last_seen_status_code.unwrap_or(200) as u16)
+                            .unwrap()
+                            .is_success();
                     let handle = tokio::spawn(async move {
-                        payload(server, reqwest_arc, tx, child_token, true).await;
+                        payload(server, reqwest_arc, tx, child_token, last_seen_status).await;
                     });
 
                     {
