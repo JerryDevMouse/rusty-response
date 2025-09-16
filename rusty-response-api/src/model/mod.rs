@@ -49,8 +49,14 @@ impl ModelManager {
     }
 
     pub async fn migrate(&self) -> Result<()> {
+        let exe_dir = std::env::current_exe()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .to_path_buf();
+        let migrations_path = exe_dir.join("migrations");
         let migrator =
-            sqlx::migrate::Migrator::new(Path::new("./rusty-response-api/migrations")).await?;
+            sqlx::migrate::Migrator::new(migrations_path).await?;
         migrator.run(&self.pool).await?;
         Ok(())
     }
