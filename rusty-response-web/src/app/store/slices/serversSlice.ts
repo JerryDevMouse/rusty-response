@@ -21,7 +21,6 @@ interface IState {
         server: IStateServer | null,
         loading: boolean
     }
-    newServerId: IServer['id'] | null,
     deleteCount: number,
     notifiersLoading: boolean,
     separateNotifier: {
@@ -48,7 +47,6 @@ const serversSlice = createSlice({
             loading: true
         },
         deleteCount: 0,
-        newServerId: null,
         notifiersLoading: false,
         separateNotifier: {
             notifier: {},
@@ -120,9 +118,6 @@ const serversSlice = createSlice({
         setSeparateNotifier: (state, action: PayloadAction<Partial<INotify>>) => {
             state.separateNotifier.notifier = action.payload
         },
-        setNewServerId: (state, action: PayloadAction<IServer['id']>) => {
-            state.newServerId = action.payload
-        },
         setSeparateServer: (state, action: PayloadAction<IStateServer | null>) => {
             state.separateServer.server = action.payload
         },
@@ -138,7 +133,7 @@ const serversSlice = createSlice({
 export const {
     setServers, setNotifiers, addServer, editServer, deleteServerById, setServersLoading,
     changeServersMaxPage, setServersCurrentPage, changeServersOffset,
-    setSeparateNotifier, setNotifiersLoading, setNewServerId, deleteNotifierById,
+    setSeparateNotifier, setNotifiersLoading, deleteNotifierById,
     setSeparateServer, setSeparateServerNotifiers, setSeparateServerLoading
 } = serversSlice.actions;
 
